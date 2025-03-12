@@ -263,12 +263,13 @@ def count_creator_strategies():
         totals[c.strategy] += 1
     return totals
 
+
 def export_results(users_strats_counts: dict, creators_strats_counts: dict):
     print("USERS:", users_strats_counts)
     print("CREATORS:", creators_strats_counts)
 
     # Create a unique filename. Change it later to experiment name/id
-    file_name: str = str(round(time.time())) + ".txt"
+    file_name: str = "outputs/" + str(round(time.time())) + ".txt"
     f = open(file_name, "a")
     # Write the time series of all relevant frequencies
     f.write("generation\tN\tA\tP\tO\tCc\tCd")
