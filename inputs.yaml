@@ -1,0 +1,10 @@
+---
+instructions:
+  - user population size: 50
+    commentator population size: 5
+    creators population size: 16
+    media quality: [0.9, 0.9, 0.9, 0.8, 0.5]
+    media trust vector: [0,0,0,0,0]
+    user mutation probability: 0.1
+    creator mutation probability: 0.1
+    generations: 3001
