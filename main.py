@@ -1,8 +1,5 @@
 import os
 import time
-from User import User
-from Commentator import Commentator
-from Creator import Creator
 import yaml
 import sys
 import numpy as np
@@ -10,6 +7,10 @@ import random as rand
 from tqdm import tqdm
 import plotext as plt
 import pprint
+
+from User import User
+from Commentator import Commentator
+from Creator import Creator
 
 COOPERATE = 1
 DEFECT = 0
