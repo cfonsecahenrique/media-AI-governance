@@ -14,7 +14,7 @@ OPTIMIST = 2
 # needs at least 1 negative recommendation from trusted media to adopt
 PESSIMIST = 3
 # adopts or not depending on the mode of recommendations from trusted media
-#CONSENSUS = 4
+# CONSENSUS = 4
 
 
 class User:

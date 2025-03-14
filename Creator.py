@@ -1,4 +1,5 @@
 import random
+
 COOPERATE = 1  # Produces SAFE systems
 DEFECT = 0  # Produces UNSAFE systems
 
