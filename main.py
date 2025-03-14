@@ -22,9 +22,11 @@ NUMBER_CREATORS: int
 MEDIA_TRUST_VECTOR: list
 MEDIA_QUALITY: list
 GENS: int
+RUNS: int
 USER_MUTATION_PROBABILITY: float
 CREATOR_MUTATION_PROBABILITY: float
-SELECTION_STRENGTH = 1
+U_SELECTION_STRENGTH = 1
+C_SELECTION_STRENGTH = 0.5
 # Ground truth of creator reputations
 REAL_CREATOR_STRATEGIES: list = []
 
@@ -45,19 +47,23 @@ trust_media = []
 media_image_matrix = np.zeros((0, 0))
 
 # Benefit a user receives when adopting a safe technology
-bU = 0.5
+bU = 0.4
 # Cost for the user adopting unsafe technology
-cU = 0.5
+cU = 0.8
 # Benefit the media gets by users paying the (same) cost to access it
-bM = 0.002
+bM = 0.001
 # Benefit for the creator when user uses
 bP = 0.4
 # Cost paid by creators to create safe AI
-cP = 0.2
+cP = 0.1
 
 
 def read_args():
-    file_name: str = str(sys.argv[1])
+    if sys.argv[1]:
+        file_name: str = "inputs/" + str(sys.argv[1]) + ".yaml" 
+    else:
+        raise ValueError("No filename provided. Please run as 'python main.py <filename>'")
+
     global NUMBER_USERS
     global NUMBER_COMMENTATORS
     global NUMBER_CREATORS
@@ -67,6 +73,7 @@ def read_args():
     global MEDIA_TRUST_VECTOR
     global MEDIA_QUALITY
     global GENS
+    global RUNS
 
     # Open and parse the YAML file
     with open(file_name, "r") as f:
@@ -86,25 +93,27 @@ def read_args():
         MEDIA_MUTATION_PROBABILITY = float(entry["media trust mutation"])
         MEDIA_TRUST_VECTOR = list(entry["media trust vector"])
         GENS = int(entry["generations"])
+        RUNS = int(entry["runs"])
 
 
 def initialization():
-    # Have a fixed initial configuration of trustworthiness of commentators
-    read_args()
     # Create population of users
     global user_population
+    global media_population
     global REAL_CREATOR_STRATEGIES
+    global creator_population
+
+    user_population = []
+    media_population = []
 
     for i in range(0, NUMBER_USERS):
         user_population.append(User(i))
 
     # Create population of commentators
-    global media_population
     for j in range(0, NUMBER_COMMENTATORS):
         media_population.append(Commentator(j, MEDIA_QUALITY[j]))
 
     # Create population of Devs
-    global creator_population
     for k in range(0, NUMBER_CREATORS):
         creator_population.append(Creator(k))
 
@@ -156,7 +165,7 @@ def user_evolution_step():
         # learning step
         # Calculate Probability of imitation
         p_i: float = (
-            1 + np.exp(SELECTION_STRENGTH * (user_a.fitness - user_b.fitness))
+            1 + np.exp(U_SELECTION_STRENGTH * (user_a.fitness - user_b.fitness))
         ) ** (-1)
         # print("\tLearning A->B probability:", p_i)
         if rand.random() < p_i:
@@ -193,7 +202,7 @@ def creator_evolution_step():
         # Calculate Probability of imitation
         p_i: float = (
             1
-            + np.exp(SELECTION_STRENGTH * 0.1 * (creator_a.fitness - creator_b.fitness))
+            + np.exp(C_SELECTION_STRENGTH * (creator_a.fitness - creator_b.fitness))
         ) ** (-1)
         if rand.random() < p_i:
             creator_a.strategy = creator_b.strategy
@@ -318,7 +327,7 @@ def export_results(users_strats_counts: dict, creators_strats_counts: dict):
     file_name: str = "outputs/" + str(round(time.time())) + ".csv"
     f = open(file_name, "a")
     # Write the time series of all relevant frequencies
-    f.write("generation,N,A,P,O,Cc,Cd\n")
+    f.write("generation,N,A,O,P,Cc,Cd\n")
     for g in range(GENS):
         output: str = (
             str(generations[g])
@@ -327,9 +336,9 @@ def export_results(users_strats_counts: dict, creators_strats_counts: dict):
             + ","
             + str(always_adopt[g])
             + ","
-            + str(pessimist[g])
-            + ","
             + str(optimist[g])
+            + ","
+            + str(pessimist[g])
             + ","
             + str(creator_cooperator[g])
             + ","
@@ -340,19 +349,31 @@ def export_results(users_strats_counts: dict, creators_strats_counts: dict):
     f.close()
 
     df = pd.read_csv(file_name).drop("generation", axis=1)
-    df.plot()
+    # color=['r','b','orange','g','purple','brown']
+    ls=['-','-','-', '-','-.']
+    labels=['N','A','O','P','CC','CD']
+    for i, col in enumerate(['N','A','O','P','Cc']):
+        df[col].plot(ls=ls[i], label=labels[i])
+    df['Cc']
+    plts.legend(loc='upper left')
     plts.show()
 
 
-def main(logging: bool = True):
+def print_media_trust_avg():
+    counters = np.zeros(NUMBER_COMMENTATORS)
+    for user in user_population:
+        counters += np.array(user.media_trust_vector)
+    print(counters / NUMBER_USERS)
+
+
+def run_one_generation(logging):
     global media_image_matrix
-    global REAL_CREATOR_STRATEGIES
 
     initialization()
-    print("INITIAL CREATOR STRATEGIES:", REAL_CREATOR_STRATEGIES)
-    pprint.pprint(user_population[0].media_trust_vector)
 
-    for g in tqdm(range(GENS)):
+    g, n, a, o, p, cc, cd = [], [], [], [], [], [], [] 
+
+    for generation in tqdm(range(GENS)):
         # 0. Generate media image matrix
         media_image_matrix = generate_media_beliefs()
         # 1. Evolve agents
@@ -363,23 +384,65 @@ def main(logging: bool = True):
         user_strats_dict: dict = count_user_strategies()
         creator_strats_dict: dict = count_creator_strategies()
         # Store data for plotting
-        generations.append(g)
-        never_adopt.append(user_strats_dict[0] / NUMBER_USERS)
-        always_adopt.append(user_strats_dict[1] / NUMBER_USERS)
-        optimist.append(user_strats_dict[2] / NUMBER_USERS)
-        pessimist.append(user_strats_dict[3] / NUMBER_USERS)
-        creator_cooperator.append(creator_strats_dict[COOPERATE] / NUMBER_CREATORS)
-        creator_defector.append(creator_strats_dict[DEFECT] / NUMBER_CREATORS)
+        g.append(generation)
+        n.append(user_strats_dict[0] / NUMBER_USERS)
+        a.append(user_strats_dict[1] / NUMBER_USERS)
+        o.append(user_strats_dict[2] / NUMBER_USERS)
+        p.append(user_strats_dict[3] / NUMBER_USERS)
+        cc.append(creator_strats_dict[COOPERATE] / NUMBER_CREATORS)
+        cd.append(creator_strats_dict[DEFECT] / NUMBER_CREATORS)
         # user
-        if g % 1000 == 0 and logging:
-            draw(g)
+        if generation % 1000 == 0 and logging:
+            draw(generation)
+    
+    return g, n, a, o, p, cc, cd 
 
-    print("FINAL IMAGE MATRIX:")
-    pprint.pprint(media_image_matrix)
-    counters = np.zeros(NUMBER_COMMENTATORS)
-    for user in user_population:
-        counters += np.array(user.media_trust_vector)
-    print(counters / NUMBER_USERS)
+
+def main(logging: bool = True):
+    global media_image_matrix
+    global REAL_CREATOR_STRATEGIES
+    global generations
+    global never_adopt 
+    global always_adopt 
+    global optimist
+    global pessimist 
+    global creator_cooperator 
+    global creator_defector
+
+    # Have a fixed initial configuration of trustworthiness of commentators
+    read_args()
+
+    g_tmp = np.zeros(GENS)
+    n_tmp = np.zeros(GENS)
+    a_tmp = np.zeros(GENS)
+    o_tmp = np.zeros(GENS)
+    p_tmp = np.zeros(GENS)
+    cc_tmp = np.zeros(GENS)
+    cd_tmp = np.zeros(GENS)
+
+    for run in range(RUNS):
+        g, n, a, o, p, cc, cd = run_one_generation(logging)
+
+        g_tmp = np.array(g)
+        n_tmp += np.array(n)
+        a_tmp += np.array(a)
+        o_tmp += np.array(o)
+        p_tmp += np.array(p)
+        cc_tmp += np.array(cc)
+        cd_tmp += np.array(cd)
+    
+    generations = g_tmp
+    never_adopt = n_tmp/RUNS
+    always_adopt = a_tmp/RUNS
+    optimist = o_tmp/RUNS
+    pessimist = p_tmp/RUNS
+    creator_cooperator = cc_tmp/RUNS
+    creator_defector = cd_tmp/RUNS
+
+    # print("FINAL IMAGE MATRIX:")
+    # pprint.pprint(media_image_matrix)
+    # print_media_trust_avg()
+    
     export_results(count_user_strategies(), count_creator_strategies())
 
 
