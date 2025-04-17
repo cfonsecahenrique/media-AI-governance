@@ -166,13 +166,14 @@ def user_evolution_step():
         user_a.fitness = 0
         user_b.fitness = 0
 
-        if rand.random() < MEDIA_MUTATION_PROBABILITY:
-            user_a.tm = rand.random.choice(range(0, NUMBER_COMMENTATORS))
-        if rand.random() < MEDIA_MUTATION_PROBABILITY:
-            user_b.tm = rand.random.choice(range(0, NUMBER_COMMENTATORS))
+        # if rand.random() < MEDIA_MUTATION_PROBABILITY:
+        #     user_a.tm = rand.random.choice(range(0, NUMBER_COMMENTATORS))
+        # if rand.random() < MEDIA_MUTATION_PROBABILITY:
+        #     user_b.tm = rand.random.choice(range(0, NUMBER_COMMENTATORS))
 
         # build trust media vector stochastically 
         user_a.media_trust_vector = rand.choices(population=media_population, weights=MEDIA_QUALITY_EXPECTED, k=user_a.tm)
+        print("aaaaa", user_a.media_trust_vector)
         user_b.media_trust_vector = rand.choices(population=media_population, weights=MEDIA_QUALITY_EXPECTED, k=user_b.tm)
 
         # user A plays Z games
@@ -196,6 +197,8 @@ def user_evolution_step():
         if rand.random() < p_i:
             user_a.strat = user_b.strat
             user_a.tm = user_b.tm
+
+        #TODO: update reputations
 
 
 def creator_evolution_step():
@@ -230,20 +233,11 @@ def creator_evolution_step():
             creator_a.strategy = creator_b.strategy
 
 
-def theta_function(user: User, creator_id: int, threshold: int):
-    # if threshold = 1, return 1 on having one+ positive trusted recommendation -> optimist
-    # if threshold = tM, return 1 only if all trusted sources recommend cooperation
-    media_beliefs_of_creator = media_image_matrix[:, creator_id]
-    trusted_ones = [
-        media_beliefs_of_creator[i]
-        for i in range(len(MEDIA_TRUST_VECTOR))
-        if user.media_trust_vector[i] == 1
-    ]
-    value = np.sum(trusted_ones)
-    return 1 if value >= threshold else 0
+def theta_function(sum_media_beliefs_of_creator, threshold: int):
+    return 1 if sum_media_beliefs_of_creator >= threshold else 0
 
 
-def payoff_matrix(user: User, creator_id: int):
+def payoff_matrix(user: User, sum_media_beliefs_of_creator: int):
     theta = -1
     # x = recommended action = 0 or 1
     # tM = number of trusted sources
@@ -255,10 +249,10 @@ def payoff_matrix(user: User, creator_id: int):
         pass
     elif user.strat == 2:
         # Optimist
-        theta = theta_function(user, creator_id, 1)
+        theta = theta_function(sum_media_beliefs_of_creator, threshold=1)
     elif user.strat == 3:
         # Pessimist
-        theta = theta_function(user, creator_id, user.tm)
+        theta = theta_function(sum_media_beliefs_of_creator, threshold=user.tm)
     else:
         raise ValueError("User type error")
 
@@ -279,19 +273,20 @@ def payoff_matrix(user: User, creator_id: int):
 
 def calculate_payoff(u: User, c: Creator):
     # Create a list of opinions of only trusted sources
-    media_beliefs_of_creator = media_image_matrix[:, c.id]
-    
-    # TODO: media truste vector used with MEDIA_QUALITY_EXPECTED
+    # media_beliefs_of_creat
 
-    # trusted_ones = [
-    #     media_beliefs_of_creator[i]
-    #     for i in range(len(MEDIA_TRUST_VECTOR))
-    #     if u.media_trust_vector[i] == 1
-    # ]
-    # tM = len(trusted_ones)
+    sum_media_beliefs_of_creator = 0
+    if u.tm != 0:
+        media_beliefs_of_creator = []
+        for media in u.media_trust_vector:
+            if rand.random() <= media.quality:
+                media_beliefs_of_creator.append(c.strategy)
+            else:
+                media_beliefs_of_creator.append(rand.choice([DEFECT, COOPERATE]))
+        sum_media_beliefs_of_creator = sum(media_beliefs_of_creator)
 
     # Payoffs are (kinda) different depending on u.strat being 2 or 3 or more
-    user_payoffs, creator_payoffs = payoff_matrix(u, c.id)
+    user_payoffs, creator_payoffs = payoff_matrix(u, sum_media_beliefs_of_creator)
     u.fitness += user_payoffs[c.strategy, u.strat]
     c.fitness += creator_payoffs[c.strategy, u.strat]
 
