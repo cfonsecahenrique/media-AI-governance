@@ -124,6 +124,7 @@ def initialization():
         user.media_trust_vector = np.zeros(NUMBER_COMMENTATORS)
 
 
+
 # def generate_media_beliefs():
 #     global media_image_matrix
 #     media_image_matrix = np.zeros((NUMBER_COMMENTATORS, NUMBER_CREATORS))
@@ -136,7 +137,6 @@ def initialization():
 #                     (DEFECT, COOPERATE)
 #                 )
 #     return media_image_matrix
-
 
 def update_reputation_all(media_trust_vector: list):
     # delta_q
@@ -191,10 +191,6 @@ def user_evolution_step():
         if rand.random() < p_i:
             user_a.strat = user_b.strat
             user_a.tm = user_b.tm
-        
-        # TODO: update do MEDIA_QUALITY_EXPECTED
-        # compare strategies (perceived vs real)
-        # update_reputation_all(user_a.media_trust_vector)
 
 
 def creator_evolution_step():
@@ -281,6 +277,7 @@ def calculate_payoff(u: User, c: Creator):
     media_beliefs_of_creator = media_image_matrix[:, c.id]
     
     # TODO: media truste vector used with MEDIA_QUALITY_EXPECTED
+
     trusted_ones = [
         media_beliefs_of_creator[i]
         for i in range(len(MEDIA_TRUST_VECTOR))
