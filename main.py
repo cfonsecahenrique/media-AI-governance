@@ -51,11 +51,11 @@ bU = 0.4
 # Cost for the user adopting unsafe technology
 cU = 0.8
 # Benefit the media gets by users paying the (same) cost to access it
-bM = 0.001
+bM = 0.05
 # Benefit for the creator when user uses
 bP = 0.4
 # Cost paid by creators to create safe AI
-cP = 0.1
+cP = 0.2
 
 
 def read_args():
