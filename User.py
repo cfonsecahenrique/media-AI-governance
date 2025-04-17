@@ -18,11 +18,12 @@ PESSIMIST = 3
 
 
 class User:
-    def __init__(self, user_id: int):
+    def __init__(self, user_id: int, number_commentators: int):
         self.id = user_id
         self.fitness: int = 0
         self.strat: int = random.choice((ALL_ADOPT, NEV_ADOPT, OPTIMIST, PESSIMIST))
         self.media_trust_vector: list[Commentator]
+        self.tm: int = random.choice(range(0, number_commentators))
 
     def mutate(self):
-        self.strat: str = random.choice((ALL_ADOPT, NEV_ADOPT, OPTIMIST, PESSIMIST))
+        self.strat: str = random.choice(list({ALL_ADOPT, NEV_ADOPT, OPTIMIST, PESSIMIST}-{self.strat}))

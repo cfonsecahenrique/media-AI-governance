@@ -11,4 +11,5 @@ class Creator:
         self.fitness: int = 0
 
     def mutate(self):
-        self.strategy: int = random.choice([COOPERATE, DEFECT])
+        # self.strategy: int = random.choice([COOPERATE, DEFECT])
+        self.strategy: int = 1 - self.strategy
