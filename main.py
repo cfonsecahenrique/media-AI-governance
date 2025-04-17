@@ -74,6 +74,7 @@ def read_args():
     global MEDIA_MUTATION_PROBABILITY
     global MEDIA_TRUST_VECTOR
     global MEDIA_QUALITY
+    global MEDIA_QUALITY_EXPECTED
     global GENS
     global RUNS
 
@@ -86,6 +87,7 @@ def read_args():
         NUMBER_COMMENTATORS = int(entry["commentator population size"])
         NUMBER_CREATORS = int(entry["creators population size"])
         MEDIA_QUALITY = list(entry["media quality"])
+        MEDIA_QUALITY_EXPECTED = np.random.rand(NUMBER_COMMENTATORS)
         USER_MUTATION_PROBABILITY = float(
             entry["user mutation probability"]
         )  # /NUMBER_USERS)
@@ -104,6 +106,7 @@ def initialization():
     global media_population
     global REAL_CREATOR_STRATEGIES
     global creator_population
+    
 
     user_population = []
     media_population = []
@@ -163,12 +166,14 @@ def user_evolution_step():
         user_a.fitness = 0
         user_b.fitness = 0
 
-        # TODO: build trust media vector stochastically 
-        # user_a.media_trust_vector = ...
-
-        # TODO: mutate tm
         if rand.random() < MEDIA_MUTATION_PROBABILITY:
             user_a.tm = rand.random.choice(range(0, NUMBER_COMMENTATORS))
+        if rand.random() < MEDIA_MUTATION_PROBABILITY:
+            user_b.tm = rand.random.choice(range(0, NUMBER_COMMENTATORS))
+
+        # build trust media vector stochastically 
+        user_a.media_trust_vector = rand.choices(population=media_population, weights=MEDIA_QUALITY_EXPECTED, k=user_a.tm)
+        user_b.media_trust_vector = rand.choices(population=media_population, weights=MEDIA_QUALITY_EXPECTED, k=user_b.tm)
 
         # user A plays Z games
         for _ in range(NUMBER_CREATORS):
@@ -225,7 +230,7 @@ def creator_evolution_step():
             creator_a.strategy = creator_b.strategy
 
 
-def theta_function(user: User, creator_id: int, thresh: int):
+def theta_function(user: User, creator_id: int, threshold: int):
     # if threshold = 1, return 1 on having one+ positive trusted recommendation -> optimist
     # if threshold = tM, return 1 only if all trusted sources recommend cooperation
     media_beliefs_of_creator = media_image_matrix[:, creator_id]
@@ -235,10 +240,10 @@ def theta_function(user: User, creator_id: int, thresh: int):
         if user.media_trust_vector[i] == 1
     ]
     value = np.sum(trusted_ones)
-    return 1 if value >= thresh else 0
+    return 1 if value >= threshold else 0
 
 
-def payoff_matrix(user: User, tM: int, creator_id: int):
+def payoff_matrix(user: User, creator_id: int):
     theta = -1
     # x = recommended action = 0 or 1
     # tM = number of trusted sources
@@ -253,14 +258,14 @@ def payoff_matrix(user: User, tM: int, creator_id: int):
         theta = theta_function(user, creator_id, 1)
     elif user.strat == 3:
         # Pessimist
-        theta = theta_function(user, creator_id, tM)
+        theta = theta_function(user, creator_id, user.tm)
     else:
         raise ValueError("User type error")
 
     user_payoffs = np.array(
         [
-            [0, -cU, theta * (-cU) - (tM * bM), theta * (-cU) - (tM * bM)],
-            [0, bU, theta * bU - tM * bM, theta * bU - tM * bM],
+            [0, -cU, theta * (-cU) - (user.tm * bM), theta * (-cU) - (user.tm * bM)],
+            [0, bU, theta * bU - user.tm * bM, theta * bU - user.tm * bM],
         ]
     )
     creator_payoffs = np.array(
@@ -278,15 +283,15 @@ def calculate_payoff(u: User, c: Creator):
     
     # TODO: media truste vector used with MEDIA_QUALITY_EXPECTED
 
-    trusted_ones = [
-        media_beliefs_of_creator[i]
-        for i in range(len(MEDIA_TRUST_VECTOR))
-        if u.media_trust_vector[i] == 1
-    ]
-    tM = len(trusted_ones)
+    # trusted_ones = [
+    #     media_beliefs_of_creator[i]
+    #     for i in range(len(MEDIA_TRUST_VECTOR))
+    #     if u.media_trust_vector[i] == 1
+    # ]
+    # tM = len(trusted_ones)
 
     # Payoffs are (kinda) different depending on u.strat being 2 or 3 or more
-    user_payoffs, creator_payoffs = payoff_matrix(u, tM, c.id)
+    user_payoffs, creator_payoffs = payoff_matrix(u, c.id)
     u.fitness += user_payoffs[c.strategy, u.strat]
     c.fitness += creator_payoffs[c.strategy, u.strat]
 
