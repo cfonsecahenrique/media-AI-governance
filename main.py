@@ -19,8 +19,10 @@ DEFECT = 0
 NUMBER_USERS: int
 NUMBER_COMMENTATORS: int
 NUMBER_CREATORS: int
-MEDIA_TRUST_VECTOR: list
+# MEDIA_TRUST_VECTOR: list
 MEDIA_QUALITY: list
+MEDIA_QUALITY_EXPECTED: list
+delta_q: float
 GENS: int
 RUNS: int
 USER_MUTATION_PROBABILITY: float
@@ -107,7 +109,7 @@ def initialization():
     media_population = []
 
     for i in range(0, NUMBER_USERS):
-        user_population.append(User(i))
+        user_population.append(User(i, NUMBER_COMMENTATORS))
 
     # Create population of commentators
     for j in range(0, NUMBER_COMMENTATORS):
@@ -118,26 +120,37 @@ def initialization():
         creator_population.append(Creator(k))
 
     for user in user_population:
-        user.media_trust_vector = [rand.choice([0,1]) for _ in range(NUMBER_COMMENTATORS)]
+        # initialy useless
+        user.media_trust_vector = np.zeros(NUMBER_COMMENTATORS)
 
-    # Create TRUE vector of creator reputations
-    for creator in creator_population:
-        REAL_CREATOR_STRATEGIES.append(creator.strategy)
 
+# def generate_media_beliefs():
+#     global media_image_matrix
+#     media_image_matrix = np.zeros((NUMBER_COMMENTATORS, NUMBER_CREATORS))
+#     for comm in media_population:
+#         for creator in creator_population:
+#             if rand.random() < comm.quality:
+#                 media_image_matrix[comm.id, creator.id] = creator.strategy
+#             else:
+#                 media_image_matrix[comm.id, creator.id] = rand.choice(
+#                     (DEFECT, COOPERATE)
+#                 )
+#     return media_image_matrix
+
+
+def update_reputation_all(media_trust_vector: list):
+    # delta_q
+    pass
+
+def update_reputation_single():
+    pass
+
+def update_reputation_discriminate():
+    pass
 
 def generate_media_beliefs():
-    global media_image_matrix
-    media_image_matrix = np.zeros((NUMBER_COMMENTATORS, NUMBER_CREATORS))
-    for comm in media_population:
-        for creator in creator_population:
-            if rand.random() < comm.quality:
-                media_image_matrix[comm.id, creator.id] = creator.strategy
-            else:
-                media_image_matrix[comm.id, creator.id] = rand.choice(
-                    (DEFECT, COOPERATE)
-                )
-    return media_image_matrix
-
+    # stochastically provide strat of creators with quality q
+    pass
 
 def user_evolution_step():
     if rand.random() < USER_MUTATION_PROBABILITY:
@@ -149,6 +162,13 @@ def user_evolution_step():
         user_a, user_b = rand.sample(user_population, 2)
         user_a.fitness = 0
         user_b.fitness = 0
+
+        # TODO: build trust media vector stochastically 
+        # user_a.media_trust_vector = ...
+
+        # TODO: mutate tm
+        if rand.random() < MEDIA_MUTATION_PROBABILITY:
+            user_a.tm = rand.random.choice(range(0, NUMBER_COMMENTATORS))
 
         # user A plays Z games
         for _ in range(NUMBER_CREATORS):
@@ -170,10 +190,11 @@ def user_evolution_step():
         # print("\tLearning A->B probability:", p_i)
         if rand.random() < p_i:
             user_a.strat = user_b.strat
-            user_a.media_trust_vector = user_b.media_trust_vector
-            for m in range(NUMBER_COMMENTATORS):
-                if rand.random() < MEDIA_MUTATION_PROBABILITY:
-                    user_a.media_trust_vector[m] = rand.choice([0, 1])
+            user_a.tm = user_b.tm
+        
+        # TODO: update do MEDIA_QUALITY_EXPECTED
+        # compare strategies (perceived vs real)
+        # update_reputation_all(user_a.media_trust_vector)
 
 
 def creator_evolution_step():
@@ -258,6 +279,8 @@ def payoff_matrix(user: User, tM: int, creator_id: int):
 def calculate_payoff(u: User, c: Creator):
     # Create a list of opinions of only trusted sources
     media_beliefs_of_creator = media_image_matrix[:, c.id]
+    
+    # TODO: media truste vector used with MEDIA_QUALITY_EXPECTED
     trusted_ones = [
         media_beliefs_of_creator[i]
         for i in range(len(MEDIA_TRUST_VECTOR))
@@ -375,7 +398,7 @@ def run_one_generation(logging):
 
     for generation in tqdm(range(GENS)):
         # 0. Generate media image matrix
-        media_image_matrix = generate_media_beliefs()
+        # media_image_matrix = generate_media_beliefs()
         # 1. Evolve agents
         user_evolution_step()
         # 2. Evolve Creators
