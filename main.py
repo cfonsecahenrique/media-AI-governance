@@ -16,11 +16,15 @@ from Creator import Creator
 
 COOPERATE = 1
 DEFECT = 0
+GOOD = 1
+BAD = 0
+
 NUMBER_USERS: int
 NUMBER_COMMENTATORS: int
 NUMBER_CREATORS: int
 # MEDIA_TRUST_VECTOR: list
 MEDIA_QUALITY: list
+# Vector of public reputations
 MEDIA_QUALITY_EXPECTED: list
 delta_q: float
 GENS: int
@@ -141,19 +145,35 @@ def initialization():
 #                 )
 #     return media_image_matrix
 
-def update_reputation_all(media_trust_vector: list):
-    # delta_q
-    pass
 
-def update_reputation_single():
-    pass
+def update_reputation_all(media_trust_vector: list, up_or_down: int):
+    # up = 1, down = -1
+    # up if media suggestion was right, down if it was wrong
+    global MEDIA_QUALITY_EXPECTED
+    for i in range(media_trust_vector):
+        source = media_trust_vector[i]
+        if source == GOOD:
+            # This was a trusted source, update its reputation
+            MEDIA_QUALITY_EXPECTED[i] += up_or_down * delta_q
+            # clamp it to [0,1]
+            MEDIA_QUALITY_EXPECTED[i] = max(0, min(1, MEDIA_QUALITY_EXPECTED[i]))
 
-def update_reputation_discriminate():
-    pass
+
+def update_reputation_discriminate(media_trust_vector: list, up_or_down: list):
+    # here up or down is a list of -1 or 1s
+    global MEDIA_QUALITY_EXPECTED
+    for i in range(media_trust_vector):
+        source = media_trust_vector[i]
+        if source == GOOD:
+            MEDIA_QUALITY_EXPECTED[i] += up_or_down[i] * delta_q
+            # clamp it to [0,1]
+            MEDIA_QUALITY_EXPECTED[i] = max(0, min(1, MEDIA_QUALITY_EXPECTED[i]))
+
 
 def generate_media_beliefs():
     # stochastically provide strat of creators with quality q
     pass
+
 
 def user_evolution_step():
     if rand.random() < USER_MUTATION_PROBABILITY:
@@ -165,11 +185,6 @@ def user_evolution_step():
         user_a, user_b = rand.sample(user_population, 2)
         user_a.fitness = 0
         user_b.fitness = 0
-
-        # if rand.random() < MEDIA_MUTATION_PROBABILITY:
-        #     user_a.tm = rand.random.choice(range(0, NUMBER_COMMENTATORS))
-        # if rand.random() < MEDIA_MUTATION_PROBABILITY:
-        #     user_b.tm = rand.random.choice(range(0, NUMBER_COMMENTATORS))
 
         # build trust media vector stochastically 
         user_a.media_trust_vector = rand.choices(population=media_population, weights=MEDIA_QUALITY_EXPECTED, k=user_a.tm)
