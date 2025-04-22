@@ -2,7 +2,7 @@
 instructions:
   - user population size: 100
     commentator population size: 1
-    creators population size: 20
+    creators population size: 5
     media quality: [1.]
     media trust vector: [0]
     user mutation probability: 0.05

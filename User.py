@@ -23,8 +23,14 @@ class User:
         self.fitness: int = 0
         self.strat: int = random.choice((ALL_ADOPT, NEV_ADOPT, OPTIMIST, PESSIMIST))
         self.media_trust_vector: list[Commentator]
-        self.tm: int = 0 if self.strat in [ALL_ADOPT, NEV_ADOPT] else random.choice(range(1, number_commentators))
+        if number_commentators == 1:
+            self.tm: int = 0 if self.strat in [ALL_ADOPT, NEV_ADOPT] else 1
+        else:
+            self.tm: int = 0 if self.strat in [ALL_ADOPT, NEV_ADOPT] else random.choice(range(1, number_commentators))
 
     def mutate(self, number_commentators: int):
         self.strat: str = random.choice(list({ALL_ADOPT, NEV_ADOPT, OPTIMIST, PESSIMIST}-{self.strat}))
-        self.tm: int = 0 if self.strat in [ALL_ADOPT, NEV_ADOPT] else random.choice(range(1, number_commentators))
+        if number_commentators == 1:
+            self.tm: int = 0 if self.strat in [ALL_ADOPT, NEV_ADOPT] else 1
+        else:
+            self.tm: int = 0 if self.strat in [ALL_ADOPT, NEV_ADOPT] else random.choice(range(1, number_commentators))

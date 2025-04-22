@@ -16,8 +16,6 @@ from Creator import Creator
 
 COOPERATE = 1
 DEFECT = 0
-GOOD = 1
-BAD = 0
 
 NUMBER_USERS: int
 NUMBER_COMMENTATORS: int
@@ -26,7 +24,7 @@ NUMBER_CREATORS: int
 MEDIA_QUALITY: list
 # Vector of public reputations
 MEDIA_QUALITY_EXPECTED: list
-delta_q: float
+delta_q: float = 0.001
 GENS: int
 RUNS: int
 USER_MUTATION_PROBABILITY: float
@@ -128,7 +126,7 @@ def initialization():
 
     for user in user_population:
         # initialy useless
-        user.media_trust_vector = np.zeros(NUMBER_COMMENTATORS)
+        user.media_trust_vector = []
 
 
 
@@ -150,24 +148,21 @@ def update_reputation_all(media_trust_vector: list, up_or_down: int):
     # up = 1, down = -1
     # up if media suggestion was right, down if it was wrong
     global MEDIA_QUALITY_EXPECTED
-    for i in range(media_trust_vector):
-        source = media_trust_vector[i]
-        if source == GOOD:
-            # This was a trusted source, update its reputation
-            MEDIA_QUALITY_EXPECTED[i] += up_or_down * delta_q
-            # clamp it to [0,1]
-            MEDIA_QUALITY_EXPECTED[i] = max(0, min(1, MEDIA_QUALITY_EXPECTED[i]))
+    for media in media_trust_vector:
+        MEDIA_QUALITY_EXPECTED[media.id] += up_or_down * delta_q
+        # clamp it to [0,1]
+        MEDIA_QUALITY_EXPECTED[media.id] = max(0, min(1, MEDIA_QUALITY_EXPECTED[media.id]))
 
 
 def update_reputation_discriminate(media_trust_vector: list, up_or_down: list):
     # here up or down is a list of -1 or 1s
+    # up if media suggestion was right, down if it was wrong
     global MEDIA_QUALITY_EXPECTED
-    for i in range(media_trust_vector):
-        source = media_trust_vector[i]
-        if source == GOOD:
-            MEDIA_QUALITY_EXPECTED[i] += up_or_down[i] * delta_q
-            # clamp it to [0,1]
-            MEDIA_QUALITY_EXPECTED[i] = max(0, min(1, MEDIA_QUALITY_EXPECTED[i]))
+
+    for i, media in enumerate(media_trust_vector):
+        MEDIA_QUALITY_EXPECTED[media.id] += up_or_down[i] * delta_q
+        # clamp it to [0,1]
+        MEDIA_QUALITY_EXPECTED[media.id] = max(0, min(1, MEDIA_QUALITY_EXPECTED[media.id]))
 
 
 def generate_media_beliefs():
@@ -178,7 +173,7 @@ def generate_media_beliefs():
 def user_evolution_step():
     if rand.random() < USER_MUTATION_PROBABILITY:
         random_user: User = rand.choice(user_population)
-        random_user.mutate()
+        random_user.mutate(NUMBER_COMMENTATORS)
     else:
         user_a: User
         user_b: User
@@ -186,17 +181,14 @@ def user_evolution_step():
         user_a.fitness = 0
         user_b.fitness = 0
 
-        # build trust media vector stochastically 
+        # build trust media vector stochastically
         user_a.media_trust_vector = rand.choices(population=media_population, weights=MEDIA_QUALITY_EXPECTED, k=user_a.tm)
-        print("aaaaa", user_a.media_trust_vector)
         user_b.media_trust_vector = rand.choices(population=media_population, weights=MEDIA_QUALITY_EXPECTED, k=user_b.tm)
 
         # user A plays Z games
         for _ in range(NUMBER_CREATORS):
             creator: Creator = rand.choice(creator_population)
-            calculate_payoff(user_a, creator)
-        # print("User", user_a.id, "with strategy", user_a.strat, "accumulated", user_a.fitness, "fitness")
-
+            calculate_payoff(user_a, creator)        # print("User", user_a.id, "with strategy", user_a.strat, "accumulated", user_a.fitness, "fitness")
         # user B plays Z games
         for _ in range(NUMBER_CREATORS):
             creator: Creator = rand.choice(creator_population)
@@ -212,8 +204,6 @@ def user_evolution_step():
         if rand.random() < p_i:
             user_a.strat = user_b.strat
             user_a.tm = user_b.tm
-
-        #TODO: update reputations
 
 
 def creator_evolution_step():
@@ -231,12 +221,12 @@ def creator_evolution_step():
         # Creator A plays X games
         for _ in range(NUMBER_USERS):
             user: User = rand.choice(user_population)
-            calculate_payoff(user, creator_a)
+            calculate_payoff_creators(user, creator_a)
 
         # Creator B
         for _ in range(NUMBER_USERS):
             user: User = rand.choice(user_population)
-            calculate_payoff(user, creator_b)
+            calculate_payoff_creators(user, creator_b)
 
         # learning step
         # Calculate Probability of imitation
@@ -288,11 +278,40 @@ def payoff_matrix(user: User, sum_media_beliefs_of_creator: int):
 
 def calculate_payoff(u: User, c: Creator):
     # Create a list of opinions of only trusted sources
-    # media_beliefs_of_creat
-
+   
+    # media_beliefs_of_creators
     sum_media_beliefs_of_creator = 0
+    media_beliefs_of_creator = []
     if u.tm != 0:
-        media_beliefs_of_creator = []
+        for media in u.media_trust_vector:
+            if rand.random() <= media.quality:
+                media_beliefs_of_creator.append(c.strategy)
+            else:
+                media_beliefs_of_creator.append(rand.choice([DEFECT, COOPERATE]))
+        sum_media_beliefs_of_creator = sum(media_beliefs_of_creator)
+
+    # compare media beliefs with creators strategies
+    up_or_down = np.ones(len(media_beliefs_of_creator))
+    for i in range(len(up_or_down)):
+        if media_beliefs_of_creator[i] != c.strategy:
+            up_or_down[i] = -1
+
+    # Payoffs are (kinda) different depending on u.strat being 2 or 3 or more
+    user_payoffs, creator_payoffs = payoff_matrix(u, sum_media_beliefs_of_creator)
+    u.fitness += user_payoffs[c.strategy, u.strat]
+    c.fitness += creator_payoffs[c.strategy, u.strat]
+
+    # update reputation
+    update_reputation_discriminate(u.media_trust_vector, up_or_down)
+
+
+def calculate_payoff_creators(u: User, c: Creator):
+    # Create a list of opinions of only trusted sources
+   
+    # media_beliefs_of_creators
+    sum_media_beliefs_of_creator = 0
+    media_beliefs_of_creator = []
+    if u.tm != 0:
         for media in u.media_trust_vector:
             if rand.random() <= media.quality:
                 media_beliefs_of_creator.append(c.strategy)
