@@ -1,12 +1,10 @@
 ---
 instructions:
   - user population size: 100
-    commentator population size: 1
-    creators population size: 5
-    media quality: [1.]
-    media trust vector: [0]
-    user mutation probability: 0.05
-    creator mutation probability: 0.05
-    media trust mutation: 0.01
+    commentator population size: 2
+    creators population size: 50
+    media quality: [1.0, 0.5]
+    user mutation probability: 0.01
+    creator mutation probability: 0.1
     generations: 5000
-    runs: 3
+    runs: 1

@@ -5,9 +5,9 @@ import sys
 import numpy as np
 import random as rand
 from tqdm import tqdm
-import plotext as plt
+# import plotext as plt
 import pprint
-import matplotlib.pyplot as plts
+import matplotlib.pyplot as plt
 import pandas as pd
 
 from User import User
@@ -20,7 +20,6 @@ DEFECT = 0
 NUMBER_USERS: int
 NUMBER_COMMENTATORS: int
 NUMBER_CREATORS: int
-# MEDIA_TRUST_VECTOR: list
 MEDIA_QUALITY: list
 # Vector of public reputations
 MEDIA_QUALITY_EXPECTED: list
@@ -46,20 +45,18 @@ optimist = []  # Optimistic users
 pessimist = []  # Pessimistic users
 creator_cooperator = []
 creator_defector = []
-trust_media = []
-
-media_image_matrix = np.zeros((0, 0))
+media_reputation = {}
 
 # Benefit a user receives when adopting a safe technology
 bU = 0.4
 # Cost for the user adopting unsafe technology
 cU = 0.8
 # Benefit the media gets by users paying the (same) cost to access it
-bM = 0.05
+bM = 0.01
 # Benefit for the creator when user uses
-bP = 0.4
+bP = 0.5
 # Cost paid by creators to create safe AI
-cP = 0.2
+cP = 0.1
 
 
 def read_args():
@@ -73,8 +70,6 @@ def read_args():
     global NUMBER_CREATORS
     global USER_MUTATION_PROBABILITY
     global CREATOR_MUTATION_PROBABILITY
-    global MEDIA_MUTATION_PROBABILITY
-    global MEDIA_TRUST_VECTOR
     global MEDIA_QUALITY
     global MEDIA_QUALITY_EXPECTED
     global GENS
@@ -96,8 +91,6 @@ def read_args():
         CREATOR_MUTATION_PROBABILITY = float(
             entry["creator mutation probability"]
         )  # /NUMBER_CREATORS)
-        MEDIA_MUTATION_PROBABILITY = float(entry["media trust mutation"])
-        MEDIA_TRUST_VECTOR = list(entry["media trust vector"])
         GENS = int(entry["generations"])
         RUNS = int(entry["runs"])
 
@@ -108,7 +101,6 @@ def initialization():
     global media_population
     global REAL_CREATOR_STRATEGIES
     global creator_population
-    
 
     user_population = []
     media_population = []
@@ -127,21 +119,6 @@ def initialization():
     for user in user_population:
         # initialy useless
         user.media_trust_vector = []
-
-
-
-# def generate_media_beliefs():
-#     global media_image_matrix
-#     media_image_matrix = np.zeros((NUMBER_COMMENTATORS, NUMBER_CREATORS))
-#     for comm in media_population:
-#         for creator in creator_population:
-#             if rand.random() < comm.quality:
-#                 media_image_matrix[comm.id, creator.id] = creator.strategy
-#             else:
-#                 media_image_matrix[comm.id, creator.id] = rand.choice(
-#                     (DEFECT, COOPERATE)
-#                 )
-#     return media_image_matrix
 
 
 def update_reputation_all(media_trust_vector: list, up_or_down: int):
@@ -165,9 +142,15 @@ def update_reputation_discriminate(media_trust_vector: list, up_or_down: list):
         MEDIA_QUALITY_EXPECTED[media.id] = max(0, min(1, MEDIA_QUALITY_EXPECTED[media.id]))
 
 
-def generate_media_beliefs():
-    # stochastically provide strat of creators with quality q
-    pass
+def generate_media_beliefs(u: User, c: Creator):
+    media_beliefs_of_creator = []
+    if u.tm != 0:
+        for media in u.media_trust_vector:
+            if rand.random() <= media.quality:
+                media_beliefs_of_creator.append(c.strategy)
+            else:
+                media_beliefs_of_creator.append(1-c.strategy)
+    return media_beliefs_of_creator
 
 
 def user_evolution_step():
@@ -175,6 +158,7 @@ def user_evolution_step():
         random_user: User = rand.choice(user_population)
         random_user.mutate(NUMBER_COMMENTATORS)
     else:
+        # Monte carlo step stuff
         user_a: User
         user_b: User
         user_a, user_b = rand.sample(user_population, 2)
@@ -188,19 +172,19 @@ def user_evolution_step():
         # user A plays Z games
         for _ in range(NUMBER_CREATORS):
             creator: Creator = rand.choice(creator_population)
-            calculate_payoff(user_a, creator)        # print("User", user_a.id, "with strategy", user_a.strat, "accumulated", user_a.fitness, "fitness")
+            calculate_payoff_users(user_a, creator)        
+            
         # user B plays Z games
         for _ in range(NUMBER_CREATORS):
             creator: Creator = rand.choice(creator_population)
-            calculate_payoff(user_b, creator)
-        # print("User", user_b.id, "with strategy", user_b.strat, "accumulated", user_b.fitness, "fitness")
+            calculate_payoff_users(user_b, creator)
 
         # learning step
         # Calculate Probability of imitation
         p_i: float = (
             1 + np.exp(U_SELECTION_STRENGTH * (user_a.fitness - user_b.fitness))
         ) ** (-1)
-        # print("\tLearning A->B probability:", p_i)
+
         if rand.random() < p_i:
             user_a.strat = user_b.strat
             user_a.tm = user_b.tm
@@ -276,19 +260,11 @@ def payoff_matrix(user: User, sum_media_beliefs_of_creator: int):
     return user_payoffs, creator_payoffs
 
 
-def calculate_payoff(u: User, c: Creator):
+def calculate_payoff_users(u: User, c: Creator):
     # Create a list of opinions of only trusted sources
    
     # media_beliefs_of_creators
-    sum_media_beliefs_of_creator = 0
-    media_beliefs_of_creator = []
-    if u.tm != 0:
-        for media in u.media_trust_vector:
-            if rand.random() <= media.quality:
-                media_beliefs_of_creator.append(c.strategy)
-            else:
-                media_beliefs_of_creator.append(rand.choice([DEFECT, COOPERATE]))
-        sum_media_beliefs_of_creator = sum(media_beliefs_of_creator)
+    media_beliefs_of_creator = generate_media_beliefs(u, c)
 
     # compare media beliefs with creators strategies
     up_or_down = np.ones(len(media_beliefs_of_creator))
@@ -297,7 +273,7 @@ def calculate_payoff(u: User, c: Creator):
             up_or_down[i] = -1
 
     # Payoffs are (kinda) different depending on u.strat being 2 or 3 or more
-    user_payoffs, creator_payoffs = payoff_matrix(u, sum_media_beliefs_of_creator)
+    user_payoffs, creator_payoffs = payoff_matrix(u, sum(media_beliefs_of_creator))
     u.fitness += user_payoffs[c.strategy, u.strat]
     c.fitness += creator_payoffs[c.strategy, u.strat]
 
@@ -308,55 +284,48 @@ def calculate_payoff(u: User, c: Creator):
 def calculate_payoff_creators(u: User, c: Creator):
     # Create a list of opinions of only trusted sources
    
-    # media_beliefs_of_creators
-    sum_media_beliefs_of_creator = 0
-    media_beliefs_of_creator = []
-    if u.tm != 0:
-        for media in u.media_trust_vector:
-            if rand.random() <= media.quality:
-                media_beliefs_of_creator.append(c.strategy)
-            else:
-                media_beliefs_of_creator.append(rand.choice([DEFECT, COOPERATE]))
-        sum_media_beliefs_of_creator = sum(media_beliefs_of_creator)
+    # generate media beliefs of creators
+    media_beliefs_of_creator = generate_media_beliefs(u, c)
 
     # Payoffs are (kinda) different depending on u.strat being 2 or 3 or more
-    user_payoffs, creator_payoffs = payoff_matrix(u, sum_media_beliefs_of_creator)
+    user_payoffs, creator_payoffs = payoff_matrix(u, sum(media_beliefs_of_creator))
     u.fitness += user_payoffs[c.strategy, u.strat]
     c.fitness += creator_payoffs[c.strategy, u.strat]
 
 
-def draw(g: int):
+# def draw(g: int):
+#     fig, axs = plt.subplots(3)
 
-    # Clear plot and re-draw
-    os.system("cls")
-    plt.clear_data()
-    plt.title("User Strategy Evolution Over Generations")
-    plt.xlabel("Generations")
-    plt.ylabel("Number of Users")
-    # Plot each dataset
-    plt.plot(generations, never_adopt, label="Never Adopt", color="red")
-    plt.plot(generations, always_adopt, label="Always Adopt", color="blue")
-    plt.plot(generations, optimist, label="Optimist", color="green")
-    plt.plot(generations, pessimist, label="Pessimist", color="yellow")
-    plt.plot(
-        generations,
-        creator_cooperator,
-        label="Cooperative Creators",
-        color="light green",
-        marker="square",
-    )
-    plt.plot(
-        generations,
-        creator_defector,
-        label="Defective Creators",
-        color="light red",
-        marker="square",
-    )
+#     # Clear plot and re-draw
+#     os.system("cls")
+#     plt.clear_data()
+#     plt.title("User Strategy Evolution Over Generations")
+#     plt.xlabel("Generations")
+#     plt.ylabel("Number of Users")
+#     # Plot each dataset
+#     axs[0].plot(generations, never_adopt, label="Never Adopt", color="red")
+#     axs[0].plot(generations, always_adopt, label="Always Adopt", color="blue")
+#     axs[0].plot(generations, optimist, label="Optimist", color="green")
+#     axs[0].plot(generations, pessimist, label="Pessimist", color="yellow")
+#     axs[1].plot(
+#         generations,
+#         creator_cooperator,
+#         label="Cooperative Creators",
+#         color="light green",
+#         marker="square",
+#     )
+#     axs[2].plot(
+#         generations,
+#         creator_defector,
+#         label="Defective Creators",
+#         color="light red",
+#         marker="square",
+#     )
 
-    plt.ylim(0, 1)  # Adjust Y-axis limits
-    plt.xlim(0.01, g)
-    plt.show()
-    # plt.sleep(0.01)
+#     plt.ylim(0, 1)  # Adjust Y-axis limits
+#     plt.xlim(0.01, g)
+#     plt.show()
+#     # plt.sleep(0.01)
 
 
 def count_user_strategies():
@@ -381,7 +350,12 @@ def export_results(users_strats_counts: dict, creators_strats_counts: dict):
     file_name: str = "outputs/" + str(round(time.time())) + ".csv"
     f = open(file_name, "a")
     # Write the time series of all relevant frequencies
-    f.write("generation,N,A,O,P,Cc,Cd\n")
+
+    labels = "gen,N,A,O,P,CC,CD"
+    for media in media_reputation:
+        labels += f",R{media}"
+    labels += "\n"
+    f.write(labels)
     for g in range(GENS):
         output: str = (
             str(generations[g])
@@ -397,20 +371,32 @@ def export_results(users_strats_counts: dict, creators_strats_counts: dict):
             + str(creator_cooperator[g])
             + ","
             + str(creator_defector[g])
-            + "\n"
         )
+        for media, value in media_reputation.items():
+            output += f",{value[g]}"
+        output += "\n"
         f.write(output)
     f.close()
 
-    df = pd.read_csv(file_name).drop("generation", axis=1)
+    df = pd.read_csv(file_name).drop("gen", axis=1)
+
+
+    fig, (ax1,ax2,ax3) = plt.subplots(3)
+
     # color=['r','b','orange','g','purple','brown']
-    ls=['-','-','-', '-','-.']
-    labels=['N','A','O','P','CC','CD']
-    for i, col in enumerate(['N','A','O','P','Cc']):
-        df[col].plot(ls=ls[i], label=labels[i])
-    df['Cc']
-    plts.legend(loc='upper left')
-    plts.show()
+    ls=['-','-','-', '-','-','-'] + ["dotted" for _ in media_reputation]
+    labels=['N','A','O','P','CC','CD'] + [f"R{i}" for i in media_reputation]
+    for i, col in enumerate(['N','A','O','P']):
+        df[col].plot(ls=ls[i], label=labels[i], ax=ax1)
+    for i, col in enumerate(['CC','CD']):
+        df[col].plot(ls=ls[i+4], label=labels[i+4], ax=ax2)
+    for i, col in enumerate([f"R{i}" for i in media_reputation]):
+        df[col].plot(ls=ls[i+6], label=labels[i+6], ax=ax3)
+
+    ax1.legend(loc='upper left')
+    ax2.legend(loc='upper left')
+    ax3.legend(loc='upper left')
+    plt.show()
 
 
 def print_media_trust_avg():
@@ -421,15 +407,12 @@ def print_media_trust_avg():
 
 
 def run_one_generation(logging):
-    global media_image_matrix
-
     initialization()
 
     g, n, a, o, p, cc, cd = [], [], [], [], [], [], [] 
+    r = { i: [] for i, v in enumerate(MEDIA_QUALITY_EXPECTED) }
 
     for generation in tqdm(range(GENS)):
-        # 0. Generate media image matrix
-        # media_image_matrix = generate_media_beliefs()
         # 1. Evolve agents
         user_evolution_step()
         # 2. Evolve Creators
@@ -445,11 +428,14 @@ def run_one_generation(logging):
         p.append(user_strats_dict[3] / NUMBER_USERS)
         cc.append(creator_strats_dict[COOPERATE] / NUMBER_CREATORS)
         cd.append(creator_strats_dict[DEFECT] / NUMBER_CREATORS)
+        for media in range(NUMBER_COMMENTATORS):
+            r[media].append(MEDIA_QUALITY_EXPECTED[media])
+
         # user
-        if generation % 1000 == 0 and logging:
-            draw(generation)
+        # if generation % 1000 == 0 and logging:
+        #     draw(generation)
     
-    return g, n, a, o, p, cc, cd 
+    return g, n, a, o, p, cc, cd, r
 
 
 def main(logging: bool = True):
@@ -473,9 +459,10 @@ def main(logging: bool = True):
     p_tmp = np.zeros(GENS)
     cc_tmp = np.zeros(GENS)
     cd_tmp = np.zeros(GENS)
+    r_tmp = {i: np.zeros(GENS) for i in range(NUMBER_COMMENTATORS)}
 
     for run in range(RUNS):
-        g, n, a, o, p, cc, cd = run_one_generation(logging)
+        g, n, a, o, p, cc, cd, r = run_one_generation(logging)
 
         g_tmp = np.array(g)
         n_tmp += np.array(n)
@@ -484,6 +471,8 @@ def main(logging: bool = True):
         p_tmp += np.array(p)
         cc_tmp += np.array(cc)
         cd_tmp += np.array(cd)
+        for i, v in r.items():
+            r_tmp[i] += v
     
     generations = g_tmp
     never_adopt = n_tmp/RUNS
@@ -492,6 +481,8 @@ def main(logging: bool = True):
     pessimist = p_tmp/RUNS
     creator_cooperator = cc_tmp/RUNS
     creator_defector = cd_tmp/RUNS
+    for i, v in r_tmp.items():
+        media_reputation[i] = v/RUNS
 
     # print("FINAL IMAGE MATRIX:")
     # pprint.pprint(media_image_matrix)
