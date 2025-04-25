@@ -23,13 +23,13 @@ NUMBER_CREATORS: int
 MEDIA_QUALITY: list
 # Vector of public reputations
 MEDIA_QUALITY_EXPECTED: list
-delta_q: float = 0.001
+delta_q: float = 0.0001
 GENS: int
 RUNS: int
 USER_MUTATION_PROBABILITY: float
 CREATOR_MUTATION_PROBABILITY: float
-U_SELECTION_STRENGTH = 1
-C_SELECTION_STRENGTH = 0.5
+U_SELECTION_STRENGTH = 1.
+C_SELECTION_STRENGTH = 1.
 # Ground truth of creator reputations
 REAL_CREATOR_STRATEGIES: list = []
 
@@ -54,9 +54,9 @@ cU = 0.8
 # Benefit the media gets by users paying the (same) cost to access it
 bM = 0.01
 # Benefit for the creator when user uses
-bP = 0.5
+bP = 0.4
 # Cost paid by creators to create safe AI
-cP = 0.1
+cP = 0.2
 
 
 def read_args():
