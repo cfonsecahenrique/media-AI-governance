@@ -6,7 +6,6 @@ import numpy as np
 import random as rand
 from tqdm import tqdm
 # import plotext as plt
-import pprint
 import matplotlib.pyplot as plt
 import pandas as pd
 
@@ -84,7 +83,7 @@ def read_args():
         NUMBER_COMMENTATORS = int(entry["commentator population size"])
         NUMBER_CREATORS = int(entry["creators population size"])
         MEDIA_QUALITY = list(entry["media quality"])
-        MEDIA_QUALITY_EXPECTED = np.random.rand(NUMBER_COMMENTATORS)
+        MEDIA_QUALITY_EXPECTED = np.random.uniform(low=0.5, high=1.0, size=(NUMBER_COMMENTATORS,))
         USER_MUTATION_PROBABILITY = float(
             entry["user mutation probability"]
         )  # /NUMBER_USERS)
@@ -104,6 +103,7 @@ def initialization():
 
     user_population = []
     media_population = []
+    creator_population = []
 
     for i in range(0, NUMBER_USERS):
         user_population.append(User(i, NUMBER_COMMENTATORS))
@@ -353,7 +353,7 @@ def export_results(users_strats_counts: dict, creators_strats_counts: dict):
 
     labels = "gen,N,A,O,P,CC,CD"
     for media in media_reputation:
-        labels += f",R{media}"
+        labels += f",M{media}"
     labels += "\n"
     f.write(labels)
     for g in range(GENS):
@@ -385,12 +385,12 @@ def export_results(users_strats_counts: dict, creators_strats_counts: dict):
 
     # color=['r','b','orange','g','purple','brown']
     ls=['-','-','-', '-','-','-'] + ["dotted" for _ in media_reputation]
-    labels=['N','A','O','P','CC','CD'] + [f"R{i}" for i in media_reputation]
+    labels=['N','A','O','P','CC','CD'] + [f"M{i}" for i in media_reputation]
     for i, col in enumerate(['N','A','O','P']):
         df[col].plot(ls=ls[i], label=labels[i], ax=ax1)
     for i, col in enumerate(['CC','CD']):
         df[col].plot(ls=ls[i+4], label=labels[i+4], ax=ax2)
-    for i, col in enumerate([f"R{i}" for i in media_reputation]):
+    for i, col in enumerate([f"M{i}" for i in media_reputation]):
         df[col].plot(ls=ls[i+6], label=labels[i+6], ax=ax3)
 
     ax1.legend(loc='upper left')
@@ -399,18 +399,18 @@ def export_results(users_strats_counts: dict, creators_strats_counts: dict):
     plt.show()
 
 
-def print_media_trust_avg():
-    counters = np.zeros(NUMBER_COMMENTATORS)
-    for user in user_population:
-        counters += np.array(user.media_trust_vector)
-    print(counters / NUMBER_USERS)
+# def print_media_ttrust_avg():
+#     counters = np.zeros(NUMBER_COMMENTATORS)
+#     for user in user_population:
+#         counters += np.array(user.media_trust_vector)
+#     print(counters / NUMBER_USERS)
 
 
 def run_one_generation(logging):
     initialization()
 
     g, n, a, o, p, cc, cd = [], [], [], [], [], [], [] 
-    r = { i: [] for i, v in enumerate(MEDIA_QUALITY_EXPECTED) }
+    r = { i: [] for i in range(len(MEDIA_QUALITY_EXPECTED)) }
 
     for generation in tqdm(range(GENS)):
         # 1. Evolve agents
@@ -439,7 +439,6 @@ def run_one_generation(logging):
 
 
 def main(logging: bool = True):
-    global media_image_matrix
     global REAL_CREATOR_STRATEGIES
     global generations
     global never_adopt 
@@ -448,6 +447,7 @@ def main(logging: bool = True):
     global pessimist 
     global creator_cooperator 
     global creator_defector
+    global media_reputation
 
     # Have a fixed initial configuration of trustworthiness of commentators
     read_args()
@@ -461,7 +461,11 @@ def main(logging: bool = True):
     cd_tmp = np.zeros(GENS)
     r_tmp = {i: np.zeros(GENS) for i in range(NUMBER_COMMENTATORS)}
 
-    for run in range(RUNS):
+    for run in range(1, RUNS+1):
+        print(
+            "Running simulation: " + "|" + run * "█" + (RUNS - run) * " " + f"|{run}/{RUNS}|"
+        )
+
         g, n, a, o, p, cc, cd, r = run_one_generation(logging)
 
         g_tmp = np.array(g)
@@ -471,6 +475,7 @@ def main(logging: bool = True):
         p_tmp += np.array(p)
         cc_tmp += np.array(cc)
         cd_tmp += np.array(cd)
+      
         for i, v in r.items():
             r_tmp[i] += v
     
@@ -481,12 +486,9 @@ def main(logging: bool = True):
     pessimist = p_tmp/RUNS
     creator_cooperator = cc_tmp/RUNS
     creator_defector = cd_tmp/RUNS
+
     for i, v in r_tmp.items():
         media_reputation[i] = v/RUNS
-
-    # print("FINAL IMAGE MATRIX:")
-    # pprint.pprint(media_image_matrix)
-    # print_media_trust_avg()
     
     export_results(count_user_strategies(), count_creator_strategies())
 
