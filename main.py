@@ -293,41 +293,6 @@ def calculate_payoff_creators(u: User, c: Creator):
     c.fitness += creator_payoffs[c.strategy, u.strat]
 
 
-# def draw(g: int):
-#     fig, axs = plt.subplots(3)
-
-#     # Clear plot and re-draw
-#     os.system("cls")
-#     plt.clear_data()
-#     plt.title("User Strategy Evolution Over Generations")
-#     plt.xlabel("Generations")
-#     plt.ylabel("Number of Users")
-#     # Plot each dataset
-#     axs[0].plot(generations, never_adopt, label="Never Adopt", color="red")
-#     axs[0].plot(generations, always_adopt, label="Always Adopt", color="blue")
-#     axs[0].plot(generations, optimist, label="Optimist", color="green")
-#     axs[0].plot(generations, pessimist, label="Pessimist", color="yellow")
-#     axs[1].plot(
-#         generations,
-#         creator_cooperator,
-#         label="Cooperative Creators",
-#         color="light green",
-#         marker="square",
-#     )
-#     axs[2].plot(
-#         generations,
-#         creator_defector,
-#         label="Defective Creators",
-#         color="light red",
-#         marker="square",
-#     )
-
-#     plt.ylim(0, 1)  # Adjust Y-axis limits
-#     plt.xlim(0.01, g)
-#     plt.show()
-#     # plt.sleep(0.01)
-
-
 def count_user_strategies():
     totals = {0: 0, 1: 0, 2: 0, 3: 0}
     for u in user_population:
@@ -342,7 +307,7 @@ def count_creator_strategies():
     return totals
 
 
-def export_results(users_strats_counts: dict, creators_strats_counts: dict):
+def export_results(users_strats_counts: dict, creators_strats_counts: dict, plotting: bool = False):
     print("USERS:", users_strats_counts)
     print("CREATORS:", creators_strats_counts)
 
@@ -378,35 +343,28 @@ def export_results(users_strats_counts: dict, creators_strats_counts: dict):
         f.write(output)
     f.close()
 
-    df = pd.read_csv(file_name).drop("gen", axis=1)
+    if plotting:
+        df = pd.read_csv(file_name).drop("gen", axis=1)
+
+        fig, (ax1,ax2,ax3) = plt.subplots(3)
+
+        # color=['r','b','orange','g','purple','brown']
+        ls=['-','-','-', '-','-','-'] + ["dotted" for _ in media_reputation]
+        labels=['N','A','O','P','CC','CD'] + [f"M{i}" for i in media_reputation]
+        for i, col in enumerate(['N','A','O','P']):
+            df[col].plot(ls=ls[i], label=labels[i], ax=ax1)
+        for i, col in enumerate(['CC','CD']):
+            df[col].plot(ls=ls[i+4], label=labels[i+4], ax=ax2)
+        for i, col in enumerate([f"M{i}" for i in media_reputation]):
+            df[col].plot(ls=ls[i+6], label=labels[i+6], ax=ax3)
+
+        ax1.legend(loc='upper left')
+        ax2.legend(loc='upper left')
+        ax3.legend(loc='upper left')
+        plt.show()
 
 
-    fig, (ax1,ax2,ax3) = plt.subplots(3)
-
-    # color=['r','b','orange','g','purple','brown']
-    ls=['-','-','-', '-','-','-'] + ["dotted" for _ in media_reputation]
-    labels=['N','A','O','P','CC','CD'] + [f"M{i}" for i in media_reputation]
-    for i, col in enumerate(['N','A','O','P']):
-        df[col].plot(ls=ls[i], label=labels[i], ax=ax1)
-    for i, col in enumerate(['CC','CD']):
-        df[col].plot(ls=ls[i+4], label=labels[i+4], ax=ax2)
-    for i, col in enumerate([f"M{i}" for i in media_reputation]):
-        df[col].plot(ls=ls[i+6], label=labels[i+6], ax=ax3)
-
-    ax1.legend(loc='upper left')
-    ax2.legend(loc='upper left')
-    ax3.legend(loc='upper left')
-    plt.show()
-
-
-# def print_media_ttrust_avg():
-#     counters = np.zeros(NUMBER_COMMENTATORS)
-#     for user in user_population:
-#         counters += np.array(user.media_trust_vector)
-#     print(counters / NUMBER_USERS)
-
-
-def run_one_generation(logging):
+def run_one_generation(logging: bool = False):
     initialization()
 
     g, n, a, o, p, cc, cd = [], [], [], [], [], [], [] 
@@ -431,14 +389,10 @@ def run_one_generation(logging):
         for media in range(NUMBER_COMMENTATORS):
             r[media].append(MEDIA_QUALITY_EXPECTED[media])
 
-        # user
-        # if generation % 1000 == 0 and logging:
-        #     draw(generation)
-    
     return g, n, a, o, p, cc, cd, r
 
 
-def main(logging: bool = True):
+def run(logging: bool = True, plotting: bool = False, output: bool=False):
     global REAL_CREATOR_STRATEGIES
     global generations
     global never_adopt 
@@ -490,7 +444,46 @@ def main(logging: bool = True):
     for i, v in r_tmp.items():
         media_reputation[i] = v/RUNS
     
-    export_results(count_user_strategies(), count_creator_strategies())
+    if output:
+        export_results(count_user_strategies(), count_creator_strategies(), plotting)
+
+    # calculate average cooperation rate for creators
+    nc = NUMBER_CREATORS
+    count, _ = np.histogram(creator_cooperator, bins=nc+1)
+    cc_stat_dist = count/GENS
+    avg_cooperation_creator = sum([k/nc * cc_stat_dist[k] for k in range(nc+1)])
+
+    return avg_cooperation_creator
+
+
+def run_cp_bm(n_bits: int = 6, plotting: bool = False, output: bool=False):
+    global cP
+    global bM
+
+    cps = [i / 10 for i in range(n_bits)]
+    bms = [i * 0.01 for i in range(n_bits)]
+
+    # u_heatmap = np.zeros((5,5))
+    c_heatmap = np.zeros((n_bits, n_bits))
+
+    for i, cp in enumerate(reversed(cps)):
+        cP = cp
+        for j, bm in enumerate(bms):
+            bM = bm
+            c_heatmap[i, j] = run(plotting, output)
+    
+    plt.imshow(c_heatmap, cmap='RdYlGn')
+    plt.xticks(ticks=[i for i in range(n_bits)], labels=bms)
+    plt.yticks(ticks=[i for i in range(n_bits)], labels=cps)
+    plt.xlabel("bM")
+    plt.ylabel("cP")
+    plt.show()
+
+    return c_heatmap
+
+
+def main(logging: bool = True, plotting: bool = False):
+    run_cp_bm(n_bits=11, plotting=False, output=False)    
 
 
 main(logging=False)
