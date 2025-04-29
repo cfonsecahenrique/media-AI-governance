@@ -460,7 +460,7 @@ def run_cp_bm(n_bits: int = 6, plotting: bool = False, output: bool=False):
     global cP
     global bM
 
-    cps = [i / 10 for i in range(n_bits)]
+    cps = [i / 10 - 0.5 for i in range(n_bits)]
     bms = [i * 0.01 for i in range(n_bits)]
 
     # u_heatmap = np.zeros((5,5))
@@ -474,7 +474,7 @@ def run_cp_bm(n_bits: int = 6, plotting: bool = False, output: bool=False):
     
     plt.imshow(c_heatmap, cmap='RdYlGn')
     plt.xticks(ticks=[i for i in range(n_bits)], labels=bms)
-    plt.yticks(ticks=[i for i in range(n_bits)], labels=cps)
+    plt.yticks(ticks=[i for i in range(n_bits)], labels=reversed(cps))
     plt.xlabel("bM")
     plt.ylabel("cP")
     plt.show()
