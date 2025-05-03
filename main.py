@@ -5,6 +5,7 @@ import sys
 import numpy as np
 import random as rand
 from tqdm import tqdm
+import multiprocessing
 # import plotext as plt
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -460,7 +461,7 @@ def run_cp_bm(n_bits: int = 6, plotting: bool = False, output: bool=False):
     global cP
     global bM
 
-    cps = [i / 10 - 0.5 for i in range(n_bits)]
+    cps = [round(i / (n_bits-1) - 0.5, 1) for i in range(n_bits)]
     bms = [i * 0.01 for i in range(n_bits)]
 
     # u_heatmap = np.zeros((5,5))
@@ -472,18 +473,22 @@ def run_cp_bm(n_bits: int = 6, plotting: bool = False, output: bool=False):
             bM = bm
             c_heatmap[i, j] = run(plotting, output)
     
+    plt.title("Average Creators' Cooperation Rate")
     plt.imshow(c_heatmap, cmap='RdYlGn')
     plt.xticks(ticks=[i for i in range(n_bits)], labels=bms)
     plt.yticks(ticks=[i for i in range(n_bits)], labels=reversed(cps))
     plt.xlabel("bM")
     plt.ylabel("cP")
+    plt.colorbar()
     plt.show()
 
-    return c_heatmap
+    return c_heatmap   
 
 
-def main(logging: bool = True, plotting: bool = False):
-    run_cp_bm(n_bits=11, plotting=False, output=False)    
+def multiprocess():
+    manager = multiprocessing.Manager()
+    lock = manager.Lock()
 
 
-main(logging=False)
+if __name__ == "__main__":
+    run_cp_bm(n_bits=11, plotting=False, output=False)

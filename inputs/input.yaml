@@ -3,7 +3,7 @@ instructions:
   - user population size: 100
     commentator population size: 2
     creators population size: 50
-    media quality: [1.0, 1.0]
+    media quality: [0.5, 0.5]
     user mutation probability: 0.0001
     creator mutation probability: 0.0001
     generations: 2000
