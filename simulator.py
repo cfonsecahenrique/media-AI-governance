@@ -1,6 +1,7 @@
 # system imports
 import sys
 import random as rand
+from multiprocessing import Pool, cpu_count
 
 # external libraries
 import yaml
@@ -24,7 +25,7 @@ def read_args():
     with open(file_name, "r") as f:
         data = yaml.safe_load(f)
 
-    return data
+    return data["running"], (data["simulation"], data["parameters"])
 
 
 class Simulator:
@@ -46,6 +47,16 @@ class Simulator:
         self.user_pop, self.creator_pop, self.media_pop = self.init_population(
             simulation["media quality"], parameters
         )
+
+        self.results = {
+            "never_adopt": [],  # Users who never adopt
+            "always_adopt": [],  # Users who always adopt
+            "optimist": [],  # Optimistic users
+            "pessimist": [],  # Pessimistic users
+            "creator_cooperator": [],
+            "creator_defector": [],
+            "media_reputation": {}
+        }
 
     def init_population(self, media_quality, parameters):
         user_population = []
@@ -151,15 +162,56 @@ class Simulator:
             if rand.random() < p_i:
                 creator_a.strategy = creator_b.strategy
 
+    def count_user_strategies(self):
+        totals = {0: 0, 1: 0, 2: 0, 3: 0}
+        for u in self.user_pop:
+            totals[u.strategy] += 1
+        return totals
+
+    def count_creator_strategies(self):
+        totals = {0: 0, 1: 0}
+        for c in self.creator_pop:
+            totals[c.strategy] += 1
+        return totals
+
     def run(self):
-        for generation in tqdm(range(self.gens)):
+        n, a, o, p, cc, cd = [], [], [], [], [], []
+        r = { i: [] for i in range(self.num_media) }
+
+        for _ in tqdm(range(self.gens)):
             # 1. Evolve agents
             self.user_evolution_step()
             # 2. Evolve Creators
             self.creator_evolution_step()
 
+            user_strats_dict: dict = self.count_user_strategies()
+            creator_strats_dict: dict = self.count_creator_strategies()
+
+            n.append(user_strats_dict[0] / self.num_users)
+            a.append(user_strats_dict[1] / self.num_users)
+            o.append(user_strats_dict[2] / self.num_users)
+            p.append(user_strats_dict[3] / self.num_users)
+            cc.append(creator_strats_dict[1] / self.num_creators)
+            cd.append(creator_strats_dict[0] / self.num_creators)
+            for media in range(self.num_media):
+                r[media].append(self.media_reputation[media])
+
+        return n, a, o, p, cc, cd, r
+    
+
+def run(args):
+    simulation, parameters = args
+    sim = Simulator(simulation, parameters)
+    sim.run()
+
+
+def run_simulation(run_args, sim_args):
+    num_cores = cpu_count()-1 if run_args["cores"] == "all" else run_args["cores"]
+
+    with Pool(processes=num_cores) as pool:
+        results = pool.map(run, [sim_args] * run_args["runs"])
+        
 
 if __name__ == "__main__":
-    input_data = read_args()
-    sim = Simulator(input_data["simulation"], input_data["parameters"])
-    sim.run()
+    run_args, sim_args = read_args()
+    run_simulation(run_args, sim_args)

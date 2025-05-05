@@ -1,6 +1,6 @@
-multiprocessing:
-  num processes: 2
-  num simulations: 2
+running:
+  runs: 10
+  cores: 2
 simulation:
   user population size: 100
   creator population size: 50

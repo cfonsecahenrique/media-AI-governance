@@ -80,7 +80,6 @@ class User:
             sum(media_beliefs_of_creator)
         )
         self.fitness += user_payoffs[creator.strategy, self.strategy]
-        creator.fitness += creator_payoffs[creator.strategy, self.strategy]
 
         return up_or_down
 

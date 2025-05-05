@@ -25,5 +25,4 @@ class Creator:
         user_payoffs, creator_payoffs = user.payoff_matrix(
             sum(media_beliefs_of_creator)
         )
-        user.fitness += user_payoffs[self.strategy, user.strategy]
         self.fitness += creator_payoffs[self.strategy, user.strategy]
