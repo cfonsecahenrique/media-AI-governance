@@ -10,9 +10,9 @@ import multiprocessing
 import matplotlib.pyplot as plt
 import pandas as pd
 
-from User import User
-from Commentator import Commentator
-from Creator import Creator
+from user import User
+from commentator import Commentator
+from creator import Creator
 
 COOPERATE = 1
 DEFECT = 0
@@ -196,7 +196,7 @@ def creator_evolution_step():
         random_creator = rand.choice(creator_population)
         random_creator.mutate()
     else:
-        # Monte carlo step stuff
+        # monte carlo step stuff
         creator_a: Creator
         creator_b: Creator
         creator_a, creator_b = rand.sample(creator_population, 2)
@@ -214,7 +214,7 @@ def creator_evolution_step():
             calculate_payoff_creators(user, creator_b)
 
         # learning step
-        # Calculate Probability of imitation
+        # calculate probability of imitation
         p_i: float = (
             1
             + np.exp(C_SELECTION_STRENGTH * (creator_a.fitness - creator_b.fitness))

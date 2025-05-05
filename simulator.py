@@ -1,0 +1,165 @@
+# system imports
+import sys
+import random as rand
+
+# external libraries
+import yaml
+import numpy as np
+from tqdm import tqdm
+
+# custom libraries
+from user import User
+from commentator import Commentator
+from creator import Creator
+
+
+def read_args():
+    if len(sys.argv) >= 2:
+        file_name: str = "inputs/" + str(sys.argv[1]) + ".yaml"
+    else:
+        raise ValueError(
+            "No filename provided. Please run as 'python main.py <filename>'"
+        )
+
+    with open(file_name, "r") as f:
+        data = yaml.safe_load(f)
+
+    return data
+
+
+class Simulator:
+    def __init__(self, simulation, parameters):
+        self.num_users = simulation["user population size"]
+        self.num_creators = simulation["creator population size"]
+        self.num_media = simulation["commentator population size"]
+        # self.media_quality = simulation["media quality"]
+        self.media_reputation = np.random.uniform(
+            low=0.5, high=1.0, size=(self.num_media,)
+        )
+        self.delta = simulation["media reputation update"]
+        self.user_beta = simulation["user selection strength"]
+        self.user_mutation_rate = simulation["user mutation probability"]
+        self.creator_beta = simulation["user selection strength"]
+        self.creator_mutation_rate = simulation["creator mutation probability"]
+        self.gens = simulation["generations"]
+
+        self.user_pop, self.creator_pop, self.media_pop = self.init_population(
+            simulation["media quality"], parameters
+        )
+
+    def init_population(self, media_quality, parameters):
+        user_population = []
+        creator_population = []
+        media_population = []
+
+        # create population of users
+        for i in range(0, self.num_users):
+            user_population.append(User(i, self.num_media, parameters))
+
+        # Create population of Devs
+        for k in range(0, self.num_creators):
+            creator_population.append(Creator(k))
+
+        # Create population of commentators
+        for j in range(0, self.num_media):
+            media_population.append(Commentator(j, media_quality[j]))
+
+        return user_population, creator_population, media_population
+
+    def update_reputation_discriminate(
+        self, media_trust_vector: list, up_or_down: list
+    ):
+        # here up or down is a list of -1 or 1s
+        # up if media suggestion was right, down if it was wrong
+        for i, media in enumerate(media_trust_vector):
+            self.media_reputation[media.id] += up_or_down[i] * self.delta
+            # clamp it to [0,1]
+            self.media_reputation[media.id] = max(
+                0, min(1, self.media_reputation[media.id])
+            )
+
+    def user_evolution_step(self):
+        if rand.random() < self.user_mutation_rate:
+            random_user: User = rand.choice(self.user_pop)
+            random_user.mutate()
+        else:
+            user_a: User
+            user_b: User
+            user_a, user_b = rand.sample(self.user_pop, 2)
+            user_a.fitness = 0
+            user_b.fitness = 0
+
+            # build trust media vector stochastically
+            user_a.media_trust_vector = rand.choices(
+                population=self.media_pop, weights=self.media_reputation, k=user_a.tm
+            )
+            user_b.media_trust_vector = rand.choices(
+                population=self.media_pop, weights=self.media_reputation, k=user_b.tm
+            )
+
+
+            # user A plays Z games
+            for _ in range(self.num_creators):
+                creator: Creator = rand.choice(self.creator_pop)
+                up_down = user_a.calculate_payoff(creator)
+                self.update_reputation_discriminate(user_a.media_trust_vector, up_down)
+
+            # user B plays Z games
+            for _ in range(self.num_creators):
+                creator: Creator = rand.choice(self.creator_pop)
+                up_down = user_b.calculate_payoff(creator)
+                self.update_reputation_discriminate(user_b.media_trust_vector, up_down)
+
+            # learning step
+            # calculate probability of imitation
+            p_i: float = (
+                1 + np.exp(self.user_beta * (user_a.fitness - user_b.fitness))
+            ) ** (-1)
+
+            if rand.random() < p_i:
+                user_a.strategy = user_b.strategy
+                user_a.tm = user_b.tm
+
+    def creator_evolution_step(self):
+        if rand.random() < self.creator_mutation_rate:
+            random_creator = rand.choice(self.creator_pop)
+            random_creator.mutate()
+        else:
+            # monte carlo step stuff
+            creator_a: Creator
+            creator_b: Creator
+            creator_a, creator_b = rand.sample(self.creator_pop, 2)
+            creator_a.fitness = 0
+            creator_b.fitness = 0
+
+            # creator A plays X games
+            for _ in range(self.num_users):
+                user: User = rand.choice(self.user_pop)
+                creator_a.calculate_payoff(user)
+
+            # creator B plays X games
+            for _ in range(self.num_users):
+                user: User = rand.choice(self.user_pop)
+                creator_b.calculate_payoff(user)
+
+            # learning step
+            # calculate probability of imitation
+            p_i: float = (
+                1 + np.exp(self.creator_beta * (creator_a.fitness - creator_b.fitness))
+            ) ** (-1)
+
+            if rand.random() < p_i:
+                creator_a.strategy = creator_b.strategy
+
+    def run(self):
+        for generation in tqdm(range(self.gens)):
+            # 1. Evolve agents
+            self.user_evolution_step()
+            # 2. Evolve Creators
+            self.creator_evolution_step()
+
+
+if __name__ == "__main__":
+    input_data = read_args()
+    sim = Simulator(input_data["simulation"], input_data["parameters"])
+    sim.run()
