@@ -1,7 +1,7 @@
 # system imports
 import sys
 import random as rand
-from multiprocessing import Pool, cpu_count
+from multiprocessing import Pool, cpu_count, current_process
 
 # external libraries
 import yaml
@@ -55,7 +55,7 @@ class Simulator:
             "pessimist": [],  # Pessimistic users
             "creator_cooperator": [],
             "creator_defector": [],
-            "media_reputation": {}
+            "media_reputation": {},
         }
 
     def init_population(self, media_quality, parameters):
@@ -107,7 +107,6 @@ class Simulator:
             user_b.media_trust_vector = rand.choices(
                 population=self.media_pop, weights=self.media_reputation, k=user_b.tm
             )
-
 
             # user A plays Z games
             for _ in range(self.num_creators):
@@ -174,11 +173,14 @@ class Simulator:
             totals[c.strategy] += 1
         return totals
 
-    def run(self):
-        n, a, o, p, cc, cd = [], [], [], [], [], []
-        r = { i: [] for i in range(self.num_media) }
+    def write_output(self):
+        pass
 
-        for _ in tqdm(range(self.gens)):
+    def run(self, filename: str=""):
+        g, n, a, o, p, cc, cd = [], [], [], [], [], [], []
+        r = {i: [] for i in range(self.num_media)}
+
+        for gen in range(self.gens):
             # 1. Evolve agents
             self.user_evolution_step()
             # 2. Evolve Creators
@@ -187,6 +189,7 @@ class Simulator:
             user_strats_dict: dict = self.count_user_strategies()
             creator_strats_dict: dict = self.count_creator_strategies()
 
+            g.append(gen)
             n.append(user_strats_dict[0] / self.num_users)
             a.append(user_strats_dict[1] / self.num_users)
             o.append(user_strats_dict[2] / self.num_users)
@@ -196,21 +199,51 @@ class Simulator:
             for media in range(self.num_media):
                 r[media].append(self.media_reputation[media])
 
+        if filename:
+            path = "outputs/" + filename + ".csv"
+            with open(path, "r") as f:
+                labels = "gen,N,A,O,P,CC,CD"
+                for media in range(self.num_media):
+                    labels += f",M{media}"
+                labels += "\n"
+                f.write(labels)
+                for g in range(self.gens):
+                    output: str = (
+                        str(generations[g])
+                        + ","
+                        + str(never_adopt[g])
+                        + ","
+                        + str(always_adopt[g])
+                        + ","
+                        + str(optimist[g])
+                        + ","
+                        + str(pessimist[g])
+                        + ","
+                        + str(creator_cooperator[g])
+                        + ","
+                        + str(creator_defector[g])
+                    )
+                    for media, value in media_reputation.items():
+                        output += f",{value[g]}"
+                    output += "\n"
+                    f.write(output)
+
         return n, a, o, p, cc, cd, r
-    
+
 
 def run(args):
+    # print(f"Running simulation at {current_process()._name}")
     simulation, parameters = args
     sim = Simulator(simulation, parameters)
     sim.run()
 
 
 def run_simulation(run_args, sim_args):
-    num_cores = cpu_count()-1 if run_args["cores"] == "all" else run_args["cores"]
+    num_cores = cpu_count() - 1 if run_args["cores"] == "all" else run_args["cores"]
 
     with Pool(processes=num_cores) as pool:
-        results = pool.map(run, [sim_args] * run_args["runs"])
-        
+        list(tqdm(pool.imap(run, [sim_args] * run_args["runs"]), total=run_args["runs"]))
+
 
 if __name__ == "__main__":
     run_args, sim_args = read_args()

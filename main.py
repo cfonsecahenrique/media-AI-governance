@@ -6,6 +6,7 @@ import numpy as np
 import random as rand
 from tqdm import tqdm
 import multiprocessing
+
 # import plotext as plt
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -28,8 +29,8 @@ GENS: int
 RUNS: int
 USER_MUTATION_PROBABILITY: float
 CREATOR_MUTATION_PROBABILITY: float
-U_SELECTION_STRENGTH = 1.
-C_SELECTION_STRENGTH = 1.
+U_SELECTION_STRENGTH = 1.0
+C_SELECTION_STRENGTH = 1.0
 # Ground truth of creator reputations
 REAL_CREATOR_STRATEGIES: list = []
 
@@ -61,9 +62,11 @@ cP = 0.2
 
 def read_args():
     if sys.argv[1]:
-        file_name: str = "inputs/" + str(sys.argv[1]) + ".yaml" 
+        file_name: str = "inputs/" + str(sys.argv[1]) + ".yaml"
     else:
-        raise ValueError("No filename provided. Please run as 'python main.py <filename>'")
+        raise ValueError(
+            "No filename provided. Please run as 'python main.py <filename>'"
+        )
 
     global NUMBER_USERS
     global NUMBER_COMMENTATORS
@@ -84,7 +87,9 @@ def read_args():
         NUMBER_COMMENTATORS = int(entry["commentator population size"])
         NUMBER_CREATORS = int(entry["creators population size"])
         MEDIA_QUALITY = list(entry["media quality"])
-        MEDIA_QUALITY_EXPECTED = np.random.uniform(low=0.5, high=1.0, size=(NUMBER_COMMENTATORS,))
+        MEDIA_QUALITY_EXPECTED = np.random.uniform(
+            low=0.5, high=1.0, size=(NUMBER_COMMENTATORS,)
+        )
         USER_MUTATION_PROBABILITY = float(
             entry["user mutation probability"]
         )  # /NUMBER_USERS)
@@ -129,7 +134,9 @@ def update_reputation_all(media_trust_vector: list, up_or_down: int):
     for media in media_trust_vector:
         MEDIA_QUALITY_EXPECTED[media.id] += up_or_down * delta_q
         # clamp it to [0,1]
-        MEDIA_QUALITY_EXPECTED[media.id] = max(0, min(1, MEDIA_QUALITY_EXPECTED[media.id]))
+        MEDIA_QUALITY_EXPECTED[media.id] = max(
+            0, min(1, MEDIA_QUALITY_EXPECTED[media.id])
+        )
 
 
 def update_reputation_discriminate(media_trust_vector: list, up_or_down: list):
@@ -140,7 +147,9 @@ def update_reputation_discriminate(media_trust_vector: list, up_or_down: list):
     for i, media in enumerate(media_trust_vector):
         MEDIA_QUALITY_EXPECTED[media.id] += up_or_down[i] * delta_q
         # clamp it to [0,1]
-        MEDIA_QUALITY_EXPECTED[media.id] = max(0, min(1, MEDIA_QUALITY_EXPECTED[media.id]))
+        MEDIA_QUALITY_EXPECTED[media.id] = max(
+            0, min(1, MEDIA_QUALITY_EXPECTED[media.id])
+        )
 
 
 def generate_media_beliefs(u: User, c: Creator):
@@ -150,7 +159,7 @@ def generate_media_beliefs(u: User, c: Creator):
             if rand.random() <= media.quality:
                 media_beliefs_of_creator.append(c.strategy)
             else:
-                media_beliefs_of_creator.append(1-c.strategy)
+                media_beliefs_of_creator.append(1 - c.strategy)
     return media_beliefs_of_creator
 
 
@@ -167,14 +176,18 @@ def user_evolution_step():
         user_b.fitness = 0
 
         # build trust media vector stochastically
-        user_a.media_trust_vector = rand.choices(population=media_population, weights=MEDIA_QUALITY_EXPECTED, k=user_a.tm)
-        user_b.media_trust_vector = rand.choices(population=media_population, weights=MEDIA_QUALITY_EXPECTED, k=user_b.tm)
+        user_a.media_trust_vector = rand.choices(
+            population=media_population, weights=MEDIA_QUALITY_EXPECTED, k=user_a.tm
+        )
+        user_b.media_trust_vector = rand.choices(
+            population=media_population, weights=MEDIA_QUALITY_EXPECTED, k=user_b.tm
+        )
 
         # user A plays Z games
         for _ in range(NUMBER_CREATORS):
             creator: Creator = rand.choice(creator_population)
-            calculate_payoff_users(user_a, creator)        
-            
+            calculate_payoff_users(user_a, creator)
+
         # user B plays Z games
         for _ in range(NUMBER_CREATORS):
             creator: Creator = rand.choice(creator_population)
@@ -216,8 +229,7 @@ def creator_evolution_step():
         # learning step
         # calculate probability of imitation
         p_i: float = (
-            1
-            + np.exp(C_SELECTION_STRENGTH * (creator_a.fitness - creator_b.fitness))
+            1 + np.exp(C_SELECTION_STRENGTH * (creator_a.fitness - creator_b.fitness))
         ) ** (-1)
         if rand.random() < p_i:
             creator_a.strategy = creator_b.strategy
@@ -263,7 +275,7 @@ def payoff_matrix(user: User, sum_media_beliefs_of_creator: int):
 
 def calculate_payoff_users(u: User, c: Creator):
     # Create a list of opinions of only trusted sources
-   
+
     # media_beliefs_of_creators
     media_beliefs_of_creator = generate_media_beliefs(u, c)
 
@@ -284,7 +296,7 @@ def calculate_payoff_users(u: User, c: Creator):
 
 def calculate_payoff_creators(u: User, c: Creator):
     # Create a list of opinions of only trusted sources
-   
+
     # generate media beliefs of creators
     media_beliefs_of_creator = generate_media_beliefs(u, c)
 
@@ -308,7 +320,9 @@ def count_creator_strategies():
     return totals
 
 
-def export_results(users_strats_counts: dict, creators_strats_counts: dict, plotting: bool = False):
+def export_results(
+    users_strats_counts: dict, creators_strats_counts: dict, plotting: bool = False
+):
     print("USERS:", users_strats_counts)
     print("CREATORS:", creators_strats_counts)
 
@@ -347,29 +361,29 @@ def export_results(users_strats_counts: dict, creators_strats_counts: dict, plot
     if plotting:
         df = pd.read_csv(file_name).drop("gen", axis=1)
 
-        fig, (ax1,ax2,ax3) = plt.subplots(3)
+        fig, (ax1, ax2, ax3) = plt.subplots(3)
 
         # color=['r','b','orange','g','purple','brown']
-        ls=['-','-','-', '-','-','-'] + ["dotted" for _ in media_reputation]
-        labels=['N','A','O','P','CC','CD'] + [f"M{i}" for i in media_reputation]
-        for i, col in enumerate(['N','A','O','P']):
+        ls = ["-", "-", "-", "-", "-", "-"] + ["dotted" for _ in media_reputation]
+        labels = ["N", "A", "O", "P", "CC", "CD"] + [f"M{i}" for i in media_reputation]
+        for i, col in enumerate(["N", "A", "O", "P"]):
             df[col].plot(ls=ls[i], label=labels[i], ax=ax1)
-        for i, col in enumerate(['CC','CD']):
-            df[col].plot(ls=ls[i+4], label=labels[i+4], ax=ax2)
+        for i, col in enumerate(["CC", "CD"]):
+            df[col].plot(ls=ls[i + 4], label=labels[i + 4], ax=ax2)
         for i, col in enumerate([f"M{i}" for i in media_reputation]):
-            df[col].plot(ls=ls[i+6], label=labels[i+6], ax=ax3)
+            df[col].plot(ls=ls[i + 6], label=labels[i + 6], ax=ax3)
 
-        ax1.legend(loc='upper left')
-        ax2.legend(loc='upper left')
-        ax3.legend(loc='upper left')
+        ax1.legend(loc="upper left")
+        ax2.legend(loc="upper left")
+        ax3.legend(loc="upper left")
         plt.show()
 
 
 def run_one_generation(logging: bool = False):
     initialization()
 
-    g, n, a, o, p, cc, cd = [], [], [], [], [], [], [] 
-    r = { i: [] for i in range(len(MEDIA_QUALITY_EXPECTED)) }
+    g, n, a, o, p, cc, cd = [], [], [], [], [], [], []
+    r = {i: [] for i in range(len(MEDIA_QUALITY_EXPECTED))}
 
     for generation in tqdm(range(GENS)):
         # 1. Evolve agents
@@ -393,14 +407,14 @@ def run_one_generation(logging: bool = False):
     return g, n, a, o, p, cc, cd, r
 
 
-def run(logging: bool = True, plotting: bool = False, output: bool=False):
+def run(logging: bool = True, plotting: bool = False, output: bool = False):
     global REAL_CREATOR_STRATEGIES
     global generations
-    global never_adopt 
-    global always_adopt 
+    global never_adopt
+    global always_adopt
     global optimist
-    global pessimist 
-    global creator_cooperator 
+    global pessimist
+    global creator_cooperator
     global creator_defector
     global media_reputation
 
@@ -416,9 +430,13 @@ def run(logging: bool = True, plotting: bool = False, output: bool=False):
     cd_tmp = np.zeros(GENS)
     r_tmp = {i: np.zeros(GENS) for i in range(NUMBER_COMMENTATORS)}
 
-    for run in range(1, RUNS+1):
+    for run in range(1, RUNS + 1):
         print(
-            "Running simulation: " + "|" + run * "█" + (RUNS - run) * " " + f"|{run}/{RUNS}|"
+            "Running simulation: "
+            + "|"
+            + run * "█"
+            + (RUNS - run) * " "
+            + f"|{run}/{RUNS}|"
         )
 
         g, n, a, o, p, cc, cd, r = run_one_generation(logging)
@@ -430,38 +448,38 @@ def run(logging: bool = True, plotting: bool = False, output: bool=False):
         p_tmp += np.array(p)
         cc_tmp += np.array(cc)
         cd_tmp += np.array(cd)
-      
+
         for i, v in r.items():
             r_tmp[i] += v
-    
+
     generations = g_tmp
-    never_adopt = n_tmp/RUNS
-    always_adopt = a_tmp/RUNS
-    optimist = o_tmp/RUNS
-    pessimist = p_tmp/RUNS
-    creator_cooperator = cc_tmp/RUNS
-    creator_defector = cd_tmp/RUNS
+    never_adopt = n_tmp / RUNS
+    always_adopt = a_tmp / RUNS
+    optimist = o_tmp / RUNS
+    pessimist = p_tmp / RUNS
+    creator_cooperator = cc_tmp / RUNS
+    creator_defector = cd_tmp / RUNS
 
     for i, v in r_tmp.items():
-        media_reputation[i] = v/RUNS
-    
+        media_reputation[i] = v / RUNS
+
     if output:
         export_results(count_user_strategies(), count_creator_strategies(), plotting)
 
     # calculate average cooperation rate for creators
     nc = NUMBER_CREATORS
-    count, _ = np.histogram(creator_cooperator, bins=nc+1)
-    cc_stat_dist = count/GENS
-    avg_cooperation_creator = sum([k/nc * cc_stat_dist[k] for k in range(nc+1)])
+    count, _ = np.histogram(creator_cooperator, bins=nc + 1)
+    cc_stat_dist = count / GENS
+    avg_cooperation_creator = sum([k / nc * cc_stat_dist[k] for k in range(nc + 1)])
 
     return avg_cooperation_creator
 
 
-def run_cp_bm(n_bits: int = 6, plotting: bool = False, output: bool=False):
+def run_cp_bm(n_bits: int = 6, plotting: bool = False, output: bool = False):
     global cP
     global bM
 
-    cps = [round(i / (n_bits-1) - 0.5, 1) for i in range(n_bits)]
+    cps = [round(i / (n_bits - 1) - 0.5, 1) for i in range(n_bits)]
     bms = [i * 0.01 for i in range(n_bits)]
 
     # u_heatmap = np.zeros((5,5))
@@ -472,9 +490,9 @@ def run_cp_bm(n_bits: int = 6, plotting: bool = False, output: bool=False):
         for j, bm in enumerate(bms):
             bM = bm
             c_heatmap[i, j] = run(plotting, output)
-    
+
     plt.title("Average Creators' Cooperation Rate")
-    plt.imshow(c_heatmap, cmap='RdYlGn')
+    plt.imshow(c_heatmap, cmap="RdYlGn")
     plt.xticks(ticks=[i for i in range(n_bits)], labels=bms)
     plt.yticks(ticks=[i for i in range(n_bits)], labels=reversed(cps))
     plt.xlabel("bM")
@@ -482,7 +500,7 @@ def run_cp_bm(n_bits: int = 6, plotting: bool = False, output: bool=False):
     plt.colorbar()
     plt.show()
 
-    return c_heatmap   
+    return c_heatmap
 
 
 def multiprocess():

@@ -90,10 +90,10 @@ class User:
     def payoff_matrix(self, sum_media_beliefs_of_creator: int):
         theta = -1
         if self.strategy == 0:
-        # Never Adopt
+            # Never Adopt
             pass
         elif self.strategy == 1:
-        # Always Adopt
+            # Always Adopt
             pass
         elif self.strategy == 2:
             # Optimist
