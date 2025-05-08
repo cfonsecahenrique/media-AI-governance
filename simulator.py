@@ -1,6 +1,8 @@
 # system imports
+import os
 import sys
 import random as rand
+from time import time
 from multiprocessing import Pool, cpu_count, current_process
 
 # external libraries
@@ -24,6 +26,10 @@ def read_args():
 
     with open(file_name, "r") as f:
         data = yaml.safe_load(f)
+
+    outdir = f"./outputs/{round(time())}"
+    os.mkdir(outdir)
+    data["simulation"]["outdir"] = outdir 
 
     return data["running"], (data["simulation"], data["parameters"])
 
@@ -173,14 +179,28 @@ class Simulator:
             totals[c.strategy] += 1
         return totals
 
-    def write_output(self):
-        pass
+    def write_output(self, filename, n, a, o, p, cc, cd, r):
+        path = f"{filename}.csv"
+        with open(path, "a") as file:
+            labels = "gen,N,A,O,P,CC,CD"
+            for media in range(self.num_media):
+                labels += f",M{media+1}"
+            labels += "\n"
+            file.write(labels)
+
+            for g in range(self.gens):
+                output = f"{g},{n[g]},{a[g]},{o[g]},{p[g]},{cc[g]},{cd[g]}"
+        
+                for media, value in r.items():
+                    output += f",{value[g]}"
+                output += "\n"
+                file.write(output)
 
     def run(self, filename: str=""):
-        g, n, a, o, p, cc, cd = [], [], [], [], [], [], []
+        n, a, o, p, cc, cd = [], [], [], [], [], []
         r = {i: [] for i in range(self.num_media)}
 
-        for gen in range(self.gens):
+        for _ in range(self.gens):
             # 1. Evolve agents
             self.user_evolution_step()
             # 2. Evolve Creators
@@ -189,7 +209,6 @@ class Simulator:
             user_strats_dict: dict = self.count_user_strategies()
             creator_strats_dict: dict = self.count_creator_strategies()
 
-            g.append(gen)
             n.append(user_strats_dict[0] / self.num_users)
             a.append(user_strats_dict[1] / self.num_users)
             o.append(user_strats_dict[2] / self.num_users)
@@ -200,42 +219,21 @@ class Simulator:
                 r[media].append(self.media_reputation[media])
 
         if filename:
-            path = "outputs/" + filename + ".csv"
-            with open(path, "r") as f:
-                labels = "gen,N,A,O,P,CC,CD"
-                for media in range(self.num_media):
-                    labels += f",M{media}"
-                labels += "\n"
-                f.write(labels)
-                for g in range(self.gens):
-                    output: str = (
-                        str(generations[g])
-                        + ","
-                        + str(never_adopt[g])
-                        + ","
-                        + str(always_adopt[g])
-                        + ","
-                        + str(optimist[g])
-                        + ","
-                        + str(pessimist[g])
-                        + ","
-                        + str(creator_cooperator[g])
-                        + ","
-                        + str(creator_defector[g])
-                    )
-                    for media, value in media_reputation.items():
-                        output += f",{value[g]}"
-                    output += "\n"
-                    f.write(output)
+            self.write_output(filename, n, a, o, p, cc, cd, r)
 
-        return n, a, o, p, cc, cd, r
+
+def clear_output(path):
+    for file in os.listdir(path):
+        with open(path+file, "r") as f:
+            lines = f.readlines()
+            print(lines)
+
 
 
 def run(args):
-    # print(f"Running simulation at {current_process()._name}")
     simulation, parameters = args
     sim = Simulator(simulation, parameters)
-    sim.run()
+    sim.run(filename=f"{simulation["outdir"]}/{current_process()._identity}")
 
 
 def run_simulation(run_args, sim_args):
@@ -246,5 +244,6 @@ def run_simulation(run_args, sim_args):
 
 
 if __name__ == "__main__":
-    run_args, sim_args = read_args()
-    run_simulation(run_args, sim_args)
+    # run_args, sim_args = read_args()
+    # run_simulation(run_args, sim_args)
+    clear_output("./outputs/1746742306/")

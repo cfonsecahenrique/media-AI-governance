@@ -11,7 +11,7 @@ simulation:
   creator selection strength: 1.0
   user mutation probability: 0.0001
   creator mutation probability: 0.0001
-  generations: 2000
+  generations: 100
 parameters:
   user benefit: 0.4
   user cost: 0.8
