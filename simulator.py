@@ -223,10 +223,16 @@ class Simulator:
 
 
 def clear_output(path):
-    for file in os.listdir(path):
-        with open(path+file, "r") as f:
-            lines = f.readlines()
-            print(lines)
+    new_lines = ['gen,N,A,O,P,CC,CD,M1,M2\n']
+    filename = path.removeprefix("./outputs/")
+    with open(filename[:-1]).csv:
+
+    # for file in os.listdir(path):
+    #     with open(path+file, "r") as f:
+    #         lines = f.readlines()
+
+    #         lines[1:].remove('gen,N,A,O,P,CC,CD,M1,M2\n')
+    #         print(lines)
 
 
 
@@ -246,4 +252,4 @@ def run_simulation(run_args, sim_args):
 if __name__ == "__main__":
     # run_args, sim_args = read_args()
     # run_simulation(run_args, sim_args)
-    clear_output("./outputs/1746742306/")
+    clear_output("./outputs/1746743977/")
