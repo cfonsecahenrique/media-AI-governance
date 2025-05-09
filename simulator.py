@@ -223,30 +223,52 @@ class Simulator:
             self.write_output(filename, n, a, o, p, cc, cd, r)
 
 
-def get_average_output(path, gens):
-    prefix = "./outputs/"
-    filename = path.removeprefix(prefix)
-    # with open(f"{filename[:-1]}.csv") as out_file:
-    #     pass
-    new_lines = []
+# def get_average_output(path, gens, runs, num_media):
+#     prefix = "./outputs/"
+#     filename = path.removeprefix(prefix)
+#     # with open(f"{filename[:-1]}.csv") as out_file:
+#     #     pass
+#     average = np.zeros((7 + num_media, gens))
+#     standard_dev = np.zeros((7 + num_media, gens))
+#     for file in os.listdir(path):
+#         with open(path + file, "r") as f:
+#             lines = f.readlines()
+#             header = lines[0]
+#             chunks = [lines[i + 1 : i + gens + 1] for i in range(0, len(lines), gens + 1)]
+
+#             for chunk in chunks:
+#                 tmp_chunk = []
+#                 for line in chunk:
+#                     tmp_chunk.append(np.fromstring(line[:-1], dtype=float, sep=','))
+#                 average_results += np.matrix(tmp_chunk).transpose()
+
+#     print(average_results/runs)
+
+
+def get_average_output(path, gens, runs):
+    # prefix = "./outputs/"
+    # filename = path.removeprefix(prefix)
+
+    data = pd.DataFrame()
     for file in os.listdir(path):
-        with open(path + file, "r") as f:
-            lines = f.readlines()
-            header = lines[0]
-            chunks = [
-                lines[i + 1 : i + gens + 1] for i in range(0, len(lines), gens + 1)
-            ]
-        #     print(chunks)
-    #         for chunk in chunks:
-    #             for line in chunk:
-    #                 new_line = [float(i) for i in line.split(",")]
-    #                 new_lines.append(new_line)
+        data = pd.concat([data, pd.read_csv(path + file)], ignore_index=True)
+    data = data[data.gen != "gen"]
+
+    columns = data.columns[1:]
+
+    for col in columns:
+        data[col] = data[col].astype(float)
+
+    average = {col: [] for col in columns}
+    standard_dev = {col: [] for col in columns}
+
+    for gen in range(gens):
+        df = data.iloc[[i * gens + gen for i in range(runs)]]
+        for col in columns:
+            average[col].append(df[col].mean())
+            standard_dev[col].append(df[col].std())
 
 
-    # print(new_lines)
-    # print(np.average(np.array(new_lines), axis=0))
-
-    # print(lines)
 
 
 def run(args):
@@ -267,4 +289,4 @@ def run_simulation(run_args, sim_args):
 if __name__ == "__main__":
     # run_args, sim_args = read_args()
     # run_simulation(run_args, sim_args)
-    get_average_output("./outputs/1746787514/", 10)
+    get_average_output("./outputs/1746743977/", 10, 10)
