@@ -7,11 +7,11 @@ simulation:
   commentator population size: 2
   media quality: [0.5, 0.5]
   media reputation update: 0.0001
-  user selection strength: 1.0
-  creator selection strength: 1.0
+  user selection strength: 10.0
+  creator selection strength: 10.0
   user mutation probability: 0.0001
   creator mutation probability: 0.0001
-  generations: 10
+  generations: 100
 parameters:
   user benefit: 0.4
   user cost: 0.8

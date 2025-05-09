@@ -9,6 +9,7 @@ from multiprocessing import Pool, cpu_count, current_process
 import yaml
 import numpy as np
 from tqdm import tqdm
+import pandas as pd
 
 # custom libraries
 from user import User
@@ -29,7 +30,7 @@ def read_args():
 
     outdir = f"./outputs/{round(time())}"
     os.mkdir(outdir)
-    data["simulation"]["outdir"] = outdir 
+    data["simulation"]["outdir"] = outdir
 
     return data["running"], (data["simulation"], data["parameters"])
 
@@ -190,13 +191,13 @@ class Simulator:
 
             for g in range(self.gens):
                 output = f"{g},{n[g]},{a[g]},{o[g]},{p[g]},{cc[g]},{cd[g]}"
-        
+
                 for media, value in r.items():
                     output += f",{value[g]}"
                 output += "\n"
                 file.write(output)
 
-    def run(self, filename: str=""):
+    def run(self, filename: str = ""):
         n, a, o, p, cc, cd = [], [], [], [], [], []
         r = {i: [] for i in range(self.num_media)}
 
@@ -222,18 +223,30 @@ class Simulator:
             self.write_output(filename, n, a, o, p, cc, cd, r)
 
 
-def clear_output(path):
-    new_lines = ['gen,N,A,O,P,CC,CD,M1,M2\n']
-    filename = path.removeprefix("./outputs/")
-    with open(filename[:-1]).csv:
+def get_average_output(path, gens):
+    prefix = "./outputs/"
+    filename = path.removeprefix(prefix)
+    # with open(f"{filename[:-1]}.csv") as out_file:
+    #     pass
+    new_lines = []
+    for file in os.listdir(path):
+        with open(path + file, "r") as f:
+            lines = f.readlines()
+            header = lines[0]
+            chunks = [
+                lines[i + 1 : i + gens + 1] for i in range(0, len(lines), gens + 1)
+            ]
+        #     print(chunks)
+    #         for chunk in chunks:
+    #             for line in chunk:
+    #                 new_line = [float(i) for i in line.split(",")]
+    #                 new_lines.append(new_line)
 
-    # for file in os.listdir(path):
-    #     with open(path+file, "r") as f:
-    #         lines = f.readlines()
 
-    #         lines[1:].remove('gen,N,A,O,P,CC,CD,M1,M2\n')
-    #         print(lines)
+    # print(new_lines)
+    # print(np.average(np.array(new_lines), axis=0))
 
+    # print(lines)
 
 
 def run(args):
@@ -246,10 +259,12 @@ def run_simulation(run_args, sim_args):
     num_cores = cpu_count() - 1 if run_args["cores"] == "all" else run_args["cores"]
 
     with Pool(processes=num_cores) as pool:
-        list(tqdm(pool.imap(run, [sim_args] * run_args["runs"]), total=run_args["runs"]))
+        list(
+            tqdm(pool.imap(run, [sim_args] * run_args["runs"]), total=run_args["runs"])
+        )
 
 
 if __name__ == "__main__":
     # run_args, sim_args = read_args()
     # run_simulation(run_args, sim_args)
-    clear_output("./outputs/1746743977/")
+    get_average_output("./outputs/1746787514/", 10)
