@@ -22,7 +22,9 @@ class User:
     def __init__(self, user_id: int, parameters):
         self.id = user_id
         self.fitness: int = 0
-        self.strategy: int = random.choice((ALL_REJECT, ALL_ADOPT, GOOD_MEDIA, BAD_MEDIA))
+        self.strategy: int = random.choice(
+            (ALL_REJECT, ALL_ADOPT, GOOD_MEDIA, BAD_MEDIA)
+        )
 
         self.q = parameters["media quality"]
         self.bU = parameters["user benefit"]
@@ -43,33 +45,18 @@ class User:
     def payoff_matrix(self):
         user_payoffs = np.array(
             [
-                [
-                    0,
-                    -self.cU,
-                    -0.5 * self.cU,
-                    -(1 - self.q) * self.cU - self.cI
-                ],
-                [
-                    0,
-                    self.bU,
-                    0.5 * self.bU,
-                    self.q * self.bU - self.cI
-                ],
+                [0, -self.cU, -0.5 * self.cU, -(1 - self.q) * self.cU - self.cI],
+                [0, self.bU, 0.5 * self.bU, self.q * self.bU - self.cI],
             ]
         )
         creator_payoffs = np.array(
             [
-                [
-                    0,
-                    self.bP,
-                    0.5 * self.bP,
-                    (1 - self.q) * self.bP
-                ],
+                [0, self.bP, 0.5 * self.bP, (1 - self.q) * self.bP],
                 [
                     -self.cP,
                     self.bP - self.cP,
                     0.5 * self.bP - self.cP,
-                    self.q * self.bP - self.cP
+                    self.q * self.bP - self.cP,
                 ],
             ]
         )

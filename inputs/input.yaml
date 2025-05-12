@@ -1,19 +1,18 @@
 running:
-  runs: 10
-  cores: 2
+  runs: 100
+  cores: 10
 simulation:
   user population size: 100
   creator population size: 50
-  commentator population size: 2
   user selection strength: 10.0
   creator selection strength: 10.0
-  user mutation probability: 0.0001
-  creator mutation probability: 0.0001
+  user mutation probability: 0.001
+  creator mutation probability: 0.001
   generations: 2000
 parameters:
-  media quality: 0.5
+  media quality: 0.9
   user benefit: 0.4
   user cost: 0.8
-  cost investigation: 0.01
+  cost investigation: 0.05
   creator benefit: 0.4
-  creator cost: 0.2
+  creator cost: -0.2

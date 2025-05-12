@@ -1,37 +1,12 @@
 # system imports
-import os
-import sys
-import random as rand
-from time import time
-from multiprocessing import Pool, cpu_count, current_process
+import random
 
 # external libraries
-import yaml
 import numpy as np
-from tqdm import tqdm
-import pandas as pd
 
 # custom libraries
 from user import User
 from creator import Creator
-
-
-def read_args():
-    if len(sys.argv) >= 2:
-        file_name: str = "inputs/" + str(sys.argv[1]) + ".yaml"
-    else:
-        raise ValueError(
-            "No filename provided. Please run as 'python main.py <filename>'"
-        )
-
-    with open(file_name, "r") as f:
-        data = yaml.safe_load(f)
-
-    outdir = f"./outputs/{round(time())}"
-    os.mkdir(outdir)
-    data["simulation"]["outdir"] = outdir
-
-    return data["running"], (data["simulation"], data["parameters"])
 
 
 class Simulator:
@@ -47,6 +22,16 @@ class Simulator:
         self.user_pop, self.creator_pop = self.init_population(parameters)
 
     def init_population(self, parameters):
+        """
+        Initialize population of users and creators
+
+        Args:
+            parameters: interaction parameters
+
+        Returns:
+            list[User]: population of users
+            list[Creator]: population of creators
+        """
         user_population = []
         creator_population = []
 
@@ -61,24 +46,27 @@ class Simulator:
         return user_population, creator_population
 
     def user_evolution_step(self):
-        if rand.random() < self.user_mutation_rate:
-            random_user: User = rand.choice(self.user_pop)
+        """
+        User evolutionary step
+        """
+        if random.random() < self.user_mutation_rate:
+            random_user: User = random.choice(self.user_pop)
             random_user.mutate()
         else:
             user_a: User
             user_b: User
-            user_a, user_b = rand.sample(self.user_pop, 2)
+            user_a, user_b = random.sample(self.user_pop, 2)
             user_a.fitness = 0
             user_b.fitness = 0
 
             # user A plays Z games
             for _ in range(self.num_creators):
-                creator: Creator = rand.choice(self.creator_pop)
+                creator: Creator = random.choice(self.creator_pop)
                 user_a.calculate_payoff(creator)
 
             # user B plays Z games
             for _ in range(self.num_creators):
-                creator: Creator = rand.choice(self.creator_pop)
+                creator: Creator = random.choice(self.creator_pop)
                 user_b.calculate_payoff(creator)
 
             # learning step
@@ -86,29 +74,32 @@ class Simulator:
                 1 + np.exp(self.user_beta * (user_a.fitness - user_b.fitness))
             ) ** (-1)
 
-            if rand.random() < p_i:
+            if random.random() < p_i:
                 user_a.strategy = user_b.strategy
 
     def creator_evolution_step(self):
-        if rand.random() < self.creator_mutation_rate:
-            random_creator = rand.choice(self.creator_pop)
+        """
+        Creator evolutionary step
+        """
+        if random.random() < self.creator_mutation_rate:
+            random_creator = random.choice(self.creator_pop)
             random_creator.mutate()
         else:
             # monte carlo step stuff
             creator_a: Creator
             creator_b: Creator
-            creator_a, creator_b = rand.sample(self.creator_pop, 2)
+            creator_a, creator_b = random.sample(self.creator_pop, 2)
             creator_a.fitness = 0
             creator_b.fitness = 0
 
             # creator A plays X games
             for _ in range(self.num_users):
-                user: User = rand.choice(self.user_pop)
+                user: User = random.choice(self.user_pop)
                 creator_a.calculate_payoff(user)
 
             # creator B plays X games
             for _ in range(self.num_users):
-                user: User = rand.choice(self.user_pop)
+                user: User = random.choice(self.user_pop)
                 creator_b.calculate_payoff(user)
 
             # learning step
@@ -116,34 +107,63 @@ class Simulator:
                 1 + np.exp(self.creator_beta * (creator_a.fitness - creator_b.fitness))
             ) ** (-1)
 
-            if rand.random() < p_i:
+            if random.random() < p_i:
                 creator_a.strategy = creator_b.strategy
 
     def count_user_strategies(self):
+        """
+        Count number of users for each strategy
+
+        Returns:
+            dict: count for each strategy
+        """
         totals = {0: 0, 1: 0, 2: 0, 3: 0}
         for u in self.user_pop:
             totals[u.strategy] += 1
         return totals
 
     def count_creator_strategies(self):
+        """
+        Count number of creators for each strategy
+
+        Returns:
+            dict: count for each strategy
+        """
         totals = {0: 0, 1: 0}
         for c in self.creator_pop:
             totals[c.strategy] += 1
         return totals
 
-    def write_output(self, filename, n, a, o, p, cc, cd):
+    def write_output(self, filename, d, c, g, b, cd, cc):
+        """
+        Write the output of the simulation on a csv file
+
+        Args:
+            filename (_type_): _description_
+            d (list): list of all d users over generations
+            c (list): list of all c users over generations
+            g (list): list of good media users over generations
+            b (list): list of bad media users over generations
+            cd (list): list of defective creators over generations
+            cc (list): list of cooperative creators over generations
+        """
         path = f"{filename}.csv"
         with open(path, "a") as file:
-            labels = "gen,N,A,O,P,CC,CD"
+            labels = "gen,D,C,G,B,CD,CC"
             labels += "\n"
             file.write(labels)
 
-            for g in range(self.gens):
-                output = f"{g},{n[g]},{a[g]},{o[g]},{p[g]},{cc[g]},{cd[g]}"
-                output += "\n"
+            for i in range(self.gens):
+                output = f"{i},{d[i]},{c[i]},{g[i]},{b[i]},{cd[i]},{cc[i]}\n"
                 file.write(output)
 
     def run(self, filename: str = ""):
+        """
+        Run the simulation.
+
+        Args:
+            filename (str, optional): If given, writes the results of the simulation on the filename. Defaults to "".
+        """
         d, c, g, b, cc, cd = [], [], [], [], [], []
 
         for _ in range(self.gens):
@@ -159,53 +179,8 @@ class Simulator:
             c.append(user_strats_dict[1] / self.num_users)
             g.append(user_strats_dict[2] / self.num_users)
             b.append(user_strats_dict[3] / self.num_users)
-            cc.append(creator_strats_dict[1] / self.num_creators)
             cd.append(creator_strats_dict[0] / self.num_creators)
+            cc.append(creator_strats_dict[1] / self.num_creators)
 
         if filename:
-            self.write_output(filename, d, c, g, b, cc, cd)
-
-
-def get_average_output(path, gens, runs):
-    # prefix = "./outputs/"
-    # filename = path.removeprefix(prefix)
-
-    data = pd.DataFrame()
-    for file in os.listdir(path):
-        data = pd.concat([data, pd.read_csv(path + file)], ignore_index=True)
-    data = data[data.gen != "gen"]
-
-    columns = data.columns[1:]
-
-    for col in columns:
-        data[col] = data[col].astype(float)
-
-    average = {col: [] for col in columns}
-    standard_dev = {col: [] for col in columns}
-
-    for gen in range(gens):
-        df = data.iloc[[i * gens + gen for i in range(runs)]]
-        for col in columns:
-            average[col].append(df[col].mean())
-            standard_dev[col].append(df[col].std())
-
-
-def run(args):
-    simulation, parameters = args
-    sim = Simulator(simulation, parameters)
-    sim.run(filename=f"{simulation["outdir"]}/{current_process()._identity}")
-
-
-def run_simulation(run_args, sim_args):
-    num_cores = cpu_count() - 1 if run_args["cores"] == "all" else run_args["cores"]
-
-    with Pool(processes=num_cores) as pool:
-        list(
-            tqdm(pool.imap(run, [sim_args] * run_args["runs"]), total=run_args["runs"])
-        )
-
-
-if __name__ == "__main__":
-    run_args, sim_args = read_args()
-    run_simulation(run_args, sim_args)
-    # get_average_output("./outputs/1746743977/", 10, 10)
+            self.write_output(filename, d, c, g, b, cd, cc)
