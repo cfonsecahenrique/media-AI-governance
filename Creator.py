@@ -16,11 +16,5 @@ class Creator:
         self.strategy: int = 1 - self.strategy
 
     def calculate_payoff(self, user):
-        # generate media beliefs of creators
-        media_beliefs_of_creator = user.generate_media_beliefs(self.strategy)
-
-        # Payoffs are (kinda) different depending on u.strat being 2 or 3 or more
-        user_payoffs, creator_payoffs = user.payoff_matrix(
-            sum(media_beliefs_of_creator)
-        )
+        user_payoffs, creator_payoffs = user.payoff_matrix()
         self.fitness += creator_payoffs[self.strategy, user.strategy]
