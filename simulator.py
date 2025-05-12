@@ -1,7 +1,7 @@
 # system imports
 import os
 import sys
-import random as rand
+import random
 from time import time
 from multiprocessing import Pool, cpu_count, current_process
 
@@ -10,6 +10,7 @@ import yaml
 import numpy as np
 from tqdm import tqdm
 import pandas as pd
+import matplotlib.pyplot as plt
 
 # custom libraries
 from user import User
@@ -27,10 +28,6 @@ def read_args():
 
     with open(file_name, "r") as f:
         data = yaml.safe_load(f)
-
-    outdir = f"./outputs/{round(time())}"
-    os.mkdir(outdir)
-    data["simulation"]["outdir"] = outdir
 
     return data["running"], (data["simulation"], data["parameters"])
 
@@ -97,33 +94,33 @@ class Simulator:
             )
 
     def user_evolution_step(self):
-        if rand.random() < self.user_mutation_rate:
-            random_user: User = rand.choice(self.user_pop)
+        if random.random() < self.user_mutation_rate:
+            random_user: User = random.choice(self.user_pop)
             random_user.mutate()
         else:
             user_a: User
             user_b: User
-            user_a, user_b = rand.sample(self.user_pop, 2)
+            user_a, user_b = random.sample(self.user_pop, 2)
             user_a.fitness = 0
             user_b.fitness = 0
 
             # build trust media vector stochastically
-            user_a.media_trust_vector = rand.choices(
+            user_a.media_trust_vector = random.choices(
                 population=self.media_pop, weights=self.media_reputation, k=user_a.tm
             )
-            user_b.media_trust_vector = rand.choices(
+            user_b.media_trust_vector = random.choices(
                 population=self.media_pop, weights=self.media_reputation, k=user_b.tm
             )
 
             # user A plays Z games
             for _ in range(self.num_creators):
-                creator: Creator = rand.choice(self.creator_pop)
+                creator: Creator = random.choice(self.creator_pop)
                 up_down = user_a.calculate_payoff(creator)
                 self.update_reputation_discriminate(user_a.media_trust_vector, up_down)
 
             # user B plays Z games
             for _ in range(self.num_creators):
-                creator: Creator = rand.choice(self.creator_pop)
+                creator: Creator = random.choice(self.creator_pop)
                 up_down = user_b.calculate_payoff(creator)
                 self.update_reputation_discriminate(user_b.media_trust_vector, up_down)
 
@@ -133,30 +130,30 @@ class Simulator:
                 1 + np.exp(self.user_beta * (user_a.fitness - user_b.fitness))
             ) ** (-1)
 
-            if rand.random() < p_i:
+            if random.random() < p_i:
                 user_a.strategy = user_b.strategy
                 user_a.tm = user_b.tm
 
     def creator_evolution_step(self):
-        if rand.random() < self.creator_mutation_rate:
-            random_creator = rand.choice(self.creator_pop)
+        if random.random() < self.creator_mutation_rate:
+            random_creator = random.choice(self.creator_pop)
             random_creator.mutate()
         else:
             # monte carlo step stuff
             creator_a: Creator
             creator_b: Creator
-            creator_a, creator_b = rand.sample(self.creator_pop, 2)
+            creator_a, creator_b = random.sample(self.creator_pop, 2)
             creator_a.fitness = 0
             creator_b.fitness = 0
 
             # creator A plays X games
             for _ in range(self.num_users):
-                user: User = rand.choice(self.user_pop)
+                user: User = random.choice(self.user_pop)
                 creator_a.calculate_payoff(user)
 
             # creator B plays X games
             for _ in range(self.num_users):
-                user: User = rand.choice(self.user_pop)
+                user: User = random.choice(self.user_pop)
                 creator_b.calculate_payoff(user)
 
             # learning step
@@ -165,7 +162,7 @@ class Simulator:
                 1 + np.exp(self.creator_beta * (creator_a.fitness - creator_b.fitness))
             ) ** (-1)
 
-            if rand.random() < p_i:
+            if random.random() < p_i:
                 creator_a.strategy = creator_b.strategy
 
     def count_user_strategies(self):
@@ -223,61 +220,68 @@ class Simulator:
             self.write_output(filename, n, a, o, p, cc, cd, r)
 
 
-# def get_average_output(path, gens, runs, num_media):
-#     prefix = "./outputs/"
-#     filename = path.removeprefix(prefix)
-#     # with open(f"{filename[:-1]}.csv") as out_file:
-#     #     pass
-#     average = np.zeros((7 + num_media, gens))
-#     standard_dev = np.zeros((7 + num_media, gens))
-#     for file in os.listdir(path):
-#         with open(path + file, "r") as f:
-#             lines = f.readlines()
-#             header = lines[0]
-#             chunks = [lines[i + 1 : i + gens + 1] for i in range(0, len(lines), gens + 1)]
-
-#             for chunk in chunks:
-#                 tmp_chunk = []
-#                 for line in chunk:
-#                     tmp_chunk.append(np.fromstring(line[:-1], dtype=float, sep=','))
-#                 average_results += np.matrix(tmp_chunk).transpose()
-
-#     print(average_results/runs)
-
-
-def get_average_output(path, gens, runs):
-    # prefix = "./outputs/"
-    # filename = path.removeprefix(prefix)
+def get_average_output(filename, clear_data=True):
+    path = f"./outputs/{filename}/"
 
     data = pd.DataFrame()
     for file in os.listdir(path):
         data = pd.concat([data, pd.read_csv(path + file)], ignore_index=True)
     data = data[data.gen != "gen"]
 
-    columns = data.columns[1:]
-
-    for col in columns:
+    for col in data.columns[1:]:
         data[col] = data[col].astype(float)
 
-    average = {col: [] for col in columns}
-    standard_dev = {col: [] for col in columns}
+    data.to_csv(path[:-1] + ".csv")
+
+    if clear_data:
+        for file in os.listdir(path):
+            os.remove(path + file)
+        os.rmdir(path)
+
+
+def plot_time_series(filename, gens, runs):
+    data = pd.read_csv(f"./outputs/{filename}.csv")
+
+    columns = data.columns[1:]
+
+    avg = {col: [] for col in columns}
+    std = {col: [] for col in columns}
 
     for gen in range(gens):
         df = data.iloc[[i * gens + gen for i in range(runs)]]
         for col in columns:
-            average[col].append(df[col].mean())
-            standard_dev[col].append(df[col].std())
+            avg[col].append(df[col].mean())
+            std[col].append(df[col].std())
 
-
+    plt.plot(avg["N"], color="blue")
+    plt.fill_between(
+        range(len(avg["N"])),
+        np.array(avg["N"]) - np.array(std["N"]),
+        np.array(avg["N"]) + np.array(std["N"]),
+        alpha=0.2,
+        color="blue",
+    )
+    plt.fill_between(
+        range(len(avg["N"])),
+        np.array(avg["N"]) - 2*np.array(std["N"]),
+        np.array(avg["N"]) + 2*np.array(std["N"]),
+        alpha=0.1,
+        color="blue",
+    )
+    plt.show()
 
 
 def run(args):
     simulation, parameters = args
     sim = Simulator(simulation, parameters)
-    sim.run(filename=f"{simulation["outdir"]}/{current_process()._identity}")
+    sim.run(filename=f"./outputs/{simulation["outdir"]}/{current_process()._identity}")
 
 
-def run_simulation(run_args, sim_args):
+def run_simulation(run_args, sim_args, clear_data=True):
+    outdir = f"{round(time())}"
+    os.mkdir(f"./outputs/{outdir}")
+    sim_args[0]["outdir"] = outdir
+    
     num_cores = cpu_count() - 1 if run_args["cores"] == "all" else run_args["cores"]
 
     with Pool(processes=num_cores) as pool:
@@ -285,8 +289,10 @@ def run_simulation(run_args, sim_args):
             tqdm(pool.imap(run, [sim_args] * run_args["runs"]), total=run_args["runs"])
         )
 
+    get_average_output(sim_args[0]["outdir"], clear_data)
+
 
 if __name__ == "__main__":
-    # run_args, sim_args = read_args()
-    # run_simulation(run_args, sim_args)
-    get_average_output("./outputs/1746743977/", 10, 10)
+    run_args, sim_args = read_args()
+    run_simulation(run_args, sim_args)
+    plot_time_series(1746822973, sim_args[0]["generations"], run_args["runs"])
