@@ -16,7 +16,7 @@ from plotting import plot_time_series
 
 def read_args():
     if len(sys.argv) == 2:
-        file_name: str = "inputs/" + str(sys.argv[1]) + ".yaml"
+        file_name: str = "inputs/" + str(sys.argv[1])
     else:
         raise ValueError("Invalid inputs. Please run as 'python main.py <filename>'")
 
@@ -49,12 +49,12 @@ def run(args):
     simulation, parameters = args
     sim = Simulator(simulation, parameters)
     sim.run(
-        filename=f"./outputs/{simulation["outdir"]}/{mp.current_process()._identity}"
+        filename="./outputs/" + simulation["outdir"] + "/" + str(mp.current_process()._identity)
     )
 
 
 def run_simulation(run_args, sim_args, clear_data=True):
-    outdir = f"{round(time())}"
+    outdir: str = f"{round(time())}"
     os.mkdir(f"./outputs/{outdir}")
     sim_args[0]["outdir"] = outdir
 
@@ -71,6 +71,9 @@ def run_simulation(run_args, sim_args, clear_data=True):
 
 
 if __name__ == "__main__":
+    # run_args: runs + cores
+    # sim_args[0]: "simulation"
+    # sim_args[1]: "parameters"
     run_args, sim_args = read_args()
     result = run_simulation(run_args, sim_args)
-    plot_time_series(result, sim_args[0]["generations"], run_args["runs"], maxg=1000)
+    plot_time_series(result, sim_args, run_args["runs"], maxg=sim_args[0]["generations"])

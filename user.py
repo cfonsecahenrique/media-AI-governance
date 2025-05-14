@@ -1,6 +1,5 @@
 # system imports
 import random
-
 # external libraries
 import numpy as np
 
@@ -12,10 +11,10 @@ from commentator import Commentator
 ALL_REJECT = 0
 # always adopt systems regardless of media opinions on creators
 ALL_ADOPT = 1
-# needs at least 1 positive recommendation from trusted media to adopt
-GOOD_MEDIA = 2
-# needs at least 1 negative recommendation from trusted media to adopt
-BAD_MEDIA = 3
+# Uses cheap (costless) low quality media
+BAD_MEDIA = 2
+# Uses expensive but high quality media
+GOOD_MEDIA = 3
 
 
 class User:
@@ -23,7 +22,7 @@ class User:
         self.id = user_id
         self.fitness: int = 0
         self.strategy: int = random.choice(
-            (ALL_REJECT, ALL_ADOPT, GOOD_MEDIA, BAD_MEDIA)
+            (ALL_REJECT, ALL_ADOPT, BAD_MEDIA, GOOD_MEDIA)
         )
 
         self.q = parameters["media quality"]
@@ -35,7 +34,7 @@ class User:
 
     def mutate(self):
         self.strategy: str = random.choice(
-            list({ALL_REJECT, ALL_ADOPT, GOOD_MEDIA, BAD_MEDIA} - {self.strategy})
+            list({ALL_REJECT, ALL_ADOPT, BAD_MEDIA, GOOD_MEDIA} - {self.strategy})
         )
 
     def calculate_payoff(self, creator):
@@ -43,6 +42,11 @@ class User:
         self.fitness += user_payoffs[creator.strategy, self.strategy]
 
     def payoff_matrix(self):
+        # Order for strats:
+        # [D][wtv]: opponent defected
+        # [D][D]: AllD; [D][C]: AllC; [D][B]: Bad Media Follower; [D][G]: Good Media follower;
+        # [C][wtv]: opponent cooperated
+        # [C][D]: etc...
         user_payoffs = np.array(
             [
                 [0, -self.cU, -0.5 * self.cU, -(1 - self.q) * self.cU - self.cI],

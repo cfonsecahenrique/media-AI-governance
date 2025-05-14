@@ -14,9 +14,9 @@ class Simulator:
         self.num_users = simulation["user population size"]
         self.num_creators = simulation["creator population size"]
         self.user_beta = simulation["user selection strength"]
-        self.user_mutation_rate = simulation["user mutation probability"]
+        self.user_mutation_rate = simulation["user mutation probability"]/self.num_users
         self.creator_beta = simulation["user selection strength"]
-        self.creator_mutation_rate = simulation["creator mutation probability"]
+        self.creator_mutation_rate = simulation["creator mutation probability"]/self.num_creators
         self.gens = simulation["generations"]
 
         self.user_pop, self.creator_pop = self.init_population(parameters)
@@ -69,6 +69,10 @@ class Simulator:
                 creator: Creator = random.choice(self.creator_pop)
                 user_b.calculate_payoff(creator)
 
+            # normalize
+            user_a.fitness /= self.num_creators
+            user_b.fitness /= self.num_creators
+
             # learning step
             p_i: float = (
                 1 + np.exp(self.user_beta * (user_a.fitness - user_b.fitness))
@@ -92,17 +96,21 @@ class Simulator:
             creator_a.fitness = 0
             creator_b.fitness = 0
 
-            # creator A plays X games
+            # creator A plays X games (X=#users)
             for _ in range(self.num_users):
                 user: User = random.choice(self.user_pop)
                 creator_a.calculate_payoff(user)
 
-            # creator B plays X games
+            # creator B plays X games (X=#users)
             for _ in range(self.num_users):
                 user: User = random.choice(self.user_pop)
                 creator_b.calculate_payoff(user)
 
-            # learning step
+            # Learning step
+            # Normalize
+            creator_a.fitness /= len(self.user_pop)
+            creator_b.fitness /= len(self.user_pop)
+            # Fermi update
             p_i: float = (
                 1 + np.exp(self.creator_beta * (creator_a.fitness - creator_b.fitness))
             ) ** (-1)
@@ -134,7 +142,7 @@ class Simulator:
             totals[c.strategy] += 1
         return totals
 
-    def write_output(self, filename, d, c, g, b, cd, cc):
+    def write_output(self, filename, d, c, b, g, cd, cc):
         """
         Write the output of the simulation on a csv file
 
@@ -149,24 +157,24 @@ class Simulator:
         """
         path = f"{filename}.csv"
         with open(path, "a") as file:
-            labels = "gen,D,C,G,B,CD,CC"
+            labels = "gen,AllD,AllC,BMedia,GMedia,Unsafe,Safe"
             labels += "\n"
             file.write(labels)
 
             for i in range(self.gens):
-                output = f"{i},{d[i]},{c[i]},{g[i]},{b[i]},{cd[i]},{cc[i]}\n"
+                output = f"{i},{d[i]},{c[i]},{b[i]},{g[i]},{cd[i]},{cc[i]}\n"
                 file.write(output)
 
     def run(self, filename: str = ""):
         """
         Run the simulation.
-
         Args:
             filename (str, optional): If given, writes the results of the simulation on the filename. Defaults to "".
         """
-        d, c, g, b, cc, cd = [], [], [], [], [], []
+        d, c, b, g = np.zeros(self.gens), np.zeros(self.gens), np.zeros(self.gens), np.zeros(self.gens)
+        cc, cd = np.zeros(self.gens), np.zeros(self.gens)
 
-        for _ in range(self.gens):
+        for gen in range(self.gens):
             # 1. Evolve agents
             self.user_evolution_step()
             # 2. Evolve Creators
@@ -175,12 +183,13 @@ class Simulator:
             user_strats_dict: dict = self.count_user_strategies()
             creator_strats_dict: dict = self.count_creator_strategies()
 
-            d.append(user_strats_dict[0] / self.num_users)
-            c.append(user_strats_dict[1] / self.num_users)
-            g.append(user_strats_dict[2] / self.num_users)
-            b.append(user_strats_dict[3] / self.num_users)
-            cd.append(creator_strats_dict[0] / self.num_creators)
-            cc.append(creator_strats_dict[1] / self.num_creators)
+            d[gen] = (user_strats_dict[0] / self.num_users)
+            c[gen] = (user_strats_dict[1] / self.num_users)
+            b[gen] = (user_strats_dict[2] / self.num_users)
+            g[gen] = (user_strats_dict[3] / self.num_users)
+            cd[gen] = (creator_strats_dict[0] / self.num_creators)
+            cc[gen] = (creator_strats_dict[1] / self.num_creators)
 
         if filename:
-            self.write_output(filename, d, c, g, b, cd, cc)
+            self.write_output(filename, d.tolist(), c.tolist(), b.tolist(),
+                              g.tolist(), cd.tolist(), cc.tolist())
