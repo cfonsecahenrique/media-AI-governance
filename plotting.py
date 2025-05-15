@@ -7,10 +7,13 @@ double_std: bool = False
 
 
 def plot_time_series(filename, parameters, runs, maxg=1000):
+
+    sim_params = parameters[0]
+    payoffs = parameters[1]
+
     data = pd.read_csv(f"./outputs/{filename}.csv")
     gens = parameters[0]["generations"]
     columns = data.columns[2:]
-
     avg = {col: [] for col in columns}
     std = {col: [] for col in columns}
 
@@ -20,9 +23,9 @@ def plot_time_series(filename, parameters, runs, maxg=1000):
             avg[col].append(df[col].mean())
             std[col].append(df[col].std())
 
-    fig, (ax1, ax2) = plt.subplots(2)
+    fig, (ax1, ax2, ax3) = plt.subplots(3, figsize=(10, 8))
     colors = ["red", "green", "orange", "blue"]
-    for i, col in enumerate(columns[:4]):
+    for i, col in enumerate(columns[1:5]):
         ax1.plot(avg[col][:maxg], color=colors[i], label=col)
         ax1.fill_between(
             range(len(avg[col][:maxg])),
@@ -44,7 +47,7 @@ def plot_time_series(filename, parameters, runs, maxg=1000):
     ax1.set_ylim(0, 1)
 
     colors = ["red", "green"]
-    for i, col in enumerate(columns[4:]):
+    for i, col in enumerate(columns[5:]):
         ax2.plot(avg[col][:maxg], color=colors[i], label=col)
         ax2.fill_between(
             range(len(avg[col][:maxg])),
@@ -66,8 +69,26 @@ def plot_time_series(filename, parameters, runs, maxg=1000):
     ax2.set_ylabel("Frequency of Strategy")
     ax2.legend(loc="lower right")
 
-    sim_params = parameters[0]
-    payoffs = parameters[1]
+    col = columns[0]  # 'acr' column
+    ax3.plot(avg[col][:maxg], label=col)
+    ax3.fill_between(
+        range(len(avg[col][:maxg])),
+        np.array(avg[col][:maxg]) - np.array(std[col][:maxg]),
+        np.array(avg[col][:maxg]) + np.array(std[col][:maxg]),
+        alpha=0.2,
+    )
+    if double_std:
+        ax3.fill_between(
+            range(len(avg[col][:maxg])),
+            np.array(avg[col][:maxg]) - 2 * np.array(std[col][:maxg]),
+            np.array(avg[col][:maxg]) + 2 * np.array(std[col][:maxg]),
+            alpha=0.1,
+        )
+    ax3.axvline(x=sim_params["convergence period"], linestyle='--', color='gray', linewidth=1)
+    ax3.set_ylim(0, 1)
+    ax3.set_xlabel("Generations")
+    ax3.set_ylabel("Average Cooperation Ratio")
+    ax3.legend(loc="lower right")
 
     # ==== CAPTION with PARAMETERS ====
     caption_above = (
@@ -86,5 +107,5 @@ def plot_time_series(filename, parameters, runs, maxg=1000):
     )
     fig.text(0.5, 0.01, caption_below, ha="center", fontsize=9, wrap=True)
     fig.suptitle(caption_above, fontsize=12, y=0.95)
-    plt.tight_layout(rect=[0, 0.03, 1, 0.95])  # Leave space for caption
+    plt.tight_layout(rect=[0, 0.06, 1, 0.93])  # Leave space for caption
     plt.show()

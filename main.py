@@ -76,4 +76,5 @@ if __name__ == "__main__":
     # sim_args[1]: "parameters"
     run_args, sim_args = read_args()
     result = run_simulation(run_args, sim_args)
+    print("All simulations complete, plotting results...")
     plot_time_series(result, sim_args, run_args["runs"], maxg=sim_args[0]["generations"])

@@ -18,8 +18,14 @@ class Simulator:
         self.creator_beta = simulation["user selection strength"]
         self.creator_mutation_rate = simulation["creator mutation probability"]/self.num_creators
         self.gens = simulation["generations"]
+        self.media_quality = parameters["media quality"]
+        self.converge = simulation["convergence period"]
+        self.past_convergence = False
 
         self.user_pop, self.creator_pop = self.init_population(parameters)
+        self.user_cooperative_acts = 0
+        self.creator_cooperative_acts = 0
+        self.total_actions = 0
 
     def init_population(self, parameters):
         """
@@ -64,10 +70,31 @@ class Simulator:
                 creator: Creator = random.choice(self.creator_pop)
                 user_a.calculate_payoff(creator)
 
+                if self.past_convergence:
+                    # action from user + action from creator
+                    self.total_actions += 2
+                    if user_a.strategy == 1:
+                        self.user_cooperative_acts += 1
+                    elif (user_a.strategy == 2 and random.random() < 0.5) or (user_a.strategy == 3 and random.random() < self.media_quality):
+                        self.user_cooperative_acts += 1
+                    # 0 = def, 1 = coop
+                    self.creator_cooperative_acts += creator.strategy
+
             # user B plays Z games
             for _ in range(self.num_creators):
                 creator: Creator = random.choice(self.creator_pop)
                 user_b.calculate_payoff(creator)
+
+                if self.past_convergence:
+                    # action from user + action from creator
+                    self.total_actions += 2
+                    if user_b.strategy == 1:
+                        self.user_cooperative_acts += 1
+                    elif (user_b.strategy == 2 and random.random() < 0.5) or (
+                            user_b.strategy == 3 and random.random() < self.media_quality):
+                        self.user_cooperative_acts += 1
+                    # 0 = def, 1 = coop
+                    self.creator_cooperative_acts += creator.strategy
 
             # normalize
             user_a.fitness /= self.num_creators
@@ -101,10 +128,32 @@ class Simulator:
                 user: User = random.choice(self.user_pop)
                 creator_a.calculate_payoff(user)
 
+                if self.past_convergence:
+                    # action from user + action from creator
+                    self.total_actions += 2
+                    if user.strategy == 1:
+                        self.user_cooperative_acts += 1
+                    elif (user.strategy == 2 and random.random() < 0.5) or (
+                            user.strategy == 3 and random.random() < self.media_quality):
+                        self.user_cooperative_acts += 1
+                    # 0 = def, 1 = coop
+                    self.creator_cooperative_acts += creator_a.strategy
+
             # creator B plays X games (X=#users)
             for _ in range(self.num_users):
                 user: User = random.choice(self.user_pop)
                 creator_b.calculate_payoff(user)
+
+                if self.past_convergence:
+                    # action from user + action from creator
+                    self.total_actions += 2
+                    if user.strategy == 1:
+                        self.user_cooperative_acts += 1
+                    elif (user.strategy == 2 and random.random() < 0.5) or \
+                            (user.strategy == 3 and random.random() < self.media_quality):
+                        self.user_cooperative_acts += 1
+                    # 0 = def, 1 = coop
+                    self.creator_cooperative_acts += creator_b.strategy
 
             # Learning step
             # Normalize
@@ -142,27 +191,28 @@ class Simulator:
             totals[c.strategy] += 1
         return totals
 
-    def write_output(self, filename, d, c, b, g, cd, cc):
+    def write_output(self, filename, acr, d, c, b, g, cd, cc):
         """
         Write the output of the simulation on a csv file
 
         Args:
             filename (_type_): _description_
-            d (list): list of all d users over generations
-            c (list): list of all c users over generations
-            g (list): list of good media users over generations
-            b (list): list of bad media users over generations
-            cd (list): list of defective creators over generations
-            cc (list): list of cooperative creators over generations
+            acr (np.array): total cooperation ratio over generations (past convergence period)
+            d (np.array): list of all d users over generations
+            c (np.array): list of all c users over generations
+            g (np.array): list of good media users over generations
+            b (np.array): list of bad media users over generations
+            cd (np.array): list of defective creators over generations
+            cc (np.array): list of cooperative creators over generations
         """
         path = f"{filename}.csv"
         with open(path, "a") as file:
-            labels = "gen,AllD,AllC,BMedia,GMedia,Unsafe,Safe"
+            labels = "gen,acr,AllD,AllC,BMedia,GMedia,Unsafe,Safe"
             labels += "\n"
             file.write(labels)
 
             for i in range(self.gens):
-                output = f"{i},{d[i]},{c[i]},{b[i]},{g[i]},{cd[i]},{cc[i]}\n"
+                output = f"{i},{acr[i]},{d[i]},{c[i]},{b[i]},{g[i]},{cd[i]},{cc[i]}\n"
                 file.write(output)
 
     def run(self, filename: str = ""):
@@ -173,8 +223,11 @@ class Simulator:
         """
         d, c, b, g = np.zeros(self.gens), np.zeros(self.gens), np.zeros(self.gens), np.zeros(self.gens)
         cc, cd = np.zeros(self.gens), np.zeros(self.gens)
+        acr = np.zeros(self.gens)
 
         for gen in range(self.gens):
+            if gen > self.converge:
+                self.past_convergence = True
             # 1. Evolve agents
             self.user_evolution_step()
             # 2. Evolve Creators
@@ -189,7 +242,11 @@ class Simulator:
             g[gen] = (user_strats_dict[3] / self.num_users)
             cd[gen] = (creator_strats_dict[0] / self.num_creators)
             cc[gen] = (creator_strats_dict[1] / self.num_creators)
-
+            if self.past_convergence:
+                acr[gen] = (self.creator_cooperative_acts + self.user_cooperative_acts)/self.total_actions
+            else:
+                # maybe change this to -1 in the future
+                acr[gen] = 0
         if filename:
-            self.write_output(filename, d.tolist(), c.tolist(), b.tolist(),
+            self.write_output(filename, acr.tolist(), d.tolist(), c.tolist(), b.tolist(),
                               g.tolist(), cd.tolist(), cc.tolist())
