@@ -13,7 +13,7 @@ def plot_time_series(filename, parameters, runs, maxg=1000):
 
     data = pd.read_csv(f"./outputs/{filename}.csv")
     gens = parameters[0]["generations"]
-    columns = data.columns[2:]
+    columns = data.columns[1:]
     avg = {col: [] for col in columns}
     std = {col: [] for col in columns}
 
@@ -70,7 +70,7 @@ def plot_time_series(filename, parameters, runs, maxg=1000):
     ax2.legend(loc="lower right")
 
     col = columns[0]  # 'acr' column
-    ax3.plot(avg[col][:maxg], label=col)
+    ax3.plot(range(1, maxg), avg[col][1:maxg], label=col)
     ax3.fill_between(
         range(len(avg[col][:maxg])),
         np.array(avg[col][:maxg]) - np.array(std[col][:maxg]),
@@ -79,7 +79,7 @@ def plot_time_series(filename, parameters, runs, maxg=1000):
     )
     if double_std:
         ax3.fill_between(
-            range(len(avg[col][:maxg])),
+            range(1, len(avg[col][1:maxg])),
             np.array(avg[col][:maxg]) - 2 * np.array(std[col][:maxg]),
             np.array(avg[col][:maxg]) + 2 * np.array(std[col][:maxg]),
             alpha=0.1,

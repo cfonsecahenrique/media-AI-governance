@@ -23,9 +23,9 @@ class Simulator:
         self.past_convergence = False
 
         self.user_pop, self.creator_pop = self.init_population(parameters)
-        self.user_cooperative_acts = 0
-        self.creator_cooperative_acts = 0
-        self.total_actions = 0
+        self.user_cooperative_acts: int = 0
+        self.creator_cooperative_acts: int = 0
+        self.total_actions: int = 0
 
     def init_population(self, parameters):
         """
@@ -65,9 +65,12 @@ class Simulator:
             user_a.fitness = 0
             user_b.fitness = 0
 
+            # Sample once with replacement into a list to avoid repeated sampling
+            creators_for_user_a: list[Creator] = random.choices(self.creator_pop, k=self.num_creators)
+            creators_for_user_b: list[Creator] = random.choices(self.creator_pop, k=self.num_creators)
+
             # user A plays Z games
-            for _ in range(self.num_creators):
-                creator: Creator = random.choice(self.creator_pop)
+            for creator in creators_for_user_a:
                 user_a.calculate_payoff(creator)
 
                 if self.past_convergence:
@@ -81,8 +84,7 @@ class Simulator:
                     self.creator_cooperative_acts += creator.strategy
 
             # user B plays Z games
-            for _ in range(self.num_creators):
-                creator: Creator = random.choice(self.creator_pop)
+            for creator in creators_for_user_b:
                 user_b.calculate_payoff(creator)
 
                 if self.past_convergence:
@@ -123,9 +125,12 @@ class Simulator:
             creator_a.fitness = 0
             creator_b.fitness = 0
 
+            # Sample once with replacement into a list to avoid repeated sampling
+            users_for_creator_a = random.choices(self.user_pop, k=self.num_users)
+            users_for_creator_b = random.choices(self.user_pop, k=self.num_users)
+
             # creator A plays X games (X=#users)
-            for _ in range(self.num_users):
-                user: User = random.choice(self.user_pop)
+            for user in users_for_creator_a:
                 creator_a.calculate_payoff(user)
 
                 if self.past_convergence:
@@ -140,8 +145,7 @@ class Simulator:
                     self.creator_cooperative_acts += creator_a.strategy
 
             # creator B plays X games (X=#users)
-            for _ in range(self.num_users):
-                user: User = random.choice(self.user_pop)
+            for user in users_for_creator_b:
                 creator_b.calculate_payoff(user)
 
                 if self.past_convergence:
@@ -170,26 +174,24 @@ class Simulator:
     def count_user_strategies(self):
         """
         Count number of users for each strategy
-
+        (Numpy optimised)
         Returns:
             dict: count for each strategy
         """
-        totals = {0: 0, 1: 0, 2: 0, 3: 0}
-        for u in self.user_pop:
-            totals[u.strategy] += 1
-        return totals
+        strategies = np.fromiter((u.strategy for u in self.user_pop), dtype=np.int8, count=self.num_users)
+        counts = np.bincount(strategies, minlength=4)
+        return dict(enumerate(counts))
 
     def count_creator_strategies(self):
         """
         Count number of creators for each strategy
-
+        (Numpy optimised)
         Returns:
             dict: count for each strategy
         """
-        totals = {0: 0, 1: 0}
-        for c in self.creator_pop:
-            totals[c.strategy] += 1
-        return totals
+        strategies = np.fromiter((c.strategy for c in self.creator_pop), dtype=np.int8, count=self.num_creators)
+        counts = np.bincount(strategies, minlength=2)
+        return dict(enumerate(counts))
 
     def write_output(self, filename, acr, d, c, b, g, cd, cc):
         """
@@ -207,8 +209,7 @@ class Simulator:
         """
         path = f"{filename}.csv"
         with open(path, "a") as file:
-            labels = "gen,acr,AllD,AllC,BMedia,GMedia,Unsafe,Safe"
-            labels += "\n"
+            labels = "gen,acr,AllD,AllC,BMedia,GMedia,Unsafe,Safe\n"
             file.write(labels)
 
             for i in range(self.gens):
@@ -242,11 +243,9 @@ class Simulator:
             g[gen] = (user_strats_dict[3] / self.num_users)
             cd[gen] = (creator_strats_dict[0] / self.num_creators)
             cc[gen] = (creator_strats_dict[1] / self.num_creators)
-            if self.past_convergence:
-                acr[gen] = (self.creator_cooperative_acts + self.user_cooperative_acts)/self.total_actions
-            else:
-                # maybe change this to -1 in the future
-                acr[gen] = 0
+            acr[gen] = (self.creator_cooperative_acts + self.user_cooperative_acts)/self.total_actions \
+                if self.past_convergence else 0
+
         if filename:
             self.write_output(filename, acr.tolist(), d.tolist(), c.tolist(), b.tolist(),
                               g.tolist(), cd.tolist(), cc.tolist())

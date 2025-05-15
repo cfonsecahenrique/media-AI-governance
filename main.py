@@ -28,21 +28,49 @@ def read_args():
 
 def get_average_output(filename, clear_data=True):
     path = f"./outputs/{filename}/"
+    print("Processing results...")
 
-    data = pd.DataFrame()
+    all_dataframes = []
+
     for file in os.listdir(path):
-        data = pd.concat([data, pd.read_csv(path + file)], ignore_index=True)
-    data = data[data.gen != "gen"]
+        if not file.endswith(".csv"):
+            continue
 
-    for col in data.columns[1:]:
-        data[col] = data[col].astype(float)
+        full_path = os.path.join(path, file)
 
-    data.to_csv(path[:-1] + ".csv")
+        # Read with headers, all as strings first
+        df = pd.read_csv(full_path, dtype=str)
 
+        # Drop rows where 'gen' equals 'gen' (i.e., extra headers accidentally included)
+        df = df[df["gen"] != "gen"]
+
+        # Convert columns to correct types
+        df = df.astype({
+            "gen": int,
+            "acr": float,
+            "AllD": float,
+            "AllC": float,
+            "BMedia": float,
+            "GMedia": float,
+            "Unsafe": float,
+            "Safe": float,
+        })
+
+        all_dataframes.append(df)
+
+    # Combine all clean DataFrames
+    combined = pd.concat(all_dataframes, ignore_index=True)
+
+    # Export to CSV
+    output_path = path[:-1] + ".csv"
+    combined.to_csv(output_path, index=False)
+
+    # Clean up files
     if clear_data:
         for file in os.listdir(path):
-            os.remove(path + file)
+            os.remove(os.path.join(path, file))
         os.rmdir(path)
+    print(f"Saved cleaned data to {output_path}")
 
 
 def run(args):
