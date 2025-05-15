@@ -76,6 +76,7 @@ def get_average_output(filename, clear_data=True):
 def run(args):
     simulation, parameters = args
     sim = Simulator(simulation, parameters)
+    #print(sim.__str__())
     sim.run(
         filename="./outputs/" + simulation["outdir"] + "/" + str(mp.current_process()._identity)
     )

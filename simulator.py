@@ -22,10 +22,73 @@ class Simulator:
         self.converge = simulation["convergence period"]
         self.past_convergence = False
 
+        self.q = parameters["media quality"]
+        self.bU = parameters["user benefit"]
+        self.cU = parameters["user cost"]
+        self.cI = parameters["cost investigation"]
+        self.bP = parameters["creator benefit"]
+        self.cP = parameters["creator cost"]
+
+        self.user_payoff_matrix, self.creator_payoff_matrix = self.calculate_payoff_matrices()
         self.user_pop, self.creator_pop = self.init_population(parameters)
+
         self.user_cooperative_acts: int = 0
         self.creator_cooperative_acts: int = 0
         self.total_actions: int = 0
+
+    def __str__(self):
+        user_pm, creator_pm = self.user_payoff_matrix, self.creator_payoff_matrix
+        return (
+            f"\n===== Simulation Parameters =====\n"
+            f"User population size (Z):       {self.num_users}\n"
+            f"Creator population size (Zc):   {self.num_creators}\n"
+            f"User selection strength (βᵤ):   {self.user_beta}\n"
+            f"Creator selection strength (β𝚌): {self.creator_beta}\n"
+            f"User mutation rate (μᵤ):        {self.user_mutation_rate:.6f}\n"
+            f"Creator mutation rate (μ𝚌):     {self.creator_mutation_rate:.6f}\n"
+            f"Generations:                    {self.gens}\n"
+            f"Convergence period:             {self.converge}\n"
+            f"\n===== User Payoff Matrix =====\n"
+            f"         | AllD     AllC     BMedia   GMedia\n"
+            f"--------------------------------------------\n"
+            f"Defect   | {user_pm[0, 0]:>7.2f}  {user_pm[0, 1]:>7.2f}  {user_pm[0, 2]:>7.2f}  {user_pm[0, 3]:>7.2f}\n"
+            f"Cooperate| {user_pm[1, 0]:>7.2f}  {user_pm[1, 1]:>7.2f}  {user_pm[1, 2]:>7.2f}  {user_pm[1, 3]:>7.2f}\n"
+            f"\n===== Creator Payoff Matrix =====\n"
+            f"         | AllD     AllC     BMedia   GMedia\n"
+            f"--------------------------------------------\n"
+            f"Defect   | {creator_pm[0, 0]:>7.2f}  {creator_pm[0, 1]:>7.2f}  {creator_pm[0, 2]:>7.2f}  {creator_pm[0, 3]:>7.2f}\n"
+            f"Cooperate| {creator_pm[1, 0]:>7.2f}  {creator_pm[1, 1]:>7.2f}  {creator_pm[1, 2]:>7.2f}  {creator_pm[1, 3]:>7.2f}\n"
+
+        )
+
+    def calculate_payoff_matrices(self):
+        # Order for strats:
+        # [D][wtv]: opponent defected
+        # [D][D]: AllD; [D][C]: AllC; [D][B]: Bad Media Follower; [D][G]: Good Media follower;
+        # [C][wtv]: opponent cooperated
+        # [C][D]: etc...
+        user_payoffs = np.array(
+            [
+                [0, -self.cU, -0.5 * self.cU, -(1 - self.q) * self.cU - self.cI],
+                [0, self.bU, 0.5 * self.bU, self.q * self.bU - self.cI],
+            ]
+        )
+        creator_payoffs = np.array(
+            [
+                [0, self.bP, 0.5 * self.bP, (1 - self.q) * self.bP],
+                [
+                    -self.cP,
+                    self.bP - self.cP,
+                    0.5 * self.bP - self.cP,
+                    self.q * self.bP - self.cP,
+                ],
+            ]
+        )
+        return user_payoffs, creator_payoffs
+
+    def calculate_payoff(self, user: User, creator: Creator):
+        user.fitness += self.user_payoff_matrix[creator.strategy, user.strategy]
+        creator.fitness += self.creator_payoff_matrix[creator.strategy, user.strategy]
 
     def init_population(self, parameters):
         """
@@ -38,8 +101,8 @@ class Simulator:
             list[User]: population of users
             list[Creator]: population of creators
         """
-        user_population = []
-        creator_population = []
+        user_population: list[User] = []
+        creator_population: list[Creator] = []
 
         # create population of users
         for i in range(0, self.num_users):
@@ -71,7 +134,7 @@ class Simulator:
 
             # user A plays Z games
             for creator in creators_for_user_a:
-                user_a.calculate_payoff(creator)
+                self.calculate_payoff(user_a, creator)
 
                 if self.past_convergence:
                     # action from user + action from creator
@@ -85,7 +148,7 @@ class Simulator:
 
             # user B plays Z games
             for creator in creators_for_user_b:
-                user_b.calculate_payoff(creator)
+                self.calculate_payoff(user_b, creator)
 
                 if self.past_convergence:
                     # action from user + action from creator
@@ -131,7 +194,7 @@ class Simulator:
 
             # creator A plays X games (X=#users)
             for user in users_for_creator_a:
-                creator_a.calculate_payoff(user)
+                self.calculate_payoff(user, creator_a)
 
                 if self.past_convergence:
                     # action from user + action from creator
@@ -146,7 +209,7 @@ class Simulator:
 
             # creator B plays X games (X=#users)
             for user in users_for_creator_b:
-                creator_b.calculate_payoff(user)
+                self.calculate_payoff(user, creator_b)
 
                 if self.past_convergence:
                     # action from user + action from creator
@@ -244,7 +307,7 @@ class Simulator:
             cd[gen] = (creator_strats_dict[0] / self.num_creators)
             cc[gen] = (creator_strats_dict[1] / self.num_creators)
             acr[gen] = (self.creator_cooperative_acts + self.user_cooperative_acts)/self.total_actions \
-                if self.past_convergence else 0
+                if (self.past_convergence and self.total_actions > 0) else 0
 
         if filename:
             self.write_output(filename, acr.tolist(), d.tolist(), c.tolist(), b.tolist(),
