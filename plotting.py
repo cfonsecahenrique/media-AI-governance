@@ -94,8 +94,8 @@ def plot_time_series(filename, parameters, runs, maxg=1000):
     caption_above = (
         f"Z: {sim_params['user population size']}  "
         f"Zc: {sim_params['creator population size']}  "
-        f"U(mutations): {sim_params['user mutation probability']}  "
-        f"C(mutations): {sim_params['creator mutation probability']}"
+        f"U(mutations): {100*(sim_params['user mutation probability']/sim_params['user population size'])}%  "
+        f"C(mutations): {100*(sim_params['creator mutation probability']/sim_params['creator population size'])}%"
     )
     caption_below = (
         f"media quality (q): {payoffs['media quality']}  "

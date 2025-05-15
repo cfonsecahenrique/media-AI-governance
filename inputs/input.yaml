@@ -6,14 +6,14 @@ simulation:
   creator population size: 50
   user selection strength: 10
   creator selection strength: 10
-  user mutation probability: 10
-  creator mutation probability: 10
+  user mutation probability: 1
+  creator mutation probability: 1
   generations: 5000
   convergence period: 0
 parameters:
   media quality: 0.9
   user benefit: 0.4
-  user cost: 0.6
-  cost investigation: 0.1
+  user cost: 0.8
+  cost investigation: 0.05
   creator benefit: 0.4
-  creator cost: 0.17
+  creator cost: 0.1
