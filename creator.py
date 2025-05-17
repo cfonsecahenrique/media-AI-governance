@@ -13,4 +13,3 @@ class Creator:
 
     def mutate(self):
         self.strategy: int = 1 - self.strategy
-

@@ -1,5 +1,6 @@
 # system imports
 import random
+
 # external libraries
 import numpy as np
 
@@ -29,4 +30,3 @@ class User:
         self.strategy: str = random.choice(
             list({ALL_REJECT, ALL_ADOPT, BAD_MEDIA, GOOD_MEDIA} - {self.strategy})
         )
-

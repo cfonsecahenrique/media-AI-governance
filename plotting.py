@@ -7,7 +7,6 @@ double_std: bool = False
 
 
 def plot_time_series(filename, parameters, runs, maxg=1000):
-
     sim_params = parameters[0]
     payoffs = parameters[1]
 
@@ -84,7 +83,9 @@ def plot_time_series(filename, parameters, runs, maxg=1000):
             np.array(avg[col][:maxg]) + 2 * np.array(std[col][:maxg]),
             alpha=0.1,
         )
-    ax3.axvline(x=sim_params["convergence period"], linestyle='--', color='gray', linewidth=1)
+    ax3.axvline(
+        x=sim_params["convergence period"], linestyle="--", color="gray", linewidth=1
+    )
     ax3.set_ylim(0, 1)
     ax3.set_xlabel("Generations")
     ax3.set_ylabel("Average Cooperation Ratio")
@@ -108,4 +109,41 @@ def plot_time_series(filename, parameters, runs, maxg=1000):
     fig.text(0.5, 0.01, caption_below, ha="center", fontsize=9, wrap=True)
     fig.suptitle(caption_above, fontsize=12, y=0.95)
     plt.tight_layout(rect=[0, 0.06, 1, 0.93])  # Leave space for caption
+    plt.show()
+
+
+def plot_heatmap(filenames, dir, vars, v1_range, v2_range, data_len, precision=101, save_fig=False):
+    translator = {
+        "q": "Media Quality",
+        "bU": "User Benefit",
+        "cU": "User Cost",
+        "cI": "Cost of Investigation",
+        "bP": "Creator Benefit",
+        "cP": "Creator Cost",
+    }
+
+    n_bins1 = len(v1_range)
+    n_bins2 = len(v2_range)
+    v1_range = np.round(v1_range, 2)
+    v2_range = np.round(v2_range, 2)
+    c_heatmap = np.zeros((n_bins1, n_bins2))
+
+    path = f"./outputs/{dir}"
+
+    for i, filename in enumerate(filenames):
+        data = pd.read_csv(f"{path}/{filename}.csv")
+        count, _ = np.histogram(data["acr"], bins=precision)
+        avg_cooperation_dist = count/data_len
+        avg_cooperation = sum([k/precision * avg_cooperation_dist[k] for k in range(precision)])
+        c_heatmap[i // n_bins2, i % n_bins2] = avg_cooperation
+    
+    plt.title("Average Cooperation Rate")
+    plt.imshow(c_heatmap, cmap='RdYlGn')
+    plt.xticks(ticks=[i for i in range(n_bins2)], labels=v2_range)
+    plt.yticks(ticks=[i for i in range(n_bins1)], labels=v1_range)
+    plt.xlabel(translator[vars[1]])
+    plt.ylabel(translator[vars[0]])
+    plt.colorbar()
+    if save_fig:
+        plt.savefig(f"{path}.png")
     plt.show()

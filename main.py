@@ -6,12 +6,13 @@ from time import time
 
 # external libraries
 import yaml
+import numpy as np
 import pandas as pd
 from tqdm import tqdm
 
 # custom libraries
 from simulator import Simulator
-from plotting import plot_time_series
+from plotting import plot_time_series, plot_heatmap
 
 
 def read_args():
@@ -45,16 +46,18 @@ def get_average_output(filename, clear_data=True):
         df = df[df["gen"] != "gen"]
 
         # Convert columns to correct types
-        df = df.astype({
-            "gen": int,
-            "acr": float,
-            "AllD": float,
-            "AllC": float,
-            "BMedia": float,
-            "GMedia": float,
-            "Unsafe": float,
-            "Safe": float,
-        })
+        df = df.astype(
+            {
+                "gen": int,
+                "acr": float,
+                "AllD": float,
+                "AllC": float,
+                "BMedia": float,
+                "GMedia": float,
+                "Unsafe": float,
+                "Safe": float,
+            }
+        )
 
         all_dataframes.append(df)
 
@@ -76,9 +79,12 @@ def get_average_output(filename, clear_data=True):
 def run(args):
     simulation, parameters = args
     sim = Simulator(simulation, parameters)
-    #print(sim.__str__())
+    # print(sim.__str__())
     sim.run(
-        filename="./outputs/" + simulation["outdir"] + "/" + str(mp.current_process()._identity)
+        filename="./outputs/"
+        + simulation["outdir"]
+        + "/"
+        + str(mp.current_process()._identity)
     )
 
 
@@ -99,11 +105,67 @@ def run_simulation(run_args, sim_args, clear_data=True):
     return outdir
 
 
+def run_heatmap(vars: list = ["q", "cI"], 
+                v1_start=0.5, v1_end=1.0, v1_steps=3, 
+                v2_start=0.0, v2_end=0.2, v2_steps=3, 
+                clear_data=True):
+    translator = {
+        "q": "media quality",
+        "bU": "user benefit",
+        "cU": "user cost",
+        "cI": "cost investigation",
+        "bP": "creator benefit",
+        "cP": "creator cost",
+    }
+    available_vars = ["q", "bU", "cU", "cI", "bP", "cP"]
+    if len(vars) != 2 or vars[0] not in available_vars or vars[1] not in available_vars:
+        raise ValueError("Parameter <vars> must be a list of 2 known variables.")
+
+    run_args, sim_args = read_args()
+
+    v1_range = np.linspace(v1_start, v1_end, v1_steps)
+    v2_range = np.linspace(v2_start, v2_end, v2_steps)
+
+    # Run simulation for all sets of parameters
+    results = []
+    for v1 in v1_range:
+        sim_args[1][translator[vars[0]]] = v1
+        for v2 in v2_range:
+            sim_args[1][translator[vars[1]]] = v2
+            results.append(run_simulation(run_args, sim_args))
+
+    path = f"./outputs/"
+    new_dir = round(time())
+    os.mkdir(f"{path}{new_dir}/")
+    for result in results:
+        os.rename(f"{path}{result}.csv", f"{path}{new_dir}/{result}.csv")
+
+    # Plot heatmap
+    plot_heatmap(results, new_dir, vars, v1_range, v2_range, data_len=sim_args[0]["generations"] * run_args["runs"], save_fig=True)
+
+    # Clean up files
+    path = f"{path}{new_dir}/"
+    if clear_data:
+        for file in os.listdir(path):
+            os.remove(os.path.join(path, file))
+        os.rmdir(path)
+
+    return results, new_dir
+
+
 if __name__ == "__main__":
     # run_args: runs + cores
     # sim_args[0]: "simulation"
     # sim_args[1]: "parameters"
-    run_args, sim_args = read_args()
-    result = run_simulation(run_args, sim_args)
-    print("All simulations complete, plotting results...")
-    plot_time_series(result, sim_args, run_args["runs"], maxg=sim_args[0]["generations"])
+    # run_args, sim_args = read_args()
+    # result = run_simulation(run_args, sim_args)
+    # print("All simulations complete, plotting results...")
+    # plot_time_series(
+    #     result, sim_args, run_args["runs"], maxg=sim_args[0]["generations"]
+    # )
+    run_heatmap(vars=["cI", "cP"], v1_start=0., v1_end=0.1, v1_steps=10, v2_start=0.1, v2_end=0.2, v2_steps=10)
+    
+    # v2_range = np.linspace(0, 0.2, 10)
+
+    # results = [1747486729,1747486731,1747486734,1747486736,1747486738,1747486740,1747486743,1747486745,1747486747,1747486749,1747486752,1747486754,1747486757,1747486760,1747486762,1747486765,1747486767,1747486770,1747486772,1747486774,1747486777,1747486779,1747486782,1747486785,1747486787, 1747486790,1747486792,1747486795,1747486797,1747486800]
+    # plot_heatmap(results, 1747486802, ["q", "cI"], [0.5,0.75,1], v2_range, 1000*100, save_fig=True)

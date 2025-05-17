@@ -14,9 +14,13 @@ class Simulator:
         self.num_users = simulation["user population size"]
         self.num_creators = simulation["creator population size"]
         self.user_beta = simulation["user selection strength"]
-        self.user_mutation_rate = simulation["user mutation probability"]/self.num_users
+        self.user_mutation_rate = (
+            simulation["user mutation probability"] / self.num_users
+        )
         self.creator_beta = simulation["user selection strength"]
-        self.creator_mutation_rate = simulation["creator mutation probability"]/self.num_creators
+        self.creator_mutation_rate = (
+            simulation["creator mutation probability"] / self.num_creators
+        )
         self.gens = simulation["generations"]
         self.media_quality = parameters["media quality"]
         self.converge = simulation["convergence period"]
@@ -29,7 +33,9 @@ class Simulator:
         self.bP = parameters["creator benefit"]
         self.cP = parameters["creator cost"]
 
-        self.user_payoff_matrix, self.creator_payoff_matrix = self.calculate_payoff_matrices()
+        self.user_payoff_matrix, self.creator_payoff_matrix = (
+            self.calculate_payoff_matrices()
+        )
         self.user_pop, self.creator_pop = self.init_population(parameters)
 
         self.user_cooperative_acts: int = 0
@@ -58,7 +64,6 @@ class Simulator:
             f"--------------------------------------------\n"
             f"Defect   | {creator_pm[0, 0]:>7.2f}  {creator_pm[0, 1]:>7.2f}  {creator_pm[0, 2]:>7.2f}  {creator_pm[0, 3]:>7.2f}\n"
             f"Cooperate| {creator_pm[1, 0]:>7.2f}  {creator_pm[1, 1]:>7.2f}  {creator_pm[1, 2]:>7.2f}  {creator_pm[1, 3]:>7.2f}\n"
-
         )
 
     def calculate_payoff_matrices(self):
@@ -129,8 +134,12 @@ class Simulator:
             user_b.fitness = 0
 
             # Sample once with replacement into a list to avoid repeated sampling
-            creators_for_user_a: list[Creator] = random.choices(self.creator_pop, k=self.num_creators)
-            creators_for_user_b: list[Creator] = random.choices(self.creator_pop, k=self.num_creators)
+            creators_for_user_a: list[Creator] = random.choices(
+                self.creator_pop, k=self.num_creators
+            )
+            creators_for_user_b: list[Creator] = random.choices(
+                self.creator_pop, k=self.num_creators
+            )
 
             # user A plays Z games
             for creator in creators_for_user_a:
@@ -141,7 +150,9 @@ class Simulator:
                     self.total_actions += 2
                     if user_a.strategy == 1:
                         self.user_cooperative_acts += 1
-                    elif (user_a.strategy == 2 and random.random() < 0.5) or (user_a.strategy == 3 and random.random() < self.media_quality):
+                    elif (user_a.strategy == 2 and random.random() < 0.5) or (
+                        user_a.strategy == 3 and random.random() < self.media_quality
+                    ):
                         self.user_cooperative_acts += 1
                     # 0 = def, 1 = coop
                     self.creator_cooperative_acts += creator.strategy
@@ -156,7 +167,8 @@ class Simulator:
                     if user_b.strategy == 1:
                         self.user_cooperative_acts += 1
                     elif (user_b.strategy == 2 and random.random() < 0.5) or (
-                            user_b.strategy == 3 and random.random() < self.media_quality):
+                        user_b.strategy == 3 and random.random() < self.media_quality
+                    ):
                         self.user_cooperative_acts += 1
                     # 0 = def, 1 = coop
                     self.creator_cooperative_acts += creator.strategy
@@ -202,7 +214,8 @@ class Simulator:
                     if user.strategy == 1:
                         self.user_cooperative_acts += 1
                     elif (user.strategy == 2 and random.random() < 0.5) or (
-                            user.strategy == 3 and random.random() < self.media_quality):
+                        user.strategy == 3 and random.random() < self.media_quality
+                    ):
                         self.user_cooperative_acts += 1
                     # 0 = def, 1 = coop
                     self.creator_cooperative_acts += creator_a.strategy
@@ -216,8 +229,9 @@ class Simulator:
                     self.total_actions += 2
                     if user.strategy == 1:
                         self.user_cooperative_acts += 1
-                    elif (user.strategy == 2 and random.random() < 0.5) or \
-                            (user.strategy == 3 and random.random() < self.media_quality):
+                    elif (user.strategy == 2 and random.random() < 0.5) or (
+                        user.strategy == 3 and random.random() < self.media_quality
+                    ):
                         self.user_cooperative_acts += 1
                     # 0 = def, 1 = coop
                     self.creator_cooperative_acts += creator_b.strategy
@@ -241,7 +255,9 @@ class Simulator:
         Returns:
             dict: count for each strategy
         """
-        strategies = np.fromiter((u.strategy for u in self.user_pop), dtype=np.int8, count=self.num_users)
+        strategies = np.fromiter(
+            (u.strategy for u in self.user_pop), dtype=np.int8, count=self.num_users
+        )
         counts = np.bincount(strategies, minlength=4)
         return dict(enumerate(counts))
 
@@ -252,7 +268,11 @@ class Simulator:
         Returns:
             dict: count for each strategy
         """
-        strategies = np.fromiter((c.strategy for c in self.creator_pop), dtype=np.int8, count=self.num_creators)
+        strategies = np.fromiter(
+            (c.strategy for c in self.creator_pop),
+            dtype=np.int8,
+            count=self.num_creators,
+        )
         counts = np.bincount(strategies, minlength=2)
         return dict(enumerate(counts))
 
@@ -285,7 +305,12 @@ class Simulator:
         Args:
             filename (str, optional): If given, writes the results of the simulation on the filename. Defaults to "".
         """
-        d, c, b, g = np.zeros(self.gens), np.zeros(self.gens), np.zeros(self.gens), np.zeros(self.gens)
+        d, c, b, g = (
+            np.zeros(self.gens),
+            np.zeros(self.gens),
+            np.zeros(self.gens),
+            np.zeros(self.gens),
+        )
         cc, cd = np.zeros(self.gens), np.zeros(self.gens)
         acr = np.zeros(self.gens)
 
@@ -300,15 +325,27 @@ class Simulator:
             user_strats_dict: dict = self.count_user_strategies()
             creator_strats_dict: dict = self.count_creator_strategies()
 
-            d[gen] = (user_strats_dict[0] / self.num_users)
-            c[gen] = (user_strats_dict[1] / self.num_users)
-            b[gen] = (user_strats_dict[2] / self.num_users)
-            g[gen] = (user_strats_dict[3] / self.num_users)
-            cd[gen] = (creator_strats_dict[0] / self.num_creators)
-            cc[gen] = (creator_strats_dict[1] / self.num_creators)
-            acr[gen] = (self.creator_cooperative_acts + self.user_cooperative_acts)/self.total_actions \
-                if (self.past_convergence and self.total_actions > 0) else 0
+            d[gen] = user_strats_dict[0] / self.num_users
+            c[gen] = user_strats_dict[1] / self.num_users
+            b[gen] = user_strats_dict[2] / self.num_users
+            g[gen] = user_strats_dict[3] / self.num_users
+            cd[gen] = creator_strats_dict[0] / self.num_creators
+            cc[gen] = creator_strats_dict[1] / self.num_creators
+            acr[gen] = (
+                (self.creator_cooperative_acts + self.user_cooperative_acts)
+                / self.total_actions
+                if (self.past_convergence and self.total_actions > 0)
+                else 0
+            )
 
         if filename:
-            self.write_output(filename, acr.tolist(), d.tolist(), c.tolist(), b.tolist(),
-                              g.tolist(), cd.tolist(), cc.tolist())
+            self.write_output(
+                filename,
+                acr.tolist(),
+                d.tolist(),
+                c.tolist(),
+                b.tolist(),
+                g.tolist(),
+                cd.tolist(),
+                cc.tolist(),
+            )
