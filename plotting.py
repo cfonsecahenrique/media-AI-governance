@@ -112,7 +112,9 @@ def plot_time_series(filename, parameters, runs, maxg=1000):
     plt.show()
 
 
-def plot_heatmap(filenames, dir, vars, v1_range, v2_range, data_len, precision=101, save_fig=False):
+def plot_heatmap(
+    filenames, dir, vars, v1_range, v2_range, data_len, precision=101, save_fig=False
+):
     translator = {
         "q": "Media Quality",
         "bU": "User Benefit",
@@ -133,14 +135,16 @@ def plot_heatmap(filenames, dir, vars, v1_range, v2_range, data_len, precision=1
     for i, filename in enumerate(filenames):
         data = pd.read_csv(f"{path}/{filename}.csv")
         count, _ = np.histogram(data["acr"], bins=precision)
-        avg_cooperation_dist = count/data_len
-        avg_cooperation = sum([k/precision * avg_cooperation_dist[k] for k in range(precision)])
+        avg_cooperation_dist = count / data_len
+        avg_cooperation = sum(
+            [k / precision * avg_cooperation_dist[k] for k in range(precision)]
+        )
         c_heatmap[i // n_bins2, i % n_bins2] = avg_cooperation
-    
+
     plt.title("Average Cooperation Rate")
-    plt.imshow(c_heatmap, cmap='RdYlGn')
+    plt.imshow(c_heatmap, cmap="RdYlGn")
     plt.xticks(ticks=[i for i in range(n_bins2)], labels=v2_range)
-    plt.yticks(ticks=[i for i in range(n_bins1)], labels=v1_range)
+    plt.yticks(ticks=[i for i in range(n_bins1)], labels=reversed(v1_range))
     plt.xlabel(translator[vars[1]])
     plt.ylabel(translator[vars[0]])
     plt.colorbar()

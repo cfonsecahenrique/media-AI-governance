@@ -105,10 +105,16 @@ def run_simulation(run_args, sim_args, clear_data=True):
     return outdir
 
 
-def run_heatmap(vars: list = ["q", "cI"], 
-                v1_start=0.5, v1_end=1.0, v1_steps=3, 
-                v2_start=0.0, v2_end=0.2, v2_steps=3, 
-                clear_data=True):
+def run_heatmap(
+    vars: list = ["q", "cI"],
+    v1_start=0.5,
+    v1_end=1.0,
+    v1_steps=3,
+    v2_start=0.0,
+    v2_end=0.2,
+    v2_steps=3,
+    clear_data=True,
+):
     translator = {
         "q": "media quality",
         "bU": "user benefit",
@@ -128,7 +134,7 @@ def run_heatmap(vars: list = ["q", "cI"],
 
     # Run simulation for all sets of parameters
     results = []
-    for v1 in v1_range:
+    for v1 in reversed(v1_range):
         sim_args[1][translator[vars[0]]] = v1
         for v2 in v2_range:
             sim_args[1][translator[vars[1]]] = v2
@@ -141,7 +147,15 @@ def run_heatmap(vars: list = ["q", "cI"],
         os.rename(f"{path}{result}.csv", f"{path}{new_dir}/{result}.csv")
 
     # Plot heatmap
-    plot_heatmap(results, new_dir, vars, v1_range, v2_range, data_len=sim_args[0]["generations"] * run_args["runs"], save_fig=True)
+    plot_heatmap(
+        results,
+        new_dir,
+        vars,
+        v1_range,
+        v2_range,
+        data_len=sim_args[0]["generations"] * run_args["runs"],
+        save_fig=True,
+    )
 
     # Clean up files
     path = f"{path}{new_dir}/"
@@ -163,8 +177,16 @@ if __name__ == "__main__":
     # plot_time_series(
     #     result, sim_args, run_args["runs"], maxg=sim_args[0]["generations"]
     # )
-    run_heatmap(vars=["cI", "cP"], v1_start=0., v1_end=0.1, v1_steps=10, v2_start=0.1, v2_end=0.2, v2_steps=10)
-    
+    run_heatmap(
+        vars=["q", "cI"],
+        v1_start=0.5,
+        v1_end=1.0,
+        v1_steps=10,
+        v2_start=0.0,
+        v2_end=0.1,
+        v2_steps=103,
+    )
+
     # v2_range = np.linspace(0, 0.2, 10)
 
     # results = [1747486729,1747486731,1747486734,1747486736,1747486738,1747486740,1747486743,1747486745,1747486747,1747486749,1747486752,1747486754,1747486757,1747486760,1747486762,1747486765,1747486767,1747486770,1747486772,1747486774,1747486777,1747486779,1747486782,1747486785,1747486787, 1747486790,1747486792,1747486795,1747486797,1747486800]
