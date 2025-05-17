@@ -9,7 +9,7 @@ simulation:
   user mutation probability: 1
   creator mutation probability: 1
   generations: 5000
-  convergence period: 0
+  convergence period: 500
 parameters:
   media quality: 0.9
   user benefit: 0.4
