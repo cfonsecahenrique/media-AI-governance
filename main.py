@@ -2,7 +2,7 @@
 import os
 import sys
 import multiprocessing as mp
-from time import time
+from time import time, sleep
 
 # external libraries
 import yaml
@@ -132,6 +132,8 @@ def run_heatmap(vars: list = ["q", "cI"], v1_start=0.5, v1_end=1.0, v1_steps=3, 
         for v2 in v2_range:
             sim_args[1][translator[vars[1]]] = v2
             results.append(run_simulation(run_args, sim_args))
+            sleep(0.1)
+            
 
     path = f"./outputs/"
     new_dir = round(time())
