@@ -105,16 +105,9 @@ def run_simulation(run_args, sim_args, clear_data=True):
     return outdir
 
 
-def run_heatmap(
-    vars: list = ["q", "cI"],
-    v1_start=0.5,
-    v1_end=1.0,
-    v1_steps=3,
-    v2_start=0.0,
-    v2_end=0.2,
-    v2_steps=3,
-    clear_data=True,
-):
+def run_heatmap(vars: list = ["q", "cI"], v1_start=0.5, v1_end=1.0, v1_steps=3, v2_start=0.0,
+                v2_end=0.2, v2_steps=3, clear_data=True):
+    print("Drawing heatmaps...")
     translator = {
         "q": "media quality",
         "bU": "user benefit",
@@ -146,6 +139,7 @@ def run_heatmap(
     for result in results:
         os.rename(f"{path}{result}.csv", f"{path}{new_dir}/{result}.csv")
 
+    print("Saving heatmap figure...")
     # Plot heatmap
     plot_heatmap(
         results,

@@ -2,8 +2,8 @@ running:
   runs: 100
   cores: all
 simulation:
-  user population size: 100
-  creator population size: 50
+  user population size: 200
+  creator population size: 100
   user selection strength: 10
   creator selection strength: 10
   user mutation probability: 1
