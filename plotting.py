@@ -112,9 +112,7 @@ def plot_time_series(filename, parameters, runs, maxg=1000):
     plt.show()
 
 
-def plot_heatmap(
-    filenames, dir, vars, v1_range, v2_range, data_len, precision=101, save_fig=False
-):
+def plot_heatmap(filenames, dir, vars, v1_range, v2_range, data_len, precision=101, save_fig=False):
     translator = {
         "q": "Media Quality",
         "bU": "User Benefit",
@@ -143,8 +141,8 @@ def plot_heatmap(
 
     plt.title("Average Cooperation Rate")
     plt.imshow(c_heatmap, cmap="RdYlGn")
-    plt.xticks(ticks=[i for i in range(n_bins2)], labels=v2_range)
-    plt.yticks(ticks=[i for i in range(n_bins1)], labels=reversed(v1_range))
+    plt.xticks(ticks=np.linspace(0, n_bins2 - 1, 10), labels=v2_range)
+    plt.yticks(ticks=np.linspace(0, n_bins1 - 1, 10), labels=reversed(v1_range))
     plt.xlabel(translator[vars[1]])
     plt.ylabel(translator[vars[0]])
     plt.colorbar()

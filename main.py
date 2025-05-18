@@ -175,10 +175,10 @@ if __name__ == "__main__":
         vars=["q", "cI"],
         v1_start=0.5,
         v1_end=1.0,
-        v1_steps=11,
+        v1_steps=51,
         v2_start=0.0,
         v2_end=0.1,
-        v2_steps=11,
+        v2_steps=51,
     )
 
     # v2_range = np.linspace(0, 0.2, 10)

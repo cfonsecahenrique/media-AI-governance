@@ -1,15 +1,15 @@
 running:
-  runs: 200
+  runs: 2
   cores: all
 simulation:
-  user population size: 200
-  creator population size: 100
+  user population size: 20
+  creator population size: 10
   user selection strength: 10
   creator selection strength: 10
   user mutation probability: 1
   creator mutation probability: 1
-  generations: 5000
-  convergence period: 500
+  generations: 500
+  convergence period: 50
 parameters:
   media quality: 0.9
   user benefit: 0.4
