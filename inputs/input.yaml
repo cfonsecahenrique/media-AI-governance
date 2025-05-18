@@ -1,5 +1,5 @@
 running:
-  runs: 100
+  runs: 200
   cores: all
 simulation:
   user population size: 200
