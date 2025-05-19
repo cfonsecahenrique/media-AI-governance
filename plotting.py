@@ -89,7 +89,7 @@ def plot_time_series(filename, parameters, runs, maxg=1000):
     ax3.set_ylim(0, 1)
     ax3.set_xlabel("Generations")
     ax3.set_ylabel("Average Cooperation Ratio")
-    ax3.legend(loc="lower right")
+    #ax3.legend(loc="lower right")
 
     # ==== CAPTION with PARAMETERS ====
     caption_above = (
