@@ -11,6 +11,7 @@ from creator import Creator
 
 class Simulator:
     def __init__(self, simulation, parameters):
+        self.sim_type = simulation["type"]
         self.num_users = simulation["user population size"]
         self.num_creators = simulation["creator population size"]
         self.user_beta = simulation["user selection strength"]
@@ -23,8 +24,13 @@ class Simulator:
         )
         self.gens = simulation["generations"]
         self.media_quality = parameters["media quality"]
-        self.converge = simulation["convergence period"]
-        self.past_convergence = False
+
+        if self.sim_type == "heat_map":
+            self.converge = simulation["convergence period"]*self.gens
+            self.past_convergence = False
+        else:
+            self.converge = 0
+            self.past_convergence = True
 
         self.q = parameters["media quality"]
         self.bU = parameters["user benefit"]

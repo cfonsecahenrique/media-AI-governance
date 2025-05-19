@@ -10,6 +10,7 @@ import numpy as np
 import pandas as pd
 from tqdm import tqdm
 
+import pprint
 # custom libraries
 from simulator import Simulator
 from plotting import plot_time_series, plot_heatmap
@@ -24,12 +25,16 @@ def read_args():
     with open(file_name, "r") as f:
         data = yaml.safe_load(f)
 
-    return data["running"], (data["simulation"], data["parameters"])
+    if data["simulation"]["type"] == "time_series":
+        return data["running"], data["simulation"], data["parameters"], None
+    elif data["simulation"]["type"] == "heatmap":
+        return data["running"], data["simulation"], data["parameters"], data["heatmap"]
+    else:
+        raise ValueError("This type of simulation currently doesn't exist. Please choose 'time series' or 'heatmap'.")
 
 
 def get_average_output(filename, clear_data=True):
     path = f"./outputs/{filename}/"
-    print("Processing results...")
 
     all_dataframes = []
 
@@ -95,19 +100,25 @@ def run_simulation(run_args, sim_args, clear_data=True):
 
     num_cores = mp.cpu_count() - 1 if run_args["cores"] == "all" else run_args["cores"]
 
+    print("============ Running experiment of", run_args["runs"],
+          "simulations in", num_cores, "cores: ============")
+    if sim_args[0]["type"] == "time_series":
+        pprint.pp(sim_args)
+
+    print("Pooling processes...")
     with mp.Pool(processes=num_cores) as pool:
         list(
             tqdm(pool.imap(run, [sim_args] * run_args["runs"]), total=run_args["runs"])
         )
 
+    print("Simulations done. Processing results...")
     get_average_output(outdir, clear_data)
 
     return outdir
 
 
-def run_heatmap(vars: list = ["q", "cI"], v1_start=0.5, v1_end=1.0, v1_steps=3, v2_start=0.0,
+def run_heatmap(vars: list = ("q", "cI"), v1_start=0.5, v1_end=1.0, v1_steps=3, v2_start=0.0,
                 v2_end=0.2, v2_steps=3, clear_data=True):
-    print("Drawing heatmaps...")
     translator = {
         "q": "media quality",
         "bU": "user benefit",
@@ -120,7 +131,7 @@ def run_heatmap(vars: list = ["q", "cI"], v1_start=0.5, v1_end=1.0, v1_steps=3, 
     if len(vars) != 2 or vars[0] not in available_vars or vars[1] not in available_vars:
         raise ValueError("Parameter <vars> must be a list of 2 known variables.")
 
-    run_args, sim_args = read_args()
+    run_args, sim_args, payoffs, _ = read_args()
 
     v1_range = np.linspace(v1_start, v1_end, v1_steps)
     v2_range = np.linspace(v2_start, v2_end, v2_steps)
@@ -128,12 +139,11 @@ def run_heatmap(vars: list = ["q", "cI"], v1_start=0.5, v1_end=1.0, v1_steps=3, 
     # Run simulation for all sets of parameters
     results = []
     for v1 in reversed(v1_range):
-        sim_args[1][translator[vars[0]]] = v1
+        sim_args[translator[vars[0]]] = v1
         for v2 in v2_range:
-            sim_args[1][translator[vars[1]]] = v2
-            results.append(run_simulation(run_args, sim_args))
+            sim_args[translator[vars[1]]] = v2
+            results.append(run_simulation(run_args, (sim_args, payoffs)))
             sleep(0.1)
-            
 
     path = f"./outputs/"
     new_dir = round(time())
@@ -141,7 +151,6 @@ def run_heatmap(vars: list = ["q", "cI"], v1_start=0.5, v1_end=1.0, v1_steps=3, 
     for result in results:
         os.rename(f"{path}{result}.csv", f"{path}{new_dir}/{result}.csv")
 
-    print("Saving heatmap figure...")
     # Plot heatmap
     plot_heatmap(
         results,
@@ -149,7 +158,7 @@ def run_heatmap(vars: list = ["q", "cI"], v1_start=0.5, v1_end=1.0, v1_steps=3, 
         vars,
         v1_range,
         v2_range,
-        data_len=sim_args[0]["generations"] * run_args["runs"],
+        data_len=sim_args["generations"] * run_args["runs"],
         save_fig=True,
     )
 
@@ -165,25 +174,22 @@ def run_heatmap(vars: list = ["q", "cI"], v1_start=0.5, v1_end=1.0, v1_steps=3, 
 
 if __name__ == "__main__":
     # run_args: runs + cores
-    # sim_args[0]: "simulation"
-    # sim_args[1]: "parameters"
-    # run_args, sim_args = read_args()
-    # result = run_simulation(run_args, sim_args)
-    # print("All simulations complete, plotting results...")
-    # plot_time_series(
-    #     result, sim_args, run_args["runs"], maxg=sim_args[0]["generations"]
-    # )
-    run_heatmap(
-        vars=["q", "cI"],
-        v1_start=0.5,
-        v1_end=1.0,
-        v1_steps=51,
-        v2_start=0.0,
-        v2_end=0.1,
-        v2_steps=51,
-    )
+    run_args, sim_args, payoffs, heatmap_args = read_args()
 
-    # v2_range = np.linspace(0, 0.2, 10)
-
-    # results = [1747486729,1747486731,1747486734,1747486736,1747486738,1747486740,1747486743,1747486745,1747486747,1747486749,1747486752,1747486754,1747486757,1747486760,1747486762,1747486765,1747486767,1747486770,1747486772,1747486774,1747486777,1747486779,1747486782,1747486785,1747486787, 1747486790,1747486792,1747486795,1747486797,1747486800]
-    # plot_heatmap(results, 1747486802, ["q", "cI"], [0.5,0.75,1], v2_range, 1000*100, save_fig=True)
+    if sim_args["type"] == "time_series":
+        # sim_args[0]: "simulation"
+        # sim_args[1]: "parameters"
+        result = run_simulation(run_args, (sim_args, payoffs))
+        plot_time_series(result, (sim_args, payoffs), run_args["runs"], maxg=sim_args["generations"], save_fig=True)
+    elif sim_args["type"] == "heatmap":
+        run_heatmap(
+            vars=heatmap_args["vars"],
+            v1_start=heatmap_args["v1_start"],
+            v1_end=heatmap_args["v1_end"],
+            v1_steps=heatmap_args["v1_steps"],
+            v2_start=heatmap_args["v2_start"],
+            v2_end=heatmap_args["v2_end"],
+            v2_steps=heatmap_args["v2_steps"]
+        )
+    else:
+        raise ValueError("__main__: Oops, that type doesn't exist yet.")

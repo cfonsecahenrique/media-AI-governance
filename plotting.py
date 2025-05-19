@@ -2,14 +2,36 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from time import time
+import os
 
 double_std: bool = False
 
+KEY_MAP = {
+    "user population size": "Zu",
+    "creator population size": "Zc",
+    "user selection strength": "Uβ",
+    "creator selection strength": "Cβ",
+    "user mutation probability": "Uμ",
+    "creator mutation probability": "Cμ",
+    "generations": "G",
+    "convergence period": "conv",
+    "outdir": "out",
+    "media quality": "q",
+    "user benefit": "bu",
+    "user cost": "cu",
+    "cost investigation": "ci",
+    "creator benefit": "bc",
+    "creator cost": "cc",
+}
 
-def plot_time_series(filename, parameters, runs, maxg=1000):
+
+def plot_time_series(filename, parameters, runs, maxg=1000, save_fig=False):
+    print("Creating time series figure...")
     sim_params = parameters[0]
     payoffs = parameters[1]
 
+    print("Opening data file...")
     data = pd.read_csv(f"./outputs/{filename}.csv")
     gens = parameters[0]["generations"]
     columns = data.columns[1:]
@@ -109,10 +131,42 @@ def plot_time_series(filename, parameters, runs, maxg=1000):
     fig.text(0.5, 0.01, caption_below, ha="center", fontsize=9, wrap=True)
     fig.suptitle(caption_above, fontsize=12, y=0.95)
     plt.tight_layout(rect=[0, 0.06, 1, 0.93])  # Leave space for caption
+    if save_fig:
+        save_figure_with_params(plt, sim_params, payoffs, type="time_series")
     plt.show()
 
 
+def save_figure_with_params(fig, sim_params, payoffs, type="time_series", base_dir="outputs"):
+    # Step 1: Merge both dictionaries
+    all_params = {**sim_params, **payoffs}
+
+    # Step 2: Create a directory name with short keys
+    safe_dir_parts = []
+    for key, value in all_params.items():
+        if key == "outdir":
+            continue
+        short_key = KEY_MAP.get(key, key.replace(" ", ""))
+        val_str = str(value).replace(".", "p")  # avoid issues with '.' in folder names
+        safe_dir_parts.append(f"{short_key}_{val_str}")
+    dir_name = "_".join(safe_dir_parts)
+
+    # Step 3: Full path
+    full_dir_path = os.path.join(base_dir, type, dir_name)
+
+    # Step 4: Create directory if needed
+    os.makedirs(full_dir_path, exist_ok=True)
+
+    # Step 5: Use timestamp to save figure
+    timestamp = str(int(time()))
+    file_path = os.path.join(full_dir_path, f"{type}_{timestamp}.png")
+
+    # Step 6: Save and report
+    fig.savefig(file_path)
+    print(f"Figure saved to: {file_path}")
+
+
 def plot_heatmap(filenames, dir, vars, v1_range, v2_range, data_len, precision=101, save_fig=False):
+    print("Drawing heatmaps...")
     translator = {
         "q": "Media Quality",
         "bU": "User Benefit",
@@ -141,8 +195,14 @@ def plot_heatmap(filenames, dir, vars, v1_range, v2_range, data_len, precision=1
 
     plt.title("Average Cooperation Rate")
     plt.imshow(c_heatmap, cmap="RdYlGn")
-    plt.xticks(ticks=np.linspace(0, n_bins2 - 1, 10), labels=v2_range)
-    plt.yticks(ticks=np.linspace(0, n_bins1 - 1, 10), labels=reversed(v1_range))
+    if n_bins2 < 10:
+        plt.xticks(ticks=n_bins2, labels=v2_range)
+    else:
+        plt.xticks(ticks=np.linspace(0, n_bins2 - 1, 10), labels=v2_range)
+    if n_bins1 < 10:
+        plt.xticks(ticks=n_bins1, labels=v1_range)
+    else:
+        plt.yticks(ticks=np.linspace(0, n_bins1 - 1, 10), labels=reversed(v1_range))
     plt.xlabel(translator[vars[1]])
     plt.ylabel(translator[vars[0]])
     plt.colorbar()
