@@ -323,10 +323,12 @@ class Simulator:
         for gen in range(self.gens):
             if gen > self.converge:
                 self.past_convergence = True
-            # 1. Evolve agents
-            self.user_evolution_step()
-            # 2. Evolve Creators
-            self.creator_evolution_step()
+            for _ in range(self.num_users):
+                # 1. Evolve agents
+                self.user_evolution_step()
+            for _ in range(self.num_creators):
+                # 2. Evolve Creators
+                self.creator_evolution_step()
 
             user_strats_dict: dict = self.count_user_strategies()
             creator_strats_dict: dict = self.count_creator_strategies()

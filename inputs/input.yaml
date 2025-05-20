@@ -1,15 +1,15 @@
 running:
-  runs: 100
-  cores: all
+  runs: 50
+  cores: 10
 simulation:
-  type: "heatmap"
-  user population size: 200
-  creator population size: 100
+  type: "time_series"
+  user population size: 100
+  creator population size: 50
   user selection strength: 10
   creator selection strength: 10
-  user mutation probability: 10
-  creator mutation probability: 10
-  generations: 10000
+  user mutation probability: 1
+  creator mutation probability: 1
+  generations: 4000
   convergence period: 0.1 # percentage of generations
 parameters:
   media quality: 0.9
