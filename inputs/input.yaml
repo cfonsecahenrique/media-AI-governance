@@ -1,5 +1,5 @@
 running:
-  runs: 100
+  runs: 200
   cores: all
 simulation:
   type: "heatmap"
@@ -9,7 +9,7 @@ simulation:
   creator selection strength: 10
   user mutation probability: 10
   creator mutation probability: 10
-  generations: 10000
+  generations: 5000
   convergence period: 0.1 # percentage of generations
 parameters:
   media quality: 0.9
@@ -24,6 +24,6 @@ heatmap:
   v1_end: 0.3
   v1_steps: 21
   v2_start: 0.0
-  v2_end: 0.1
+  v2_end: 0.2
   v2_steps: 21
 
