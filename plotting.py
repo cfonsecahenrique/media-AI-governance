@@ -193,16 +193,18 @@ def plot_heatmap(filenames, dir, vars, v1_range, v2_range, data_len, precision=1
         )
         c_heatmap[i // n_bins2, i % n_bins2] = avg_cooperation
 
+    xticks_labels = v2_range if n_bins2 < 10 else np.linspace(v2_range[0], v2_range[-1], 10)
+    yticks_labels = v1_range if n_bins1 < 10 else np.linspace(v1_range[0], v1_range[-1], 10)
+    xticks_labels = [round(i, 2) for i in xticks_labels]
+    yticks_labels = [round(i, 2) for i in yticks_labels]
+
+    xticks = np.linspace(0, n_bins2-1, n_bins2 if n_bins2 < 10 else 10)
+    yticks = np.linspace(0, n_bins1, n_bins1 if n_bins1 < 10 else 10)
+
     plt.title("Average Cooperation Rate")
     plt.imshow(c_heatmap, cmap="RdYlGn")
-    if n_bins2 < 10:
-        plt.xticks(ticks=n_bins2, labels=v2_range)
-    else:
-        plt.xticks(ticks=np.linspace(0, n_bins2 - 1, 10), labels=v2_range)
-    if n_bins1 < 10:
-        plt.xticks(ticks=n_bins1, labels=v1_range)
-    else:
-        plt.yticks(ticks=np.linspace(0, n_bins1 - 1, 10), labels=reversed(v1_range))
+    plt.xticks(ticks=xticks, labels=xticks_labels)
+    plt.yticks(ticks=yticks, labels=reversed(yticks_labels))
     plt.xlabel(translator[vars[1]])
     plt.ylabel(translator[vars[0]])
     plt.colorbar()
