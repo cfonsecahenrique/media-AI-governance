@@ -191,7 +191,7 @@ def plot_heatmap(filenames, dir, vars, v1_range, v2_range, data_len, precision=1
             [k / precision * avg_cooperation_dist[k] for k in range(precision)]
         )
         c_heatmap[i // n_bins2, i % n_bins2] = avg_cooperation
-        print(i // n_bins2, i % n_bins2, avg_cooperation)
+        # print(i // n_bins2, i % n_bins2, avg_cooperation)
 
     xticks_labels = v2_range if n_bins2 < 10 else np.linspace(v2_range[0], v2_range[-1], 10)
     yticks_labels = v1_range if n_bins1 < 10 else np.linspace(v1_range[0], v1_range[-1], 10)

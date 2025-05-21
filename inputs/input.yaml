@@ -9,7 +9,7 @@ simulation:
   creator selection strength: 1
   user mutation probability: 1
   creator mutation probability: 1
-  generations: 300
+  generations: 50
   convergence period: 0.1 # percentage of generations
 parameters:
   media quality: 0.9

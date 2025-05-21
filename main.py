@@ -141,7 +141,7 @@ def run_heatmap(vars: list = ("q", "cI"), v1_start=0.5, v1_end=1.0, v1_steps=3, 
     # Run simulation for all sets of parameters
     n_sims = len(v1_range) * len(v2_range)
     results = []
-    for i, v1 in enumerate(reversed(v1_range)):
+    for i, v1 in enumerate(v1_range):
         payoffs[translator[vars[0]]] = v1
         for j, v2 in enumerate(v2_range):
             print(f"============ Running experiment {i*len(v2_range)+j+1} of {n_sims} ============")
