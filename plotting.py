@@ -46,7 +46,7 @@ def plot_time_series(filename, parameters, runs, maxg=1000, save_fig=False):
 
     fig, (ax1, ax2, ax3) = plt.subplots(3, figsize=(10, 8))
     colors = ["red", "green", "orange", "blue"]
-    for i, col in enumerate(columns[1:5]):
+    for i, col in enumerate(columns[3:7]):
         ax1.plot(avg[col][:maxg], color=colors[i], label=col)
         ax1.fill_between(
             range(len(avg[col][:maxg])),
@@ -68,7 +68,7 @@ def plot_time_series(filename, parameters, runs, maxg=1000, save_fig=False):
     ax1.set_ylim(0, 1)
 
     colors = ["red", "green"]
-    for i, col in enumerate(columns[5:]):
+    for i, col in enumerate(columns[7:]):
         ax2.plot(avg[col][:maxg], color=colors[i], label=col)
         ax2.fill_between(
             range(len(avg[col][:maxg])),
@@ -86,32 +86,31 @@ def plot_time_series(filename, parameters, runs, maxg=1000, save_fig=False):
                 color=colors[i],
             )
     ax2.set_ylim(0, 1)
-    ax2.set_xlabel("Generations")
     ax2.set_ylabel("Frequency of Strategy")
     ax2.legend(loc="lower right")
 
-    col = columns[0]  # 'acr' column
-    ax3.plot(range(1, maxg), avg[col][1:maxg], label=col)
-    ax3.fill_between(
-        range(len(avg[col][:maxg])),
-        np.array(avg[col][:maxg]) - np.array(std[col][:maxg]),
-        np.array(avg[col][:maxg]) + np.array(std[col][:maxg]),
-        alpha=0.2,
-    )
-    if double_std:
+    for i, col in enumerate(columns[0:3]):
+        ax3.plot(range(1, maxg), avg[col][1:maxg], label=col)
         ax3.fill_between(
-            range(1, len(avg[col][1:maxg])),
-            np.array(avg[col][:maxg]) - 2 * np.array(std[col][:maxg]),
-            np.array(avg[col][:maxg]) + 2 * np.array(std[col][:maxg]),
-            alpha=0.1,
+            range(len(avg[col][:maxg])),
+            np.array(avg[col][:maxg]) - np.array(std[col][:maxg]),
+            np.array(avg[col][:maxg]) + np.array(std[col][:maxg]),
+            alpha=0.2,
         )
+        if double_std:
+            ax3.fill_between(
+                range(1, len(avg[col][1:maxg])),
+                np.array(avg[col][:maxg]) - 2 * np.array(std[col][:maxg]),
+                np.array(avg[col][:maxg]) + 2 * np.array(std[col][:maxg]),
+                alpha=0.1,
+            )
     ax3.axvline(
         x=sim_params["convergence period"], linestyle="--", color="gray", linewidth=1
     )
     ax3.set_ylim(0, 1)
     ax3.set_xlabel("Generations")
     ax3.set_ylabel("Average Cooperation Ratio")
-    #ax3.legend(loc="lower right")
+    ax3.legend(loc="lower right")
 
     # ==== CAPTION with PARAMETERS ====
     caption_above = (
@@ -192,6 +191,7 @@ def plot_heatmap(filenames, dir, vars, v1_range, v2_range, data_len, precision=1
             [k / precision * avg_cooperation_dist[k] for k in range(precision)]
         )
         c_heatmap[i // n_bins2, i % n_bins2] = avg_cooperation
+        print(i // n_bins2, i % n_bins2, avg_cooperation)
 
     xticks_labels = v2_range if n_bins2 < 10 else np.linspace(v2_range[0], v2_range[-1], 10)
     yticks_labels = v1_range if n_bins1 < 10 else np.linspace(v1_range[0], v1_range[-1], 10)
@@ -202,12 +202,13 @@ def plot_heatmap(filenames, dir, vars, v1_range, v2_range, data_len, precision=1
     yticks = np.linspace(0, n_bins1, n_bins1 if n_bins1 < 10 else 10)
 
     plt.title("Average Cooperation Rate")
-    plt.imshow(c_heatmap, cmap="RdYlGn")
+    plt.imshow(c_heatmap, cmap="RdYlGn", vmin=0, vmax=1)
     plt.xticks(ticks=xticks, labels=xticks_labels)
     plt.yticks(ticks=yticks, labels=reversed(yticks_labels))
     plt.xlabel(translator[vars[1]])
     plt.ylabel(translator[vars[0]])
     plt.colorbar()
     if save_fig:
+        print("Heatmap saved.")
         plt.savefig(f"{path}.png")
     plt.show()

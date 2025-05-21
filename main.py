@@ -55,6 +55,8 @@ def get_average_output(filename, clear_data=True):
             {
                 "gen": int,
                 "acr": float,
+                "acr_u": float,
+                "acr_c": float,
                 "AllD": float,
                 "AllC": float,
                 "BMedia": float,

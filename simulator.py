@@ -282,27 +282,29 @@ class Simulator:
         counts = np.bincount(strategies, minlength=2)
         return dict(enumerate(counts))
 
-    def write_output(self, filename, acr, d, c, b, g, cd, cc):
+    def write_output(self, filename, acr, acr_u, acr_c, d, c, b, g, cd, cc):
         """
         Write the output of the simulation on a csv file
 
         Args:
             filename (_type_): _description_
-            acr (np.array): total cooperation ratio over generations (past convergence period)
-            d (np.array): list of all d users over generations
-            c (np.array): list of all c users over generations
-            g (np.array): list of good media users over generations
-            b (np.array): list of bad media users over generations
-            cd (np.array): list of defective creators over generations
-            cc (np.array): list of cooperative creators over generations
+            acr (list): total cooperation ratio over generations (past convergence period)
+            :param acr_c: cooperation ratio of creators
+            :param acr_u: cooperation ratio of users
+            d (list): list of all d users over generations
+            c (list): list of all c users over generations
+            g (list): list of good media users over generations
+            b (list): list of bad media users over generations
+            cd (list): list of defective creators over generations
+            cc (list): list of cooperative creators over generations
         """
         path = f"{filename}.csv"
         with open(path, "a") as file:
-            labels = "gen,acr,AllD,AllC,BMedia,GMedia,Unsafe,Safe\n"
+            labels = "gen,acr,acr_u,acr_c,AllD,AllC,BMedia,GMedia,Unsafe,Safe\n"
             file.write(labels)
 
             for i in range(self.gens):
-                output = f"{i},{acr[i]},{d[i]},{c[i]},{b[i]},{g[i]},{cd[i]},{cc[i]}\n"
+                output = f"{i},{acr[i]},{acr_u[i]},{acr_c[i]},{d[i]},{c[i]},{b[i]},{g[i]},{cd[i]},{cc[i]}\n"
                 file.write(output)
 
     def run(self, filename: str = ""):
@@ -319,6 +321,8 @@ class Simulator:
         )
         cc, cd = np.zeros(self.gens), np.zeros(self.gens)
         acr = np.zeros(self.gens)
+        acr_u = np.zeros(self.gens)
+        acr_c = np.zeros(self.gens)
 
         for gen in range(self.gens):
             if gen > self.converge:
@@ -339,17 +343,24 @@ class Simulator:
             g[gen] = user_strats_dict[3] / self.num_users
             cd[gen] = creator_strats_dict[0] / self.num_creators
             cc[gen] = creator_strats_dict[1] / self.num_creators
-            acr[gen] = (
-                (self.creator_cooperative_acts + self.user_cooperative_acts)
-                / self.total_actions
-                if (self.past_convergence and self.total_actions > 0)
-                else 0
-            )
+            if self.past_convergence and self.total_actions > 0:
+                acr[gen] = (
+                    (self.creator_cooperative_acts + self.user_cooperative_acts)
+                    / self.total_actions
+                )
+                acr_u[gen] = self.user_cooperative_acts / (self.total_actions/2)
+                acr_c[gen] = self.creator_cooperative_acts / (self.total_actions/2)
+            else:
+                acr[gen] = 0
+                acr_u[gen] = 0
+                acr_c[gen] = 0
 
         if filename:
             self.write_output(
                 filename,
                 acr.tolist(),
+                acr_u.tolist(),
+                acr_c.tolist(),
                 d.tolist(),
                 c.tolist(),
                 b.tolist(),
