@@ -147,7 +147,7 @@ def run_heatmap(vars: list = ("q", "cI"), v1_start=0.5, v1_end=1.0, v1_steps=3, 
             print(f"============ Running experiment {i*len(v2_range)+j+1} of {n_sims} ============")
             sim_args[translator[vars[1]]] = v2
             results.append(run_simulation(run_args, (sim_args, payoffs)))
-            sleep(0.1)
+            sleep(0.05)
 
     path = f"./outputs/"
     new_dir = round(time())
