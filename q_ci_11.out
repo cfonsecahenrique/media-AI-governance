@@ -1,849 +1,0 @@
-============ Running experiment 1 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:09<07:42,  9.43s/it]  4%|▍         | 2/50 [00:10<03:32,  4.43s/it]  6%|▌         | 3/50 [00:11<02:15,  2.88s/it] 18%|█▊        | 9/50 [00:11<00:27,  1.51it/s] 20%|██        | 10/50 [00:12<00:24,  1.66it/s] 36%|███▌      | 18/50 [00:12<00:07,  4.45it/s] 96%|█████████▌| 48/50 [00:13<00:00, 12.52it/s]100%|██████████| 50/50 [00:14<00:00,  3.50it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747862149.csv
-============ Running experiment 2 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:22, 10.25s/it]  4%|▍         | 2/50 [00:11<03:55,  4.91s/it]  6%|▌         | 3/50 [00:11<02:09,  2.75s/it]  8%|▊         | 4/50 [00:12<01:30,  1.98s/it] 36%|███▌      | 18/50 [00:12<00:07,  4.32it/s] 96%|█████████▌| 48/50 [00:12<00:00, 14.25it/s]100%|██████████| 50/50 [00:15<00:00,  3.28it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747862165.csv
-============ Running experiment 3 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:09<07:50,  9.60s/it]  4%|▍         | 2/50 [00:11<04:15,  5.32s/it] 20%|██        | 10/50 [00:12<00:28,  1.42it/s] 36%|███▌      | 18/50 [00:12<00:10,  3.06it/s] 48%|████▊     | 24/50 [00:12<00:05,  4.60it/s] 96%|█████████▌| 48/50 [00:13<00:00, 11.04it/s]100%|██████████| 50/50 [00:14<00:00,  3.35it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747862183.csv
-============ Running experiment 4 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:08<06:57,  8.53s/it]  4%|▍         | 2/50 [00:10<03:33,  4.45s/it]  8%|▊         | 4/50 [00:10<01:25,  1.85s/it] 34%|███▍      | 17/50 [00:11<00:11,  2.85it/s] 58%|█████▊    | 29/50 [00:12<00:03,  5.73it/s] 72%|███████▏  | 36/50 [00:12<00:01,  7.93it/s] 90%|█████████ | 45/50 [00:12<00:00, 11.69it/s]100%|██████████| 50/50 [00:14<00:00,  6.09it/s]100%|██████████| 50/50 [00:14<00:00,  3.43it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747862200.csv
-============ Running experiment 5 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:09<08:07,  9.95s/it]  4%|▍         | 2/50 [00:10<03:38,  4.54s/it]  8%|▊         | 4/50 [00:10<01:21,  1.78s/it] 10%|█         | 5/50 [00:11<01:04,  1.43s/it] 30%|███       | 15/50 [00:13<00:13,  2.63it/s] 40%|████      | 20/50 [00:13<00:07,  3.98it/s] 96%|█████████▌| 48/50 [00:13<00:00, 14.43it/s]100%|██████████| 50/50 [00:14<00:00,  3.35it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747862217.csv
-============ Running experiment 6 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:09<08:08,  9.97s/it]  4%|▍         | 2/50 [00:12<04:25,  5.54s/it] 10%|█         | 5/50 [00:12<01:11,  1.60s/it] 28%|██▊       | 14/50 [00:12<00:14,  2.44it/s] 96%|█████████▌| 48/50 [00:13<00:00, 10.48it/s]100%|██████████| 50/50 [00:15<00:00,  3.26it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747862234.csv
-============ Running experiment 7 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:14, 10.09s/it]  4%|▍         | 2/50 [00:11<03:51,  4.81s/it]  6%|▌         | 3/50 [00:11<02:18,  2.94s/it] 14%|█▍        | 7/50 [00:12<00:38,  1.13it/s] 32%|███▏      | 16/50 [00:12<00:09,  3.63it/s] 98%|█████████▊| 49/50 [00:15<00:00,  8.16it/s]100%|██████████| 50/50 [00:15<00:00,  3.31it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747862252.csv
-============ Running experiment 8 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:09<07:58,  9.76s/it]  4%|▍         | 2/50 [00:11<03:58,  4.96s/it] 14%|█▍        | 7/50 [00:11<00:42,  1.00it/s] 22%|██▏       | 11/50 [00:11<00:21,  1.82it/s] 26%|██▌       | 13/50 [00:12<00:16,  2.29it/s] 38%|███▊      | 19/50 [00:12<00:07,  4.30it/s] 96%|█████████▌| 48/50 [00:13<00:00, 11.77it/s]100%|██████████| 50/50 [00:14<00:00,  8.66it/s]100%|██████████| 50/50 [00:14<00:00,  3.41it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747862270.csv
-============ Running experiment 9 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:09<08:01,  9.83s/it]  4%|▍         | 2/50 [00:11<03:55,  4.90s/it] 10%|█         | 5/50 [00:12<01:10,  1.57s/it] 30%|███       | 15/50 [00:12<00:13,  2.58it/s] 96%|█████████▌| 48/50 [00:13<00:00,  9.23it/s]100%|██████████| 50/50 [00:15<00:00,  6.59it/s]100%|██████████| 50/50 [00:15<00:00,  3.32it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747862286.csv
-============ Running experiment 10 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:28, 10.37s/it] 12%|█▏        | 6/50 [00:10<01:00,  1.37s/it] 14%|█▍        | 7/50 [00:11<00:53,  1.24s/it] 16%|█▌        | 8/50 [00:11<00:41,  1.01it/s] 22%|██▏       | 11/50 [00:12<00:22,  1.70it/s] 44%|████▍     | 22/50 [00:12<00:04,  5.67it/s] 96%|█████████▌| 48/50 [00:14<00:00, 10.43it/s]100%|██████████| 50/50 [00:14<00:00,  3.41it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747862304.csv
-============ Running experiment 11 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:17, 10.16s/it]  4%|▍         | 2/50 [00:11<04:01,  5.03s/it]  8%|▊         | 4/50 [00:12<01:32,  2.01s/it] 22%|██▏       | 11/50 [00:12<00:20,  1.92it/s] 96%|█████████▌| 48/50 [00:13<00:00,  9.25it/s]100%|██████████| 50/50 [00:14<00:00,  7.56it/s]100%|██████████| 50/50 [00:14<00:00,  3.41it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747862321.csv
-============ Running experiment 12 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:54, 10.92s/it]  4%|▍         | 2/50 [00:11<03:43,  4.65s/it] 12%|█▏        | 6/50 [00:11<00:49,  1.12s/it] 18%|█▊        | 9/50 [00:11<00:27,  1.47it/s] 30%|███       | 15/50 [00:12<00:10,  3.23it/s] 96%|█████████▌| 48/50 [00:13<00:00, 10.03it/s]100%|██████████| 50/50 [00:14<00:00,  3.37it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747862338.csv
-============ Running experiment 13 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:12<10:04, 12.33s/it] 96%|█████████▌| 48/50 [00:13<00:00,  4.89it/s]100%|██████████| 50/50 [00:14<00:00,  3.34it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747862355.csv
-============ Running experiment 14 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:09<07:42,  9.43s/it]  4%|▍         | 2/50 [00:11<04:01,  5.03s/it] 10%|█         | 5/50 [00:13<01:26,  1.93s/it] 96%|█████████▌| 48/50 [00:13<00:00,  7.81it/s]100%|██████████| 50/50 [00:14<00:00,  3.38it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747862372.csv
-============ Running experiment 15 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:25, 10.32s/it]  4%|▍         | 2/50 [00:10<03:30,  4.38s/it]  8%|▊         | 4/50 [00:10<01:18,  1.70s/it] 20%|██        | 10/50 [00:11<00:20,  1.98it/s] 24%|██▍       | 12/50 [00:12<00:18,  2.02it/s] 52%|█████▏    | 26/50 [00:12<00:03,  6.69it/s] 96%|█████████▌| 48/50 [00:13<00:00, 11.02it/s]100%|██████████| 50/50 [00:14<00:00,  3.39it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747862390.csv
-============ Running experiment 16 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:21, 10.24s/it]  8%|▊         | 4/50 [00:11<01:41,  2.21s/it] 10%|█         | 5/50 [00:12<01:22,  1.83s/it] 96%|█████████▌| 48/50 [00:13<00:00,  7.07it/s]100%|██████████| 50/50 [00:14<00:00,  6.38it/s]100%|██████████| 50/50 [00:14<00:00,  3.39it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747862407.csv
-============ Running experiment 17 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:13, 10.07s/it]  4%|▍         | 2/50 [00:10<03:32,  4.43s/it]  6%|▌         | 3/50 [00:11<02:06,  2.70s/it]  8%|▊         | 4/50 [00:11<01:19,  1.74s/it] 12%|█▏        | 6/50 [00:11<00:40,  1.08it/s] 24%|██▍       | 12/50 [00:12<00:12,  3.14it/s] 38%|███▊      | 19/50 [00:12<00:05,  6.17it/s] 96%|█████████▌| 48/50 [00:13<00:00, 13.93it/s]100%|██████████| 50/50 [00:15<00:00,  3.31it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747862424.csv
-============ Running experiment 18 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:12<10:00, 12.25s/it] 96%|█████████▌| 48/50 [00:13<00:00,  4.67it/s]100%|██████████| 50/50 [00:14<00:00,  3.34it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747862441.csv
-============ Running experiment 19 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:08<07:12,  8.83s/it]  4%|▍         | 2/50 [00:10<03:49,  4.78s/it] 10%|█         | 5/50 [00:11<01:03,  1.41s/it] 12%|█▏        | 6/50 [00:11<00:50,  1.16s/it] 14%|█▍        | 7/50 [00:11<00:39,  1.10it/s] 16%|█▌        | 8/50 [00:12<00:35,  1.17it/s] 96%|█████████▌| 48/50 [00:14<00:00, 11.01it/s]100%|██████████| 50/50 [00:14<00:00,  9.78it/s]100%|██████████| 50/50 [00:14<00:00,  3.43it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747862458.csv
-============ Running experiment 20 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:21, 10.24s/it]  6%|▌         | 3/50 [00:10<02:06,  2.70s/it] 10%|█         | 5/50 [00:11<01:07,  1.49s/it] 12%|█▏        | 6/50 [00:11<00:53,  1.21s/it] 16%|█▌        | 8/50 [00:12<00:34,  1.22it/s] 96%|█████████▌| 48/50 [00:14<00:00,  8.97it/s] 98%|█████████▊| 49/50 [00:14<00:00,  8.38it/s]100%|██████████| 50/50 [00:14<00:00,  3.39it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747862475.csv
-============ Running experiment 21 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:18, 10.17s/it]  4%|▍         | 2/50 [00:11<04:05,  5.11s/it] 12%|█▏        | 6/50 [00:12<01:00,  1.36s/it] 96%|█████████▌| 48/50 [00:13<00:00,  7.46it/s]100%|██████████| 50/50 [00:14<00:00,  6.90it/s]100%|██████████| 50/50 [00:14<00:00,  3.44it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747862492.csv
-============ Running experiment 22 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:51, 10.86s/it]  8%|▊         | 4/50 [00:12<01:51,  2.43s/it] 96%|█████████▌| 48/50 [00:14<00:00,  5.56it/s]100%|██████████| 50/50 [00:15<00:00,  5.27it/s]100%|██████████| 50/50 [00:15<00:00,  3.32it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747862509.csv
-============ Running experiment 23 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:39, 10.59s/it]  8%|▊         | 4/50 [00:10<01:33,  2.03s/it] 14%|█▍        | 7/50 [00:12<00:54,  1.27s/it] 34%|███▍      | 17/50 [00:12<00:12,  2.74it/s] 96%|█████████▌| 48/50 [00:14<00:00,  7.99it/s]100%|██████████| 50/50 [00:14<00:00,  3.35it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747862527.csv
-============ Running experiment 24 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:36, 10.54s/it]  6%|▌         | 3/50 [00:10<02:10,  2.78s/it] 10%|█         | 5/50 [00:11<01:06,  1.48s/it] 24%|██▍       | 12/50 [00:12<00:19,  1.91it/s] 28%|██▊       | 14/50 [00:12<00:15,  2.39it/s] 96%|█████████▌| 48/50 [00:13<00:00, 11.73it/s]100%|██████████| 50/50 [00:15<00:00,  3.30it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747862544.csv
-============ Running experiment 25 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:09<08:00,  9.80s/it]  4%|▍         | 2/50 [00:10<03:25,  4.28s/it] 10%|█         | 5/50 [00:10<00:59,  1.32s/it] 14%|█▍        | 7/50 [00:12<00:48,  1.13s/it] 40%|████      | 20/50 [00:12<00:07,  4.07it/s] 96%|█████████▌| 48/50 [00:13<00:00, 10.40it/s]100%|██████████| 50/50 [00:15<00:00,  3.32it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747862561.csv
-============ Running experiment 26 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:42, 10.67s/it]  4%|▍         | 2/50 [00:10<03:38,  4.55s/it]  6%|▌         | 3/50 [00:12<02:19,  2.97s/it]  8%|▊         | 4/50 [00:12<01:27,  1.89s/it] 96%|█████████▌| 48/50 [00:13<00:00,  9.82it/s]100%|██████████| 50/50 [00:14<00:00,  7.58it/s]100%|██████████| 50/50 [00:14<00:00,  3.38it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747862580.csv
-============ Running experiment 27 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:17, 10.14s/it]  6%|▌         | 3/50 [00:11<02:34,  3.29s/it] 58%|█████▊    | 29/50 [00:12<00:04,  4.29it/s] 72%|███████▏  | 36/50 [00:12<00:02,  5.60it/s] 96%|█████████▌| 48/50 [00:13<00:00,  6.85it/s]100%|██████████| 50/50 [00:15<00:00,  3.33it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747862597.csv
-============ Running experiment 28 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:56, 10.95s/it]  4%|▍         | 2/50 [00:12<04:16,  5.34s/it] 96%|█████████▌| 48/50 [00:14<00:00,  5.78it/s]100%|██████████| 50/50 [00:14<00:00,  5.59it/s]100%|██████████| 50/50 [00:14<00:00,  3.40it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747862614.csv
-============ Running experiment 29 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:09<08:09,  9.99s/it]  6%|▌         | 3/50 [00:12<02:42,  3.46s/it] 40%|████      | 20/50 [00:12<00:10,  2.84it/s] 96%|█████████▌| 48/50 [00:13<00:00,  6.93it/s]100%|██████████| 50/50 [00:14<00:00,  3.37it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747862631.csv
-============ Running experiment 30 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:12<10:02, 12.29s/it] 14%|█▍        | 7/50 [00:12<00:56,  1.32s/it] 20%|██        | 10/50 [00:12<00:33,  1.20it/s] 24%|██▍       | 12/50 [00:12<00:23,  1.60it/s] 96%|█████████▌| 48/50 [00:13<00:00, 12.21it/s]100%|██████████| 50/50 [00:15<00:00,  3.25it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747862649.csv
-============ Running experiment 31 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:10, 10.01s/it]  4%|▍         | 2/50 [00:11<04:13,  5.27s/it] 32%|███▏      | 16/50 [00:12<00:14,  2.33it/s] 40%|████      | 20/50 [00:12<00:09,  3.12it/s] 96%|█████████▌| 48/50 [00:13<00:00,  8.32it/s]100%|██████████| 50/50 [00:14<00:00,  3.36it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747862666.csv
-============ Running experiment 32 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:09<08:02,  9.86s/it]  4%|▍         | 2/50 [00:12<04:27,  5.57s/it] 10%|█         | 5/50 [00:12<01:12,  1.61s/it] 96%|█████████▌| 48/50 [00:13<00:00,  7.78it/s]100%|██████████| 50/50 [00:14<00:00,  3.34it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747862684.csv
-============ Running experiment 33 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:31, 10.43s/it]  8%|▊         | 4/50 [00:12<01:52,  2.46s/it] 96%|█████████▌| 48/50 [00:14<00:00,  5.34it/s]100%|██████████| 50/50 [00:15<00:00,  5.28it/s]100%|██████████| 50/50 [00:15<00:00,  3.33it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747862701.csv
-============ Running experiment 34 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:11<09:28, 11.60s/it]  8%|▊         | 4/50 [00:12<01:47,  2.34s/it] 46%|████▌     | 23/50 [00:12<00:07,  3.49it/s] 96%|█████████▌| 48/50 [00:13<00:00,  6.71it/s]100%|██████████| 50/50 [00:15<00:00,  3.33it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747862719.csv
-============ Running experiment 35 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:18, 10.18s/it]  6%|▌         | 3/50 [00:11<02:22,  3.02s/it] 10%|█         | 5/50 [00:12<01:15,  1.68s/it] 14%|█▍        | 7/50 [00:12<00:43,  1.01s/it] 22%|██▏       | 11/50 [00:12<00:18,  2.09it/s] 96%|█████████▌| 48/50 [00:14<00:00,  9.96it/s]100%|██████████| 50/50 [00:15<00:00,  8.13it/s]100%|██████████| 50/50 [00:15<00:00,  3.31it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747862736.csv
-============ Running experiment 36 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:40, 10.61s/it]  8%|▊         | 4/50 [00:11<01:42,  2.22s/it] 10%|█         | 5/50 [00:11<01:15,  1.67s/it] 18%|█▊        | 9/50 [00:11<00:27,  1.47it/s] 24%|██▍       | 12/50 [00:12<00:18,  2.06it/s] 96%|█████████▌| 48/50 [00:13<00:00, 11.47it/s]100%|██████████| 50/50 [00:15<00:00,  7.34it/s]100%|██████████| 50/50 [00:15<00:00,  3.30it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747862753.csv
-============ Running experiment 37 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:09<08:06,  9.92s/it]  4%|▍         | 2/50 [00:10<03:22,  4.22s/it]  6%|▌         | 3/50 [00:12<02:31,  3.23s/it] 10%|█         | 5/50 [00:12<01:04,  1.44s/it] 38%|███▊      | 19/50 [00:12<00:07,  4.41it/s] 96%|█████████▌| 48/50 [00:13<00:00, 13.00it/s]100%|██████████| 50/50 [00:15<00:00,  3.31it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747862771.csv
-============ Running experiment 38 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:09<08:04,  9.89s/it]  6%|▌         | 3/50 [00:10<02:04,  2.64s/it]  8%|▊         | 4/50 [00:10<01:26,  1.87s/it] 10%|█         | 5/50 [00:11<01:10,  1.56s/it] 14%|█▍        | 7/50 [00:12<00:46,  1.09s/it] 28%|██▊       | 14/50 [00:13<00:14,  2.49it/s] 34%|███▍      | 17/50 [00:13<00:10,  3.27it/s] 50%|█████     | 25/50 [00:13<00:03,  6.60it/s] 98%|█████████▊| 49/50 [00:14<00:00, 14.64it/s]100%|██████████| 50/50 [00:15<00:00,  3.32it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747862788.csv
-============ Running experiment 39 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:19, 10.20s/it]  4%|▍         | 2/50 [00:10<03:29,  4.37s/it]  6%|▌         | 3/50 [00:11<02:07,  2.71s/it]  8%|▊         | 4/50 [00:11<01:23,  1.82s/it] 12%|█▏        | 6/50 [00:12<00:43,  1.02it/s] 24%|██▍       | 12/50 [00:12<00:12,  3.06it/s] 96%|█████████▌| 48/50 [00:13<00:00, 13.87it/s]100%|██████████| 50/50 [00:15<00:00,  8.24it/s]100%|██████████| 50/50 [00:15<00:00,  3.30it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747862806.csv
-============ Running experiment 40 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:11<09:31, 11.67s/it] 22%|██▏       | 11/50 [00:12<00:31,  1.25it/s] 28%|██▊       | 14/50 [00:12<00:21,  1.66it/s] 96%|█████████▌| 48/50 [00:13<00:00,  7.29it/s]100%|██████████| 50/50 [00:14<00:00,  3.35it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747862823.csv
-============ Running experiment 41 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:27, 10.36s/it]  4%|▍         | 2/50 [00:10<03:35,  4.50s/it]  6%|▌         | 3/50 [00:11<02:18,  2.94s/it] 20%|██        | 10/50 [00:12<00:22,  1.75it/s] 26%|██▌       | 13/50 [00:12<00:15,  2.46it/s] 52%|█████▏    | 26/50 [00:12<00:03,  6.97it/s] 96%|█████████▌| 48/50 [00:13<00:00, 13.53it/s]100%|██████████| 50/50 [00:15<00:00,  3.33it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747862841.csv
-============ Running experiment 42 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:09<08:04,  9.90s/it]  4%|▍         | 2/50 [00:10<03:30,  4.39s/it]  8%|▊         | 4/50 [00:10<01:16,  1.67s/it] 10%|█         | 5/50 [00:11<00:59,  1.32s/it] 12%|█▏        | 6/50 [00:11<00:50,  1.14s/it] 16%|█▌        | 8/50 [00:12<00:29,  1.44it/s] 24%|██▍       | 12/50 [00:12<00:13,  2.87it/s] 84%|████████▍ | 42/50 [00:12<00:00, 19.06it/s]100%|██████████| 50/50 [00:14<00:00,  3.35it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747862858.csv
-============ Running experiment 43 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:09<07:56,  9.73s/it]  4%|▍         | 2/50 [00:10<03:20,  4.18s/it]  8%|▊         | 4/50 [00:12<01:47,  2.33s/it] 96%|█████████▌| 48/50 [00:12<00:00,  8.23it/s]100%|██████████| 50/50 [00:15<00:00,  3.32it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747862875.csv
-============ Running experiment 44 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:09<08:05,  9.90s/it]  4%|▍         | 2/50 [00:10<03:23,  4.24s/it]  6%|▌         | 3/50 [00:11<02:27,  3.14s/it] 26%|██▌       | 13/50 [00:12<00:17,  2.12it/s] 36%|███▌      | 18/50 [00:12<00:09,  3.30it/s] 96%|█████████▌| 48/50 [00:13<00:00, 11.29it/s]100%|██████████| 50/50 [00:14<00:00,  3.36it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747862893.csv
-============ Running experiment 45 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:24, 10.30s/it]  4%|▍         | 2/50 [00:12<04:22,  5.47s/it] 96%|█████████▌| 48/50 [00:13<00:00,  6.37it/s]100%|██████████| 50/50 [00:15<00:00,  3.29it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747862910.csv
-============ Running experiment 46 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:26, 10.33s/it]  4%|▍         | 2/50 [00:12<04:16,  5.35s/it] 28%|██▊       | 14/50 [00:12<00:18,  2.00it/s] 96%|█████████▌| 48/50 [00:13<00:00,  7.38it/s]100%|██████████| 50/50 [00:14<00:00,  3.35it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747862929.csv
-============ Running experiment 47 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:23, 10.28s/it]  6%|▌         | 3/50 [00:11<02:28,  3.15s/it] 10%|█         | 5/50 [00:11<01:10,  1.57s/it] 16%|█▌        | 8/50 [00:12<00:38,  1.08it/s] 96%|█████████▌| 48/50 [00:13<00:00,  9.94it/s]100%|██████████| 50/50 [00:15<00:00,  3.30it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747862946.csv
-============ Running experiment 48 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:11<09:33, 11.71s/it] 22%|██▏       | 11/50 [00:12<00:31,  1.23it/s] 30%|███       | 15/50 [00:12<00:18,  1.86it/s] 96%|█████████▌| 48/50 [00:13<00:00,  7.04it/s]100%|██████████| 50/50 [00:14<00:00,  3.37it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747862964.csv
-============ Running experiment 49 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:14, 10.09s/it]  4%|▍         | 2/50 [00:12<04:17,  5.37s/it] 10%|█         | 5/50 [00:12<01:09,  1.55s/it] 14%|█▍        | 7/50 [00:12<00:40,  1.06it/s] 96%|█████████▌| 48/50 [00:13<00:00, 10.28it/s]100%|██████████| 50/50 [00:15<00:00,  3.28it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747862981.csv
-============ Running experiment 50 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:46, 10.75s/it]  4%|▍         | 2/50 [00:10<03:35,  4.50s/it]  6%|▌         | 3/50 [00:12<02:22,  3.03s/it] 18%|█▊        | 9/50 [00:12<00:26,  1.55it/s] 36%|███▌      | 18/50 [00:12<00:07,  4.01it/s] 96%|█████████▌| 48/50 [00:13<00:00, 10.56it/s]100%|██████████| 50/50 [00:14<00:00,  3.37it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747862998.csv
-============ Running experiment 51 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:11<09:00, 11.04s/it]  6%|▌         | 3/50 [00:11<02:27,  3.13s/it] 10%|█         | 5/50 [00:12<01:13,  1.63s/it] 20%|██        | 10/50 [00:12<00:23,  1.70it/s] 42%|████▏     | 21/50 [00:12<00:05,  4.96it/s] 96%|█████████▌| 48/50 [00:13<00:00, 11.53it/s]100%|██████████| 50/50 [00:15<00:00,  3.29it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747863015.csv
-============ Running experiment 52 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:11<09:12, 11.27s/it]  4%|▍         | 2/50 [00:12<04:12,  5.26s/it] 16%|█▌        | 8/50 [00:12<00:37,  1.12it/s] 96%|█████████▌| 48/50 [00:13<00:00,  8.69it/s]100%|██████████| 50/50 [00:15<00:00,  3.31it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747863033.csv
-============ Running experiment 53 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:09<08:06,  9.92s/it]  4%|▍         | 2/50 [00:10<03:27,  4.32s/it]  8%|▊         | 4/50 [00:11<01:34,  2.06s/it] 12%|█▏        | 6/50 [00:11<00:49,  1.13s/it] 20%|██        | 10/50 [00:12<00:20,  1.93it/s] 96%|█████████▌| 48/50 [00:13<00:00, 12.15it/s]100%|██████████| 50/50 [00:14<00:00,  7.56it/s]100%|██████████| 50/50 [00:14<00:00,  3.34it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747863050.csv
-============ Running experiment 54 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:53, 10.88s/it]  8%|▊         | 4/50 [00:12<01:53,  2.46s/it] 96%|█████████▌| 48/50 [00:13<00:00,  6.32it/s]100%|██████████| 50/50 [00:15<00:00,  3.29it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747863068.csv
-============ Running experiment 55 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:13, 10.07s/it]  4%|▍         | 2/50 [00:12<04:13,  5.28s/it] 12%|█▏        | 6/50 [00:12<00:58,  1.32s/it] 16%|█▌        | 8/50 [00:12<00:37,  1.12it/s] 18%|█▊        | 9/50 [00:13<00:32,  1.28it/s] 96%|█████████▌| 48/50 [00:14<00:00, 11.87it/s]100%|██████████| 50/50 [00:14<00:00,  9.12it/s]100%|██████████| 50/50 [00:14<00:00,  3.33it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747863085.csv
-============ Running experiment 56 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:11<09:11, 11.25s/it]  6%|▌         | 3/50 [00:11<02:19,  2.96s/it] 10%|█         | 5/50 [00:12<01:16,  1.70s/it] 58%|█████▊    | 29/50 [00:12<00:03,  5.60it/s] 96%|█████████▌| 48/50 [00:13<00:00,  8.58it/s]100%|██████████| 50/50 [00:14<00:00,  3.34it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747863103.csv
-============ Running experiment 57 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:11<09:06, 11.15s/it] 12%|█▏        | 6/50 [00:12<01:12,  1.65s/it] 44%|████▍     | 22/50 [00:12<00:09,  3.00it/s] 96%|█████████▌| 48/50 [00:14<00:00,  6.65it/s]100%|██████████| 50/50 [00:14<00:00,  3.44it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747863120.csv
-============ Running experiment 58 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:34, 10.50s/it]  6%|▌         | 3/50 [00:11<02:30,  3.20s/it] 12%|█▏        | 6/50 [00:12<00:56,  1.29s/it] 44%|████▍     | 22/50 [00:12<00:06,  4.21it/s] 96%|█████████▌| 48/50 [00:13<00:00,  8.90it/s]100%|██████████| 50/50 [00:14<00:00,  3.36it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747863137.csv
-============ Running experiment 59 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:11, 10.04s/it]  4%|▍         | 2/50 [00:10<03:39,  4.58s/it]  8%|▊         | 4/50 [00:12<01:36,  2.09s/it] 18%|█▊        | 9/50 [00:12<00:27,  1.47it/s] 96%|█████████▌| 48/50 [00:13<00:00,  9.29it/s]100%|██████████| 50/50 [00:15<00:00,  6.72it/s]100%|██████████| 50/50 [00:15<00:00,  3.30it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747863154.csv
-============ Running experiment 60 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:53, 10.88s/it]  4%|▍         | 2/50 [00:11<03:38,  4.56s/it]  8%|▊         | 4/50 [00:12<01:36,  2.09s/it] 18%|█▊        | 9/50 [00:12<00:27,  1.51it/s] 50%|█████     | 25/50 [00:12<00:04,  6.02it/s] 96%|█████████▌| 48/50 [00:13<00:00, 11.11it/s]100%|██████████| 50/50 [00:15<00:00,  3.31it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747863171.csv
-============ Running experiment 61 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:09<08:01,  9.83s/it]  4%|▍         | 2/50 [00:09<03:18,  4.14s/it]  6%|▌         | 3/50 [00:10<01:59,  2.53s/it]  8%|▊         | 4/50 [00:10<01:13,  1.60s/it] 10%|█         | 5/50 [00:12<01:06,  1.47s/it] 12%|█▏        | 6/50 [00:12<00:44,  1.01s/it] 44%|████▍     | 22/50 [00:12<00:03,  8.21it/s] 96%|█████████▌| 48/50 [00:13<00:00, 13.26it/s]100%|██████████| 50/50 [00:14<00:00,  3.37it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747863189.csv
-============ Running experiment 62 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:12<09:56, 12.16s/it] 16%|█▌        | 8/50 [00:12<00:47,  1.12s/it] 96%|█████████▌| 48/50 [00:13<00:00,  6.28it/s]100%|██████████| 50/50 [00:14<00:00,  3.36it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747863206.csv
-============ Running experiment 63 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:09<08:06,  9.92s/it]  6%|▌         | 3/50 [00:10<02:08,  2.74s/it]  8%|▊         | 4/50 [00:11<01:43,  2.24s/it] 14%|█▍        | 7/50 [00:12<00:43,  1.02s/it] 38%|███▊      | 19/50 [00:12<00:07,  4.18it/s] 96%|█████████▌| 48/50 [00:13<00:00, 10.81it/s]100%|██████████| 50/50 [00:15<00:00,  3.30it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747863223.csv
-============ Running experiment 64 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:51, 10.84s/it] 14%|█▍        | 7/50 [00:11<00:51,  1.19s/it] 20%|██        | 10/50 [00:11<00:32,  1.23it/s] 26%|██▌       | 13/50 [00:12<00:21,  1.72it/s] 96%|█████████▌| 48/50 [00:13<00:00,  8.62it/s]100%|██████████| 50/50 [00:14<00:00,  6.79it/s]100%|██████████| 50/50 [00:14<00:00,  3.35it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747863240.csv
-============ Running experiment 65 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:19, 10.19s/it]  4%|▍         | 2/50 [00:10<03:42,  4.64s/it]  8%|▊         | 4/50 [00:11<01:30,  1.96s/it] 18%|█▊        | 9/50 [00:12<00:26,  1.53it/s] 24%|██▍       | 12/50 [00:12<00:17,  2.21it/s] 96%|█████████▌| 48/50 [00:13<00:00, 12.89it/s]100%|██████████| 50/50 [00:15<00:00,  3.30it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747863258.csv
-============ Running experiment 66 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:09<08:07,  9.94s/it]  4%|▍         | 2/50 [00:10<03:35,  4.50s/it]  6%|▌         | 3/50 [00:12<02:26,  3.11s/it] 12%|█▏        | 6/50 [00:12<00:48,  1.11s/it] 80%|████████  | 40/50 [00:12<00:00, 10.24it/s]100%|██████████| 50/50 [00:15<00:00,  3.30it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747863275.csv
-============ Running experiment 67 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:11, 10.03s/it]  4%|▍         | 2/50 [00:12<04:20,  5.43s/it] 96%|█████████▌| 48/50 [00:13<00:00,  6.04it/s]100%|██████████| 50/50 [00:14<00:00,  3.39it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747863293.csv
-============ Running experiment 68 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:43, 10.69s/it]  4%|▍         | 2/50 [00:11<03:47,  4.75s/it] 10%|█         | 5/50 [00:12<01:15,  1.67s/it] 96%|█████████▌| 48/50 [00:13<00:00,  8.32it/s]100%|██████████| 50/50 [00:15<00:00,  3.33it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747863310.csv
-============ Running experiment 69 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:11<09:40, 11.85s/it]  4%|▍         | 2/50 [00:12<04:09,  5.20s/it] 20%|██        | 10/50 [00:12<00:27,  1.46it/s] 96%|█████████▌| 48/50 [00:13<00:00,  8.16it/s]100%|██████████| 50/50 [00:14<00:00,  3.35it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747863327.csv
-============ Running experiment 70 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:28, 10.38s/it]  4%|▍         | 2/50 [00:11<03:55,  4.90s/it]  6%|▌         | 3/50 [00:11<02:10,  2.78s/it]  8%|▊         | 4/50 [00:12<01:25,  1.86s/it] 14%|█▍        | 7/50 [00:12<00:31,  1.35it/s] 96%|█████████▌| 48/50 [00:13<00:00, 12.25it/s]100%|██████████| 50/50 [00:15<00:00,  8.10it/s]100%|██████████| 50/50 [00:15<00:00,  3.32it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747863344.csv
-============ Running experiment 71 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:44, 10.70s/it]  6%|▌         | 3/50 [00:10<02:15,  2.87s/it]  8%|▊         | 4/50 [00:11<01:36,  2.10s/it] 10%|█         | 5/50 [00:12<01:11,  1.59s/it] 16%|█▌        | 8/50 [00:12<00:30,  1.38it/s] 96%|█████████▌| 48/50 [00:13<00:00, 13.87it/s]100%|██████████| 50/50 [00:15<00:00,  3.30it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747863362.csv
-============ Running experiment 72 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:11<09:07, 11.18s/it] 14%|█▍        | 7/50 [00:11<00:54,  1.27s/it] 22%|██▏       | 11/50 [00:12<00:27,  1.41it/s] 26%|██▌       | 13/50 [00:12<00:20,  1.77it/s] 40%|████      | 20/50 [00:12<00:07,  3.82it/s] 96%|█████████▌| 48/50 [00:13<00:00, 11.43it/s]100%|██████████| 50/50 [00:15<00:00,  3.31it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747863379.csv
-============ Running experiment 73 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:31, 10.44s/it]  6%|▌         | 3/50 [00:11<02:20,  2.99s/it] 12%|█▏        | 6/50 [00:11<00:54,  1.24s/it] 20%|██        | 10/50 [00:12<00:26,  1.51it/s] 22%|██▏       | 11/50 [00:12<00:22,  1.73it/s] 96%|█████████▌| 48/50 [00:13<00:00, 11.65it/s]100%|██████████| 50/50 [00:15<00:00,  7.39it/s]100%|██████████| 50/50 [00:15<00:00,  3.30it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747863397.csv
-============ Running experiment 74 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:19, 10.19s/it]  4%|▍         | 2/50 [00:10<03:34,  4.48s/it]  6%|▌         | 3/50 [00:11<02:01,  2.59s/it] 14%|█▍        | 7/50 [00:12<00:42,  1.01it/s] 96%|█████████▌| 48/50 [00:13<00:00,  9.82it/s]100%|██████████| 50/50 [00:14<00:00,  3.33it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747863415.csv
-============ Running experiment 75 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:11<09:09, 11.22s/it]  6%|▌         | 3/50 [00:11<02:22,  3.04s/it] 10%|█         | 5/50 [00:12<01:20,  1.79s/it] 96%|█████████▌| 48/50 [00:13<00:00,  8.38it/s]100%|██████████| 50/50 [00:15<00:00,  3.31it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747863432.csv
-============ Running experiment 76 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:45, 10.72s/it]  4%|▍         | 2/50 [00:11<03:42,  4.64s/it]  8%|▊         | 4/50 [00:11<01:28,  1.91s/it] 12%|█▏        | 6/50 [00:11<00:45,  1.04s/it] 14%|█▍        | 7/50 [00:12<00:37,  1.14it/s] 16%|█▌        | 8/50 [00:12<00:31,  1.32it/s] 18%|█▊        | 9/50 [00:12<00:24,  1.70it/s] 56%|█████▌    | 28/50 [00:12<00:01, 13.14it/s] 96%|█████████▌| 48/50 [00:13<00:00, 18.64it/s]100%|██████████| 50/50 [00:15<00:00,  3.32it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747863450.csv
-============ Running experiment 77 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:27, 10.36s/it]  4%|▍         | 2/50 [00:10<03:39,  4.58s/it]  6%|▌         | 3/50 [00:11<02:09,  2.75s/it]  8%|▊         | 4/50 [00:12<01:30,  1.96s/it] 12%|█▏        | 6/50 [00:12<00:46,  1.06s/it] 98%|█████████▊| 49/50 [00:15<00:00,  8.32it/s]100%|██████████| 50/50 [00:15<00:00,  3.24it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747863467.csv
-============ Running experiment 78 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:09<07:57,  9.75s/it]  4%|▍         | 2/50 [00:11<04:00,  5.00s/it]  6%|▌         | 3/50 [00:11<02:13,  2.84s/it]  8%|▊         | 4/50 [00:12<01:25,  1.86s/it] 14%|█▍        | 7/50 [00:12<00:31,  1.35it/s] 96%|█████████▌| 48/50 [00:13<00:00, 11.28it/s]100%|██████████| 50/50 [00:14<00:00,  8.52it/s]100%|██████████| 50/50 [00:14<00:00,  3.36it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747863485.csv
-============ Running experiment 79 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:13, 10.06s/it]  4%|▍         | 2/50 [00:11<04:05,  5.12s/it] 10%|█         | 5/50 [00:12<01:11,  1.60s/it] 24%|██▍       | 12/50 [00:12<00:18,  2.05it/s] 96%|█████████▌| 48/50 [00:13<00:00,  9.91it/s]100%|██████████| 50/50 [00:15<00:00,  3.29it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747863502.csv
-============ Running experiment 80 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:25, 10.32s/it]  4%|▍         | 2/50 [00:12<04:21,  5.45s/it] 96%|█████████▌| 48/50 [00:13<00:00,  6.19it/s]100%|██████████| 50/50 [00:15<00:00,  3.27it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747863519.csv
-============ Running experiment 81 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:11, 10.02s/it]  4%|▍         | 2/50 [00:10<03:23,  4.25s/it]  6%|▌         | 3/50 [00:10<01:58,  2.52s/it]  8%|▊         | 4/50 [00:11<01:27,  1.91s/it] 12%|█▏        | 6/50 [00:12<00:44,  1.01s/it] 28%|██▊       | 14/50 [00:12<00:09,  3.66it/s] 96%|█████████▌| 48/50 [00:14<00:00, 10.15it/s]100%|██████████| 50/50 [00:15<00:00,  8.87it/s]100%|██████████| 50/50 [00:15<00:00,  3.33it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747863537.csv
-============ Running experiment 82 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:56, 10.96s/it]  4%|▍         | 2/50 [00:11<03:51,  4.82s/it] 12%|█▏        | 6/50 [00:11<00:49,  1.13s/it] 16%|█▌        | 8/50 [00:11<00:31,  1.34it/s] 20%|██        | 10/50 [00:12<00:24,  1.65it/s] 26%|██▌       | 13/50 [00:12<00:13,  2.73it/s] 40%|████      | 20/50 [00:12<00:05,  5.95it/s] 96%|█████████▌| 48/50 [00:13<00:00, 17.70it/s]100%|██████████| 50/50 [00:14<00:00,  3.34it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747863554.csv
-============ Running experiment 83 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:45, 10.73s/it] 10%|█         | 5/50 [00:12<01:25,  1.89s/it] 26%|██▌       | 13/50 [00:12<00:22,  1.67it/s] 44%|████▍     | 22/50 [00:12<00:08,  3.39it/s] 96%|█████████▌| 48/50 [00:13<00:00,  8.79it/s]100%|██████████| 50/50 [00:15<00:00,  3.27it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747863571.csv
-============ Running experiment 84 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:13, 10.08s/it]  4%|▍         | 2/50 [00:11<03:53,  4.86s/it] 16%|█▌        | 8/50 [00:12<00:41,  1.02it/s] 96%|█████████▌| 48/50 [00:13<00:00,  7.98it/s]100%|██████████| 50/50 [00:15<00:00,  3.29it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747863589.csv
-============ Running experiment 85 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:11<09:36, 11.76s/it]  4%|▍         | 2/50 [00:12<04:10,  5.23s/it]  8%|▊         | 4/50 [00:12<01:31,  2.00s/it] 96%|█████████▌| 48/50 [00:13<00:00,  9.29it/s]100%|██████████| 50/50 [00:15<00:00,  3.24it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747863607.csv
-============ Running experiment 86 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:09<08:04,  9.89s/it]  4%|▍         | 2/50 [00:10<03:19,  4.15s/it]  6%|▌         | 3/50 [00:10<01:55,  2.47s/it]  8%|▊         | 4/50 [00:11<01:28,  1.93s/it] 14%|█▍        | 7/50 [00:11<00:32,  1.32it/s] 16%|█▌        | 8/50 [00:12<00:28,  1.50it/s] 38%|███▊      | 19/50 [00:12<00:05,  6.17it/s] 96%|█████████▌| 48/50 [00:13<00:00, 15.10it/s]100%|██████████| 50/50 [00:15<00:00,  3.33it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747863625.csv
-============ Running experiment 87 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:28, 10.39s/it]  8%|▊         | 4/50 [00:11<01:39,  2.16s/it] 14%|█▍        | 7/50 [00:11<00:47,  1.11s/it] 16%|█▌        | 8/50 [00:12<00:44,  1.06s/it] 96%|█████████▌| 48/50 [00:12<00:00, 10.90it/s]100%|██████████| 50/50 [00:15<00:00,  3.25it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747863642.csv
-============ Running experiment 88 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:19, 10.19s/it]  4%|▍         | 2/50 [00:11<04:05,  5.11s/it]  6%|▌         | 3/50 [00:11<02:12,  2.82s/it]  8%|▊         | 4/50 [00:11<01:20,  1.76s/it] 10%|█         | 5/50 [00:12<00:52,  1.17s/it] 14%|█▍        | 7/50 [00:12<00:27,  1.59it/s] 96%|█████████▌| 48/50 [00:13<00:00, 14.09it/s]100%|██████████| 50/50 [00:14<00:00,  9.80it/s]100%|██████████| 50/50 [00:14<00:00,  3.37it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747863660.csv
-============ Running experiment 89 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:26, 10.35s/it]  4%|▍         | 2/50 [00:12<04:17,  5.36s/it] 48%|████▊     | 24/50 [00:12<00:07,  3.57it/s] 72%|███████▏  | 36/50 [00:12<00:02,  6.02it/s] 96%|█████████▌| 48/50 [00:13<00:00,  6.98it/s]100%|██████████| 50/50 [00:14<00:00,  3.43it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747863677.csv
-============ Running experiment 90 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:12, 10.06s/it]  4%|▍         | 2/50 [00:10<03:44,  4.68s/it]  8%|▊         | 4/50 [00:11<01:25,  1.86s/it] 10%|█         | 5/50 [00:12<01:13,  1.63s/it] 14%|█▍        | 7/50 [00:12<00:39,  1.08it/s] 96%|█████████▌| 48/50 [00:13<00:00, 12.07it/s]100%|██████████| 50/50 [00:14<00:00,  8.32it/s]100%|██████████| 50/50 [00:14<00:00,  3.34it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747863694.csv
-============ Running experiment 91 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:50, 10.83s/it] 10%|█         | 5/50 [00:12<01:32,  2.05s/it] 66%|██████▌   | 33/50 [00:13<00:03,  4.45it/s] 96%|█████████▌| 48/50 [00:13<00:00,  6.51it/s]100%|██████████| 50/50 [00:14<00:00,  3.35it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747863712.csv
-============ Running experiment 92 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:52, 10.86s/it]  8%|▊         | 4/50 [00:11<01:40,  2.19s/it] 10%|█         | 5/50 [00:12<01:23,  1.86s/it] 26%|██▌       | 13/50 [00:12<00:18,  2.04it/s] 96%|█████████▌| 48/50 [00:13<00:00,  9.93it/s]100%|██████████| 50/50 [00:15<00:00,  3.27it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747863729.csv
-============ Running experiment 93 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:47, 10.76s/it]  6%|▌         | 3/50 [00:10<02:13,  2.84s/it] 10%|█         | 5/50 [00:12<01:16,  1.71s/it] 14%|█▍        | 7/50 [00:12<00:44,  1.04s/it] 16%|█▌        | 8/50 [00:12<00:34,  1.21it/s] 96%|█████████▌| 48/50 [00:13<00:00, 12.10it/s]100%|██████████| 50/50 [00:15<00:00,  8.19it/s]100%|██████████| 50/50 [00:15<00:00,  3.32it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747863747.csv
-============ Running experiment 94 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:09<08:02,  9.84s/it]  4%|▍         | 2/50 [00:12<04:15,  5.33s/it] 10%|█         | 5/50 [00:12<01:09,  1.54s/it] 18%|█▊        | 9/50 [00:12<00:30,  1.36it/s] 96%|█████████▌| 48/50 [00:13<00:00,  9.64it/s]100%|██████████| 50/50 [00:14<00:00,  3.37it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747863764.csv
-============ Running experiment 95 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:41, 10.64s/it]  4%|▍         | 2/50 [00:12<04:18,  5.38s/it] 22%|██▏       | 11/50 [00:12<00:24,  1.56it/s] 96%|█████████▌| 48/50 [00:14<00:00,  7.13it/s]100%|██████████| 50/50 [00:15<00:00,  3.30it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747863782.csv
-============ Running experiment 96 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:36, 10.55s/it]  4%|▍         | 2/50 [00:12<04:15,  5.31s/it] 14%|█▍        | 7/50 [00:12<00:44,  1.04s/it] 20%|██        | 10/50 [00:12<00:25,  1.58it/s] 64%|██████▍   | 32/50 [00:12<00:02,  8.04it/s] 96%|█████████▌| 48/50 [00:13<00:00, 10.24it/s]100%|██████████| 50/50 [00:15<00:00,  3.33it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747863799.csv
-============ Running experiment 97 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:31, 10.43s/it]  4%|▍         | 2/50 [00:11<03:47,  4.74s/it]  8%|▊         | 4/50 [00:11<01:28,  1.92s/it] 10%|█         | 5/50 [00:11<01:01,  1.37s/it] 32%|███▏      | 16/50 [00:12<00:09,  3.49it/s] 96%|█████████▌| 48/50 [00:13<00:00, 11.73it/s]100%|██████████| 50/50 [00:15<00:00,  7.18it/s]100%|██████████| 50/50 [00:15<00:00,  3.29it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747863817.csv
-============ Running experiment 98 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:11<09:04, 11.12s/it] 10%|█         | 5/50 [00:12<01:26,  1.93s/it] 30%|███       | 15/50 [00:12<00:17,  2.04it/s] 96%|█████████▌| 48/50 [00:13<00:00,  7.68it/s]100%|██████████| 50/50 [00:14<00:00,  3.39it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747863834.csv
-============ Running experiment 99 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:16, 10.13s/it]  6%|▌         | 3/50 [00:12<02:41,  3.43s/it] 28%|██▊       | 14/50 [00:12<00:18,  1.95it/s] 40%|████      | 20/50 [00:12<00:09,  3.17it/s] 96%|█████████▌| 48/50 [00:13<00:00,  8.48it/s]100%|██████████| 50/50 [00:14<00:00,  3.35it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747863851.csv
-============ Running experiment 100 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:40, 10.62s/it]  4%|▍         | 2/50 [00:11<03:54,  4.89s/it]  6%|▌         | 3/50 [00:12<02:27,  3.15s/it] 12%|█▏        | 6/50 [00:12<00:47,  1.09s/it] 96%|█████████▌| 48/50 [00:13<00:00, 10.73it/s]100%|██████████| 50/50 [00:15<00:00,  3.27it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747863869.csv
-============ Running experiment 101 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:07<05:46,  7.08s/it]  4%|▍         | 2/50 [00:08<02:54,  3.64s/it]  6%|▌         | 3/50 [00:11<02:31,  3.23s/it] 10%|█         | 5/50 [00:11<01:14,  1.66s/it] 14%|█▍        | 7/50 [00:12<00:44,  1.04s/it] 24%|██▍       | 12/50 [00:12<00:16,  2.32it/s] 96%|█████████▌| 48/50 [00:13<00:00, 12.36it/s]100%|██████████| 50/50 [00:14<00:00,  8.79it/s]100%|██████████| 50/50 [00:14<00:00,  3.36it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747863887.csv
-============ Running experiment 102 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:11<09:24, 11.51s/it]  8%|▊         | 4/50 [00:12<01:54,  2.50s/it] 96%|█████████▌| 48/50 [00:13<00:00,  6.44it/s]100%|██████████| 50/50 [00:15<00:00,  3.28it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747863904.csv
-============ Running experiment 103 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:12<10:00, 12.26s/it] 96%|█████████▌| 48/50 [00:13<00:00,  4.77it/s]100%|██████████| 50/50 [00:14<00:00,  3.35it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747863921.csv
-============ Running experiment 104 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:09<08:05,  9.90s/it]  4%|▍         | 2/50 [00:11<03:47,  4.73s/it]  6%|▌         | 3/50 [00:11<02:11,  2.80s/it] 16%|█▌        | 8/50 [00:12<00:33,  1.24it/s] 20%|██        | 10/50 [00:12<00:23,  1.69it/s] 96%|█████████▌| 48/50 [00:13<00:00, 11.94it/s]100%|██████████| 50/50 [00:15<00:00,  7.41it/s]100%|██████████| 50/50 [00:15<00:00,  3.26it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747863939.csv
-============ Running experiment 105 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:12<09:58, 12.21s/it] 22%|██▏       | 11/50 [00:13<00:35,  1.11it/s] 98%|█████████▊| 49/50 [00:14<00:00,  5.43it/s]100%|██████████| 50/50 [00:15<00:00,  3.30it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747863956.csv
-============ Running experiment 106 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:51, 10.84s/it]  8%|▊         | 4/50 [00:11<01:41,  2.21s/it] 12%|█▏        | 6/50 [00:11<00:58,  1.33s/it] 14%|█▍        | 7/50 [00:12<00:50,  1.17s/it] 96%|█████████▌| 48/50 [00:13<00:00, 10.25it/s]100%|██████████| 50/50 [00:14<00:00,  3.35it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747863974.csv
-============ Running experiment 107 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:12, 10.05s/it]  6%|▌         | 3/50 [00:10<02:12,  2.82s/it]  8%|▊         | 4/50 [00:11<01:46,  2.31s/it] 26%|██▌       | 13/50 [00:12<00:16,  2.20it/s] 30%|███       | 15/50 [00:12<00:13,  2.68it/s] 36%|███▌      | 18/50 [00:12<00:09,  3.49it/s] 42%|████▏     | 21/50 [00:12<00:06,  4.69it/s] 96%|█████████▌| 48/50 [00:14<00:00, 12.70it/s]100%|██████████| 50/50 [00:15<00:00,  8.68it/s]100%|██████████| 50/50 [00:15<00:00,  3.30it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747863991.csv
-============ Running experiment 108 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:25, 10.31s/it]  6%|▌         | 3/50 [00:10<02:10,  2.78s/it]  8%|▊         | 4/50 [00:10<01:29,  1.94s/it] 10%|█         | 5/50 [00:11<01:04,  1.43s/it] 12%|█▏        | 6/50 [00:11<00:49,  1.13s/it] 16%|█▌        | 8/50 [00:12<00:29,  1.42it/s] 24%|██▍       | 12/50 [00:12<00:11,  3.18it/s] 28%|██▊       | 14/50 [00:12<00:08,  4.19it/s] 96%|█████████▌| 48/50 [00:13<00:00, 18.19it/s]100%|██████████| 50/50 [00:15<00:00,  3.26it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747864009.csv
-============ Running experiment 109 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:11<09:37, 11.78s/it] 10%|█         | 5/50 [00:12<01:23,  1.86s/it] 18%|█▊        | 9/50 [00:12<00:35,  1.16it/s] 96%|█████████▌| 48/50 [00:13<00:00,  7.86it/s]100%|██████████| 50/50 [00:14<00:00,  3.36it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747864027.csv
-============ Running experiment 110 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:09<08:09,  9.98s/it]  4%|▍         | 2/50 [00:10<03:27,  4.32s/it]  6%|▌         | 3/50 [00:10<02:03,  2.63s/it] 10%|█         | 5/50 [00:12<01:05,  1.45s/it] 12%|█▏        | 6/50 [00:12<00:51,  1.16s/it] 96%|█████████▌| 48/50 [00:14<00:00, 10.08it/s]100%|██████████| 50/50 [00:14<00:00,  8.69it/s]100%|██████████| 50/50 [00:14<00:00,  3.37it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747864045.csv
-============ Running experiment 111 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:12<10:05, 12.35s/it] 96%|█████████▌| 48/50 [00:14<00:00,  4.55it/s]100%|██████████| 50/50 [00:14<00:00,  3.34it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747864062.csv
-============ Running experiment 112 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:12<09:55, 12.14s/it] 22%|██▏       | 11/50 [00:12<00:31,  1.23it/s] 96%|█████████▌| 48/50 [00:15<00:00,  5.05it/s]100%|██████████| 50/50 [00:15<00:00,  3.31it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747864079.csv
-============ Running experiment 113 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:09<07:56,  9.72s/it]  4%|▍         | 2/50 [00:10<03:22,  4.23s/it]  6%|▌         | 3/50 [00:11<02:17,  2.93s/it] 12%|█▏        | 6/50 [00:11<00:46,  1.05s/it] 28%|██▊       | 14/50 [00:12<00:12,  2.93it/s] 42%|████▏     | 21/50 [00:12<00:05,  5.28it/s] 96%|█████████▌| 48/50 [00:14<00:00,  9.28it/s]100%|██████████| 50/50 [00:14<00:00,  3.35it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747864096.csv
-============ Running experiment 114 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:17, 10.15s/it]  4%|▍         | 2/50 [00:11<04:00,  5.00s/it]  6%|▌         | 3/50 [00:12<02:19,  2.97s/it] 14%|█▍        | 7/50 [00:12<00:37,  1.14it/s] 26%|██▌       | 13/50 [00:12<00:13,  2.81it/s] 96%|█████████▌| 48/50 [00:13<00:00, 11.94it/s]100%|██████████| 50/50 [00:15<00:00,  3.30it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747864114.csv
-============ Running experiment 115 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:48, 10.78s/it]  6%|▌         | 3/50 [00:11<02:25,  3.09s/it]  8%|▊         | 4/50 [00:12<01:45,  2.28s/it] 12%|█▏        | 6/50 [00:12<00:53,  1.21s/it] 58%|█████▊    | 29/50 [00:12<00:02,  7.31it/s] 98%|█████████▊| 49/50 [00:15<00:00,  7.42it/s]100%|██████████| 50/50 [00:15<00:00,  3.25it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747864131.csv
-============ Running experiment 116 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:38, 10.59s/it]  4%|▍         | 2/50 [00:11<03:41,  4.61s/it]  6%|▌         | 3/50 [00:11<02:18,  2.95s/it] 28%|██▊       | 14/50 [00:12<00:13,  2.61it/s] 96%|█████████▌| 48/50 [00:14<00:00,  8.08it/s]100%|██████████| 50/50 [00:14<00:00,  7.36it/s]100%|██████████| 50/50 [00:14<00:00,  3.37it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747864149.csv
-============ Running experiment 117 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:12<10:11, 12.47s/it] 16%|█▌        | 8/50 [00:12<00:48,  1.16s/it] 96%|█████████▌| 48/50 [00:13<00:00,  6.47it/s]100%|██████████| 50/50 [00:14<00:00,  3.36it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747864166.csv
-============ Running experiment 118 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:07<05:47,  7.09s/it]  4%|▍         | 2/50 [00:10<04:03,  5.07s/it]  6%|▌         | 3/50 [00:12<02:38,  3.36s/it] 18%|█▊        | 9/50 [00:12<00:28,  1.42it/s] 22%|██▏       | 11/50 [00:12<00:22,  1.72it/s] 96%|█████████▌| 48/50 [00:13<00:00, 10.25it/s]100%|██████████| 50/50 [00:14<00:00,  8.11it/s]100%|██████████| 50/50 [00:14<00:00,  3.35it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747864183.csv
-============ Running experiment 119 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:38, 10.58s/it]  4%|▍         | 2/50 [00:10<03:35,  4.48s/it]  6%|▌         | 3/50 [00:11<02:05,  2.68s/it] 10%|█         | 5/50 [00:12<01:08,  1.52s/it] 96%|█████████▌| 48/50 [00:12<00:00, 11.01it/s]100%|██████████| 50/50 [00:15<00:00,  3.30it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747864200.csv
-============ Running experiment 120 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:42, 10.67s/it]  4%|▍         | 2/50 [00:12<04:34,  5.71s/it] 96%|█████████▌| 48/50 [00:13<00:00,  6.20it/s]100%|██████████| 50/50 [00:15<00:00,  3.30it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747864218.csv
-============ Running experiment 121 of 121 ============
-============ Running experiment of 50 simulations in 47 cores: ============
-Pooling processes...
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:10<08:16, 10.13s/it]  4%|▍         | 2/50 [00:11<04:02,  5.05s/it] 20%|██        | 10/50 [00:12<00:29,  1.36it/s] 82%|████████▏ | 41/50 [00:12<00:01,  7.72it/s]100%|██████████| 50/50 [00:15<00:00,  3.31it/s]
-Simulations done. Processing results...
-Saved cleaned data to ./outputs/1747864235.csv
-Drawing heatmaps...
-0 0 0.2704
-0 1 0.27965346534653474
-0 2 0.29746138613861395
-0 3 0.31449504950495055
-0 4 0.25322178217821784
-0 5 0.22536336633663365
-0 6 0.28219009900990116
-0 7 0.31695544554455474
-0 8 0.2820425742574258
-0 9 0.23715445544554462
-0 10 0.2692970297029703
-1 0 0.2669188118811882
-1 1 0.31872178217821784
-1 2 0.28103168316831706
-1 3 0.28373762376237627
-1 4 0.31842376237623765
-1 5 0.3184910891089109
-1 6 0.2465445544554456
-1 7 0.2438019801980199
-1 8 0.2732643564356435
-1 9 0.26542475247524755
-1 10 0.26234851485148525
-2 0 0.2603376237623763
-2 1 0.26619603960396043
-2 2 0.2956524752475247
-2 3 0.25264356435643565
-2 4 0.28019702970297056
-2 5 0.24890495049504957
-2 6 0.2796792079207921
-2 7 0.3374554455445545
-2 8 0.2657693069306932
-2 9 0.28585742574257433
-2 10 0.31170792079207926
-3 0 0.2235762376237624
-3 1 0.26677128712871284
-3 2 0.2664980198019803
-3 3 0.2849069306930693
-3 4 0.2735277227722773
-3 5 0.25873663366336636
-3 6 0.33598910891089123
-3 7 0.2538168316831684
-3 8 0.2833069306930691
-3 9 0.2408396039603961
-3 10 0.2909960396039603
-4 0 0.2697524752475249
-4 1 0.2928445544554457
-4 2 0.32302871287128715
-4 3 0.25218415841584163
-4 4 0.26338514851485145
-4 5 0.26126930693069317
-4 6 0.25480891089108915
-4 7 0.287391089108911
-4 8 0.27596039603960393
-4 9 0.25871881188118806
-4 10 0.3093227722772279
-5 0 0.2828485148514852
-5 1 0.3017188118811881
-5 2 0.262210891089109
-5 3 0.24350891089108914
-5 4 0.2621138613861386
-5 5 0.2626376237623764
-5 6 0.33047029702970293
-5 7 0.279039603960396
-5 8 0.24290495049504948
-5 9 0.27318415841584165
-5 10 0.2583059405940596
-6 0 0.2723089108910892
-6 1 0.2535663366336634
-6 2 0.2525207920792079
-6 3 0.30350000000000016
-6 4 0.26031188118811893
-6 5 0.2874277227722773
-6 6 0.253110891089109
-6 7 0.2784891089108911
-6 8 0.3216495049504951
-6 9 0.28352277227722783
-6 10 0.3157980198019803
-7 0 0.29216336633663376
-7 1 0.3170752475247525
-7 2 0.2883861386138614
-7 3 0.3145
-7 4 0.27083069306930685
-7 5 0.28280099009901
-7 6 0.2631089108910891
-7 7 0.28272277227722775
-7 8 0.3017336633663367
-7 9 0.32544455445544557
-7 10 0.27177227722772285
-8 0 0.25820099009901004
-8 1 0.2801693069306931
-8 2 0.293
-8 3 0.2830960396039604
-8 4 0.26629603960396053
-8 5 0.2844029702970297
-8 6 0.36963564356435635
-8 7 0.2776980198019801
-8 8 0.30639504950495045
-8 9 0.2915455445544555
-8 10 0.28286336633663367
-9 0 0.2636524752475249
-9 1 0.26023267326732674
-9 2 0.24985247524752482
-9 3 0.2912366336633665
-9 4 0.27755940594059403
-9 5 0.24278910891089125
-9 6 0.24203663366336645
-9 7 0.29189504950495054
-9 8 0.261471287128713
-9 9 0.2869445544554456
-9 10 0.2503772277227723
-10 0 0.26325742574257444
-10 1 0.29000891089108916
-10 2 0.2600643564356437
-10 3 0.26756336633663386
-10 4 0.342492079207921
-10 5 0.3174039603960396
-10 6 0.3036930693069306
-10 7 0.2579782178217822
-10 8 0.3040871287128714
-10 9 0.34580198019801983
-10 10 0.31525049504950503
-Heatmap saved.

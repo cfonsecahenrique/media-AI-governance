@@ -186,7 +186,7 @@ def plot_heatmap(filenames, dir, vars, v1_range, v2_range, data_len, precision=1
     for i, filename in enumerate(filenames):
         data = pd.read_csv(f"{path}/{filename}.csv")
         count, _ = np.histogram(data["acr"], bins=precision)
-        avg_cooperation_dist = count / data_len
+        avg_cooperation_dist = count / np.sum(count)
         avg_cooperation = sum(
             [k / precision * avg_cooperation_dist[k] for k in range(precision)]
         )
@@ -199,12 +199,12 @@ def plot_heatmap(filenames, dir, vars, v1_range, v2_range, data_len, precision=1
     yticks_labels = [round(i, 2) for i in yticks_labels]
 
     xticks = np.linspace(0, n_bins2-1, n_bins2 if n_bins2 < 10 else 10)
-    yticks = np.linspace(0, n_bins1, n_bins1 if n_bins1 < 10 else 10)
+    yticks = np.linspace(0, n_bins1-1, n_bins1 if n_bins1 < 10 else 10)
 
     plt.title("Average Cooperation Rate")
-    plt.imshow(c_heatmap, cmap="RdYlGn", vmin=0, vmax=1)
+    plt.imshow(c_heatmap, cmap="RdYlGn", vmin=0, vmax=1, origin="lower")
     plt.xticks(ticks=xticks, labels=xticks_labels)
-    plt.yticks(ticks=yticks, labels=reversed(yticks_labels))
+    plt.yticks(ticks=yticks, labels=yticks_labels)
     plt.xlabel(translator[vars[1]])
     plt.ylabel(translator[vars[0]])
     plt.colorbar()
