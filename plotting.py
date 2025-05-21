@@ -181,7 +181,7 @@ def plot_heatmap(filenames, dir, vars, v1_range, v2_range, data_len, precision=1
     v2_range = np.round(v2_range, 2)
     c_heatmap = np.zeros((n_bins1, n_bins2))
 
-    path = f"./outputs/heatmaps/{dir}"
+    path = f"./outputs/{dir}"
 
     for i, filename in enumerate(filenames):
         data = pd.read_csv(f"{path}/{filename}.csv")
