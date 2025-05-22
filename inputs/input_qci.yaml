@@ -1,5 +1,5 @@
 running:
-  runs: 100
+  runs: 80
   cores: all
 simulation:
   type: "heatmap"
@@ -9,8 +9,10 @@ simulation:
   creator selection strength: 1
   user mutation probability: 1
   creator mutation probability: 1
-  generations: 500
+  generations: 300
   convergence period: 0.1 # percentage of generations
+  user initialization: -1 # or a strategy 0,1,2,3
+  creator initialization: -1  # 0,1
 parameters:
   media quality: 0.9
   user benefit: 0.4

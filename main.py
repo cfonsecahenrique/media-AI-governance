@@ -151,7 +151,7 @@ def run_heatmap(vars: list = ("q", "cI"), v1_start=0.5, v1_end=1.0, v1_steps=3, 
 
     path = f"./outputs/"
     new_dir = str(time_ns())
-    os.mkdir(f"{path}{new_dir}/", exist_ok=True)
+    os.makedirs(f"{path}{new_dir}/", exist_ok=True)
     for result in results:
         os.rename(f"{path}{result}.csv", f"{path}{new_dir}/{result}.csv")
 

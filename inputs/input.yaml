@@ -1,15 +1,15 @@
 running:
-  runs: 50
+  runs: 5
   cores: all
 simulation:
-  type: "time_series"
+  type: "heatmap"
   user population size: 100
   creator population size: 50
   user selection strength: 1
   creator selection strength: 1
   user mutation probability: 1
   creator mutation probability: 1
-  generations: 1000
+  generations: 200
   convergence period: 0.1 # percentage of generations
   user initialization: 0 # or a strategy 0,1,2,3
   creator initialization: 0  # 0,1
@@ -24,8 +24,8 @@ heatmap:
   vars: ["cP", "cI"]
   v1_start: 0
   v1_end: 0.4
-  v1_steps: 5
+  v1_steps: 1
   v2_start: 0.0
   v2_end: 0.4
-  v2_steps: 5
+  v2_steps: 1
 
