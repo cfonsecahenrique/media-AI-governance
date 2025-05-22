@@ -176,4 +176,4 @@ cython_debug/
 # outputs
 outputs/**/*.csv
 # cluster log
-nohup.out
+*.out
