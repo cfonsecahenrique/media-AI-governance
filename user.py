@@ -19,12 +19,15 @@ GOOD_MEDIA = 3
 
 
 class User:
-    def __init__(self, user_id: int, parameters):
+    def __init__(self, user_id: int, parameters, initial_strat=-1):
         self.id = user_id
         self.fitness: int = 0
-        self.strategy: int = random.choice(
-            (ALL_REJECT, ALL_ADOPT, BAD_MEDIA, GOOD_MEDIA)
-        )
+        if initial_strat == -1:
+            self.strategy: int = random.choice(
+                (ALL_REJECT, ALL_ADOPT, BAD_MEDIA, GOOD_MEDIA)
+            )
+        else:
+            self.strategy: int = initial_strat
 
     def mutate(self):
         self.strategy: str = random.choice(

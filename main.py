@@ -2,7 +2,7 @@
 import os
 import sys
 import multiprocessing as mp
-from time import time, sleep
+from time import time, sleep, time_ns
 
 # external libraries
 import yaml
@@ -150,7 +150,7 @@ def run_heatmap(vars: list = ("q", "cI"), v1_start=0.5, v1_end=1.0, v1_steps=3, 
             sleep(0.05)
 
     path = f"./outputs/"
-    new_dir = str(time.time_ns())
+    new_dir = str(time_ns())
     os.mkdir(f"{path}{new_dir}/", exist_ok=True)
     for result in results:
         os.rename(f"{path}{result}.csv", f"{path}{new_dir}/{result}.csv")

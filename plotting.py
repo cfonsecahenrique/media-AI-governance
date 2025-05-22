@@ -23,6 +23,8 @@ KEY_MAP = {
     "cost investigation": "ci",
     "creator benefit": "bc",
     "creator cost": "cc",
+    "user initialization": "uinit",
+    "creator initialization": "cinit"
 }
 
 
