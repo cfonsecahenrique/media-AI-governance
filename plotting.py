@@ -164,7 +164,7 @@ def save_figure_with_params(fig, sim_params, payoffs, type="time_series", base_d
     print(f"Figure saved to: {file_path}")
 
 
-def plot_heatmap(filenames, dir, vars, v1_range, v2_range, data_len, precision=101, save_fig=False):
+def plot_heatmap(filenames, dir, vars, v1_range, v1_scale, v2_range, v2_scale, precision=101, save_fig=False):
     print("Drawing heatmaps...")
     translator = {
         "q": "Media Quality",
@@ -173,6 +173,8 @@ def plot_heatmap(filenames, dir, vars, v1_range, v2_range, data_len, precision=1
         "cI": "Cost of Investigation",
         "bP": "Creator Benefit",
         "cP": "Creator Cost",
+        "um": "User Mutation Probability",
+        "cm": "Creator Mutation Probability"
     }
 
     n_bins1 = len(v1_range)
@@ -193,10 +195,19 @@ def plot_heatmap(filenames, dir, vars, v1_range, v2_range, data_len, precision=1
         c_heatmap[i // n_bins2, i % n_bins2] = avg_cooperation
         # print(i // n_bins2, i % n_bins2, avg_cooperation)
 
-    xticks_labels = v2_range if n_bins2 < 10 else np.linspace(v2_range[0], v2_range[-1], 10)
-    yticks_labels = v1_range if n_bins1 < 10 else np.linspace(v1_range[0], v1_range[-1], 10)
-    xticks_labels = [round(i, 2) for i in xticks_labels]
-    yticks_labels = [round(i, 2) for i in yticks_labels]
+    if v2_scale == "lin":
+        xticks_labels = v2_range if n_bins2 < 10 else np.linspace(v2_range[0], v2_range[-1], 10)
+        xticks_labels = [round(i, 2) for i in xticks_labels]
+    elif v2_scale == "log":
+        xticks_labels = v2_range if n_bins2 < 10 else np.logspace(v2_range[0], v2_range[-1], 10)
+    
+    if v1_scale == "lin":
+        yticks_labels = v1_range if n_bins1 < 10 else np.linspace(v1_range[0], v1_range[-1], 10)
+        yticks_labels = [round(i, 2) for i in yticks_labels]    
+    elif v1_scale == "log":
+        yticks_labels = v1_range if n_bins1 < 10 else np.logspace(v1_range[0], v1_range[-1], 10)
+    
+    
 
     xticks = np.linspace(0, n_bins2-1, n_bins2 if n_bins2 < 10 else 10)
     yticks = np.linspace(0, n_bins1-1, n_bins1 if n_bins1 < 10 else 10)

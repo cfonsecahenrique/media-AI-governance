@@ -119,8 +119,8 @@ def run_simulation(run_args, sim_args, clear_data=True):
     return outdir
 
 
-def run_heatmap(vars: list = ("q", "cI"), v1_start=0.5, v1_end=1.0, v1_steps=3, v2_start=0.0,
-                v2_end=0.2, v2_steps=3, clear_data=True):
+def run_heatmap(vars: list = ("q", "cI"), v1_start=0.5, v1_end=1.0, v1_steps=3, v1_scale="lin",
+                v2_start=0.0, v2_end=0.2, v2_steps=3, v2_scale="lin", clear_data=True):
     translator = {
         "q": "media quality",
         "bU": "user benefit",
@@ -128,24 +128,43 @@ def run_heatmap(vars: list = ("q", "cI"), v1_start=0.5, v1_end=1.0, v1_steps=3, 
         "cI": "cost investigation",
         "bP": "creator benefit",
         "cP": "creator cost",
+        "um": "user mutation probability",
+        "cm": "creator mutation probability"
     }
-    available_vars = ["q", "bU", "cU", "cI", "bP", "cP"]
+    available_vars = ["q", "bU", "cU", "cI", "bP", "cP","um", "cm"]
     if len(vars) != 2 or vars[0] not in available_vars or vars[1] not in available_vars:
         raise ValueError("Parameter <vars> must be a list of 2 known variables.")
 
     run_args, sim_args, payoffs, _ = read_args()
 
-    v1_range = np.linspace(v1_start, v1_end, v1_steps)
-    v2_range = np.linspace(v2_start, v2_end, v2_steps)
+    if v1_scale == "lin":
+        v1_range = np.linspace(v1_start, v1_end, v1_steps)
+    elif v1_scale == "log":
+        v1_range = np.logspace(v1_start, v1_end, v1_steps)
+    else:
+        raise ValueError("Var 1 scale can only be 'lin' of 'log'.")
+    
+    if v2_scale == "lin":
+        v2_range = np.linspace(v1_start, v1_end, v1_steps)
+    elif v2_scale == "log":
+        v2_range = np.logspace(v2_start, v2_end, v2_steps)
+    else:
+        raise ValueError("Var 1 scale can only be 'lin' of 'log'.")
 
     # Run simulation for all sets of parameters
     n_sims = len(v1_range) * len(v2_range)
     results = []
     for i, v1 in enumerate(v1_range):
-        payoffs[translator[vars[0]]] = v1
+        if vars[0] in ("um","cm"):
+            sim_args[translator[vars[0]]] = v1
+        else:
+            payoffs[translator[vars[0]]] = v1
         for j, v2 in enumerate(v2_range):
             print(f"============ Running experiment {i*len(v2_range)+j+1} of {n_sims} ============")
-            payoffs[translator[vars[1]]] = v2
+            if vars[1] in ("um","cm"):
+                sim_args[translator[vars[1]]] = v2
+            else:
+                payoffs[translator[vars[1]]] = v2
             results.append(run_simulation(run_args, (sim_args, payoffs)))
             sleep(0.05)
 
@@ -161,8 +180,9 @@ def run_heatmap(vars: list = ("q", "cI"), v1_start=0.5, v1_end=1.0, v1_steps=3, 
         new_dir,
         vars,
         v1_range,
+        v1_scale,
         v2_range,
-        data_len=sim_args["generations"] * run_args["runs"],
+        v2_scale,
         save_fig=True,
     )
 
@@ -191,9 +211,12 @@ if __name__ == "__main__":
             v1_start=heatmap_args["v1_start"],
             v1_end=heatmap_args["v1_end"],
             v1_steps=heatmap_args["v1_steps"],
+            v1_scale=heatmap_args["v1_scale"],
             v2_start=heatmap_args["v2_start"],
             v2_end=heatmap_args["v2_end"],
-            v2_steps=heatmap_args["v2_steps"]
+            v2_steps=heatmap_args["v2_steps"],
+            v2_scale=heatmap_args["v2_scale"],
         )
     else:
         raise ValueError("__main__: Oops, that type doesn't exist yet.")
+

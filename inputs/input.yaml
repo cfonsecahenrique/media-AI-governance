@@ -5,25 +5,27 @@ simulation:
   type: "heatmap"
   user population size: 100
   creator population size: 50
-  user selection strength: 1
-  creator selection strength: 1
+  user selection strength: 10
+  creator selection strength: 10
   user mutation probability: 1
   creator mutation probability: 1
-  generations: 50
+  generations: 300
   convergence period: 0.1 # percentage of generations
 parameters:
   media quality: 0.9
   user benefit: 0.4
   user cost: 0.8
-  cost investigation: 0.05
+  cost investigation: 0.1
   creator benefit: 0.4
   creator cost: 0.1
 heatmap:
-  vars: ["cP", "cI"]
-  v1_start: 0.
-  v1_end: 0.4
-  v1_steps: 5
-  v2_start: 0.0
-  v2_end: 0.4
-  v2_steps: 5
+  vars: ["q", "cm"]
+  v1_start: 0.5
+  v1_end: 1
+  v1_steps: 21
+  v1_scale: "lin"
+  v2_start: -5
+  v2_end: 1
+  v2_steps: 21
+  v2_scale: "log"
 
