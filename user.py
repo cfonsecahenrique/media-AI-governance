@@ -30,6 +30,7 @@ class User:
             self.strategy: int = initial_strat
 
     def mutate(self):
+        """Mutates user strategy."""
         self.strategy: str = random.choice(
             list({ALL_REJECT, ALL_ADOPT, BAD_MEDIA, GOOD_MEDIA} - {self.strategy})
         )

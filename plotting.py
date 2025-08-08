@@ -24,11 +24,27 @@ KEY_MAP = {
     "creator benefit": "bc",
     "creator cost": "cc",
     "user initialization": "uinit",
-    "creator initialization": "cinit"
+    "creator initialization": "cinit",
 }
 
 
-def plot_time_series(filename, parameters, runs, maxg=1000, save_fig=False):
+def plot_time_series(
+    filename: str,
+    parameters: tuple,
+    runs: int,
+    maxg: int = 1000,
+    save_fig: bool = False,
+):
+    """Plot and show time series from given file.
+
+    Args:
+        filename (str): file in which time series data is stored.
+        parameters (tuple): tuple of simulation and parameters arguments.
+        runs (int): total number of runs for time_series.
+        maxg (int, optional): maximum value of shown generations. Defaults to 1000.
+        save_fig (bool, optional): if true, saves figure to .png file. Defaults to False.
+    """
+
     print("Creating time series figure...")
     sim_params = parameters[0]
     payoffs = parameters[1]
@@ -137,7 +153,23 @@ def plot_time_series(filename, parameters, runs, maxg=1000, save_fig=False):
     plt.show()
 
 
-def save_figure_with_params(fig, sim_params, payoffs, type="time_series", base_dir="outputs"):
+def save_figure_with_params(
+    fig,
+    sim_params: dict,
+    payoffs: dict,
+    type: str = "time_series",
+    base_dir: str = "outputs",
+):
+    """Save given figure to file.
+
+    Args:
+        fig: built figure.
+        sim_params (dict): simulator arguments.
+        payoffs (dict): game parameters arguments.
+        type (str, optional): type of plot. Defaults to "time_series".
+        base_dir (str, optional): directory to save. Defaults to "outputs".
+    """
+
     # Step 1: Merge both dictionaries
     all_params = {**sim_params, **payoffs}
 
@@ -166,7 +198,31 @@ def save_figure_with_params(fig, sim_params, payoffs, type="time_series", base_d
     print(f"Figure saved to: {file_path}")
 
 
-def plot_heatmap(filenames, dir, vars, v1_range, v1_scale, v2_range, v2_scale, precision=101, save_fig=False):
+def plot_heatmap(
+    filenames: list,
+    dir: str,
+    vars: tuple,
+    v1_range: list,
+    v1_scale: str,
+    v2_range: list,
+    v2_scale: str,
+    precision=101,
+    save_fig=False,
+):
+    """Plot heatmap from given data.
+
+    Args:
+        filenames (list): list of files where data is stored.
+        dir (str): directory where all data files are stored.
+        vars (tuple): heatmap (x, y) variables.
+        v1_range (list): variable x value range.
+        v1_scale (str): scale for variable x.
+        v2_range (list): variable x value range.
+        v2_scale (str): scale for variable y.
+        precision (int, optional): number of bins for histogram counting. Defaults to 101.
+        save_fig (bool, optional): if true, saves figure to .png file. Defaults to False.
+    """
+
     print("Drawing heatmaps...")
     translator = {
         "q": "Media Quality",
@@ -176,7 +232,7 @@ def plot_heatmap(filenames, dir, vars, v1_range, v1_scale, v2_range, v2_scale, p
         "bP": "Creator Benefit",
         "cP": "Creator Cost",
         "um": "User Mutation Probability",
-        "cm": "Creator Mutation Probability"
+        "cm": "Creator Mutation Probability",
     }
 
     n_bins1 = len(v1_range)
@@ -198,21 +254,27 @@ def plot_heatmap(filenames, dir, vars, v1_range, v1_scale, v2_range, v2_scale, p
         # print(i // n_bins2, i % n_bins2, avg_cooperation)
 
     if v2_scale == "lin":
-        xticks_labels = v2_range if n_bins2 < 10 else np.linspace(v2_range[0], v2_range[-1], 10)
+        xticks_labels = (
+            v2_range if n_bins2 < 10 else np.linspace(v2_range[0], v2_range[-1], 10)
+        )
         xticks_labels = [round(i, 2) for i in xticks_labels]
     elif v2_scale == "log":
-        xticks_labels = v2_range if n_bins2 < 10 else np.logspace(v2_range[0], v2_range[-1], 10)
-    
-    if v1_scale == "lin":
-        yticks_labels = v1_range if n_bins1 < 10 else np.linspace(v1_range[0], v1_range[-1], 10)
-        yticks_labels = [round(i, 2) for i in yticks_labels]    
-    elif v1_scale == "log":
-        yticks_labels = v1_range if n_bins1 < 10 else np.logspace(v1_range[0], v1_range[-1], 10)
-    
-    
+        xticks_labels = (
+            v2_range if n_bins2 < 10 else np.logspace(v2_range[0], v2_range[-1], 10)
+        )
 
-    xticks = np.linspace(0, n_bins2-1, n_bins2 if n_bins2 < 10 else 10)
-    yticks = np.linspace(0, n_bins1-1, n_bins1 if n_bins1 < 10 else 10)
+    if v1_scale == "lin":
+        yticks_labels = (
+            v1_range if n_bins1 < 10 else np.linspace(v1_range[0], v1_range[-1], 10)
+        )
+        yticks_labels = [round(i, 2) for i in yticks_labels]
+    elif v1_scale == "log":
+        yticks_labels = (
+            v1_range if n_bins1 < 10 else np.logspace(v1_range[0], v1_range[-1], 10)
+        )
+
+    xticks = np.linspace(0, n_bins2 - 1, n_bins2 if n_bins2 < 10 else 10)
+    yticks = np.linspace(0, n_bins1 - 1, n_bins1 if n_bins1 < 10 else 10)
 
     plt.title("Average Cooperation Rate")
     plt.imshow(c_heatmap, cmap="RdYlGn", vmin=0, vmax=1, origin="lower")
