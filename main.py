@@ -1,494 +1,222 @@
+# system imports
 import os
-import time
-import yaml
 import sys
+import multiprocessing as mp
+from time import time, sleep, time_ns
+
+# external libraries
+import yaml
 import numpy as np
-import random as rand
-from tqdm import tqdm
-import multiprocessing
-# import plotext as plt
-import matplotlib.pyplot as plt
 import pandas as pd
+from tqdm import tqdm
 
-from User import User
-from Commentator import Commentator
-from Creator import Creator
-
-COOPERATE = 1
-DEFECT = 0
-
-NUMBER_USERS: int
-NUMBER_COMMENTATORS: int
-NUMBER_CREATORS: int
-MEDIA_QUALITY: list
-# Vector of public reputations
-MEDIA_QUALITY_EXPECTED: list
-delta_q: float = 0.0001
-GENS: int
-RUNS: int
-USER_MUTATION_PROBABILITY: float
-CREATOR_MUTATION_PROBABILITY: float
-U_SELECTION_STRENGTH = 1.
-C_SELECTION_STRENGTH = 1.
-# Ground truth of creator reputations
-REAL_CREATOR_STRATEGIES: list = []
-
-user_population: list[User] = []
-media_population: list[Commentator] = []
-creator_population: list[Creator] = []
-
-# for plotting
-generations = []  # Store time steps
-never_adopt = []  # Users who never adopt
-always_adopt = []  # Users who always adopt
-optimist = []  # Optimistic users
-pessimist = []  # Pessimistic users
-creator_cooperator = []
-creator_defector = []
-media_reputation = {}
-
-# Benefit a user receives when adopting a safe technology
-bU = 0.4
-# Cost for the user adopting unsafe technology
-cU = 0.8
-# Benefit the media gets by users paying the (same) cost to access it
-bM = 0.01
-# Benefit for the creator when user uses
-bP = 0.4
-# Cost paid by creators to create safe AI
-cP = 0.2
+import pprint
+# custom libraries
+from simulator import Simulator
+from plotting import plot_time_series, plot_heatmap
 
 
 def read_args():
-    if sys.argv[1]:
-        file_name: str = "inputs/" + str(sys.argv[1]) + ".yaml" 
+    if len(sys.argv) == 2:
+        file_name: str = "inputs/" + str(sys.argv[1])
     else:
-        raise ValueError("No filename provided. Please run as 'python main.py <filename>'")
+        raise ValueError("Invalid inputs. Please run as 'python main.py <filename>'")
 
-    global NUMBER_USERS
-    global NUMBER_COMMENTATORS
-    global NUMBER_CREATORS
-    global USER_MUTATION_PROBABILITY
-    global CREATOR_MUTATION_PROBABILITY
-    global MEDIA_QUALITY
-    global MEDIA_QUALITY_EXPECTED
-    global GENS
-    global RUNS
-
-    # Open and parse the YAML file
     with open(file_name, "r") as f:
         data = yaml.safe_load(f)
 
-    for entry in data.get("instructions", []):
-        NUMBER_USERS = int(entry["user population size"])
-        NUMBER_COMMENTATORS = int(entry["commentator population size"])
-        NUMBER_CREATORS = int(entry["creators population size"])
-        MEDIA_QUALITY = list(entry["media quality"])
-        MEDIA_QUALITY_EXPECTED = np.random.uniform(low=0.5, high=1.0, size=(NUMBER_COMMENTATORS,))
-        USER_MUTATION_PROBABILITY = float(
-            entry["user mutation probability"]
-        )  # /NUMBER_USERS)
-        CREATOR_MUTATION_PROBABILITY = float(
-            entry["creator mutation probability"]
-        )  # /NUMBER_CREATORS)
-        GENS = int(entry["generations"])
-        RUNS = int(entry["runs"])
+    if data["simulation"]["type"] == "time_series":
+        return data["running"], data["simulation"], data["parameters"], None
+    elif data["simulation"]["type"] == "heatmap":
+        return data["running"], data["simulation"], data["parameters"], data["heatmap"]
+    else:
+        raise ValueError("This type of simulation currently doesn't exist. Please choose 'time series' or 'heatmap'.")
 
 
-def initialization():
-    # Create population of users
-    global user_population
-    global media_population
-    global REAL_CREATOR_STRATEGIES
-    global creator_population
+def get_average_output(filename, clear_data=True):
+    path = f"./outputs/{filename}/"
 
-    user_population = []
-    media_population = []
-    creator_population = []
+    all_dataframes = []
 
-    for i in range(0, NUMBER_USERS):
-        user_population.append(User(i, NUMBER_COMMENTATORS))
+    for file in os.listdir(path):
+        if not file.endswith(".csv"):
+            continue
 
-    # Create population of commentators
-    for j in range(0, NUMBER_COMMENTATORS):
-        media_population.append(Commentator(j, MEDIA_QUALITY[j]))
+        full_path = os.path.join(path, file)
 
-    # Create population of Devs
-    for k in range(0, NUMBER_CREATORS):
-        creator_population.append(Creator(k))
+        # Read with headers, all as strings first
+        df = pd.read_csv(full_path, dtype=str)
 
-    for user in user_population:
-        # initialy useless
-        user.media_trust_vector = []
+        # Drop rows where 'gen' equals 'gen' (i.e., extra headers accidentally included)
+        df = df[df["gen"] != "gen"]
+
+        # Convert columns to correct types
+        df = df.astype(
+            {
+                "gen": int,
+                "acr": float,
+                "acr_u": float,
+                "acr_c": float,
+                "AllD": float,
+                "AllC": float,
+                "BMedia": float,
+                "GMedia": float,
+                "Unsafe": float,
+                "Safe": float,
+            }
+        )
+
+        all_dataframes.append(df)
+
+    # Combine all clean DataFrames
+    combined = pd.concat(all_dataframes, ignore_index=True)
+
+    # Export to CSV
+    output_path = path[:-1] + ".csv"
+    combined.to_csv(output_path, index=False)
+
+    # Clean up files
+    if clear_data:
+        for file in os.listdir(path):
+            os.remove(os.path.join(path, file))
+        os.rmdir(path)
+    print(f"Saved cleaned data to {output_path}")
 
 
-def update_reputation_all(media_trust_vector: list, up_or_down: int):
-    # up = 1, down = -1
-    # up if media suggestion was right, down if it was wrong
-    global MEDIA_QUALITY_EXPECTED
-    for media in media_trust_vector:
-        MEDIA_QUALITY_EXPECTED[media.id] += up_or_down * delta_q
-        # clamp it to [0,1]
-        MEDIA_QUALITY_EXPECTED[media.id] = max(0, min(1, MEDIA_QUALITY_EXPECTED[media.id]))
+def run(args):
+    simulation, parameters = args
+    sim = Simulator(simulation, parameters)
+    # print(sim.__str__())
+    sim.run(
+        filename="./outputs/"
+        + simulation["outdir"]
+        + "/"
+        + str(mp.current_process()._identity)
+    )
 
 
-def update_reputation_discriminate(media_trust_vector: list, up_or_down: list):
-    # here up or down is a list of -1 or 1s
-    # up if media suggestion was right, down if it was wrong
-    global MEDIA_QUALITY_EXPECTED
+def run_simulation(run_args, sim_args, clear_data=True):
+    outdir: str = f"{round(time())}"
+    os.mkdir(f"./outputs/{outdir}")
+    sim_args[0]["outdir"] = outdir
 
-    for i, media in enumerate(media_trust_vector):
-        MEDIA_QUALITY_EXPECTED[media.id] += up_or_down[i] * delta_q
-        # clamp it to [0,1]
-        MEDIA_QUALITY_EXPECTED[media.id] = max(0, min(1, MEDIA_QUALITY_EXPECTED[media.id]))
+    num_cores = mp.cpu_count() - 1 if run_args["cores"] == "all" else run_args["cores"]
+
+    print("============ Running experiment of", run_args["runs"],
+          "simulations in", num_cores, "cores: ============")
+    if sim_args[0]["type"] == "time_series":
+        pprint.pp(sim_args)
+
+    print("Pooling processes...")
+    with mp.Pool(processes=num_cores) as pool:
+        list(
+            tqdm(pool.imap(run, [sim_args] * run_args["runs"]), total=run_args["runs"])
+        )
+
+    print("Simulations done. Processing results...")
+    get_average_output(outdir, clear_data)
+
+    return outdir
 
 
-def generate_media_beliefs(u: User, c: Creator):
-    media_beliefs_of_creator = []
-    if u.tm != 0:
-        for media in u.media_trust_vector:
-            if rand.random() <= media.quality:
-                media_beliefs_of_creator.append(c.strategy)
+def run_heatmap(vars: list = ("q", "cI"), v1_start=0.5, v1_end=1.0, v1_steps=3, v1_scale="lin",
+                v2_start=0.0, v2_end=0.2, v2_steps=3, v2_scale="lin", clear_data=True):
+    translator = {
+        "q": "media quality",
+        "bU": "user benefit",
+        "cU": "user cost",
+        "cI": "cost investigation",
+        "bP": "creator benefit",
+        "cP": "creator cost",
+        "um": "user mutation probability",
+        "cm": "creator mutation probability"
+    }
+    available_vars = ["q", "bU", "cU", "cI", "bP", "cP","um", "cm"]
+    if len(vars) != 2 or vars[0] not in available_vars or vars[1] not in available_vars:
+        raise ValueError("Parameter <vars> must be a list of 2 known variables.")
+
+    run_args, sim_args, payoffs, _ = read_args()
+
+    if v1_scale == "lin":
+        v1_range = np.linspace(v1_start, v1_end, v1_steps)
+    elif v1_scale == "log":
+        v1_range = np.logspace(v1_start, v1_end, v1_steps)
+    else:
+        raise ValueError("Var 1 scale can only be 'lin' of 'log'.")
+    
+    if v2_scale == "lin":
+        v2_range = np.linspace(v1_start, v1_end, v1_steps)
+    elif v2_scale == "log":
+        v2_range = np.logspace(v2_start, v2_end, v2_steps)
+    else:
+        raise ValueError("Var 1 scale can only be 'lin' of 'log'.")
+
+    # Run simulation for all sets of parameters
+    n_sims = len(v1_range) * len(v2_range)
+    results = []
+    for i, v1 in enumerate(v1_range):
+        if vars[0] in ("um","cm"):
+            sim_args[translator[vars[0]]] = v1
+        else:
+            payoffs[translator[vars[0]]] = v1
+        for j, v2 in enumerate(v2_range):
+            print(f"============ Running experiment {i*len(v2_range)+j+1} of {n_sims} ============")
+            if vars[1] in ("um","cm"):
+                sim_args[translator[vars[1]]] = v2
             else:
-                media_beliefs_of_creator.append(1-c.strategy)
-    return media_beliefs_of_creator
+                payoffs[translator[vars[1]]] = v2
+            results.append(run_simulation(run_args, (sim_args, payoffs)))
+            sleep(0.05)
 
+    path = f"./outputs/"
+    new_dir = str(time_ns())
+    os.makedirs(f"{path}{new_dir}/", exist_ok=True)
+    for result in results:
+        os.rename(f"{path}{result}.csv", f"{path}{new_dir}/{result}.csv")
 
-def user_evolution_step():
-    if rand.random() < USER_MUTATION_PROBABILITY:
-        random_user: User = rand.choice(user_population)
-        random_user.mutate(NUMBER_COMMENTATORS)
-    else:
-        # Monte carlo step stuff
-        user_a: User
-        user_b: User
-        user_a, user_b = rand.sample(user_population, 2)
-        user_a.fitness = 0
-        user_b.fitness = 0
-
-        # build trust media vector stochastically
-        user_a.media_trust_vector = rand.choices(population=media_population, weights=MEDIA_QUALITY_EXPECTED, k=user_a.tm)
-        user_b.media_trust_vector = rand.choices(population=media_population, weights=MEDIA_QUALITY_EXPECTED, k=user_b.tm)
-
-        # user A plays Z games
-        for _ in range(NUMBER_CREATORS):
-            creator: Creator = rand.choice(creator_population)
-            calculate_payoff_users(user_a, creator)        
-            
-        # user B plays Z games
-        for _ in range(NUMBER_CREATORS):
-            creator: Creator = rand.choice(creator_population)
-            calculate_payoff_users(user_b, creator)
-
-        # learning step
-        # Calculate Probability of imitation
-        p_i: float = (
-            1 + np.exp(U_SELECTION_STRENGTH * (user_a.fitness - user_b.fitness))
-        ) ** (-1)
-
-        if rand.random() < p_i:
-            user_a.strat = user_b.strat
-            user_a.tm = user_b.tm
-
-
-def creator_evolution_step():
-    if rand.random() < CREATOR_MUTATION_PROBABILITY:
-        random_creator = rand.choice(creator_population)
-        random_creator.mutate()
-    else:
-        # Monte carlo step stuff
-        creator_a: Creator
-        creator_b: Creator
-        creator_a, creator_b = rand.sample(creator_population, 2)
-        creator_a.fitness = 0
-        creator_b.fitness = 0
-
-        # Creator A plays X games
-        for _ in range(NUMBER_USERS):
-            user: User = rand.choice(user_population)
-            calculate_payoff_creators(user, creator_a)
-
-        # Creator B
-        for _ in range(NUMBER_USERS):
-            user: User = rand.choice(user_population)
-            calculate_payoff_creators(user, creator_b)
-
-        # learning step
-        # Calculate Probability of imitation
-        p_i: float = (
-            1
-            + np.exp(C_SELECTION_STRENGTH * (creator_a.fitness - creator_b.fitness))
-        ) ** (-1)
-        if rand.random() < p_i:
-            creator_a.strategy = creator_b.strategy
-
-
-def theta_function(sum_media_beliefs_of_creator, threshold: int):
-    return 1 if sum_media_beliefs_of_creator >= threshold else 0
-
-
-def payoff_matrix(user: User, sum_media_beliefs_of_creator: int):
-    theta = -1
-    # x = recommended action = 0 or 1
-    # tM = number of trusted sources
-    if user.strat == 0:
-        # Never Adopt
-        pass
-    elif user.strat == 1:
-        # Always Adopt
-        pass
-    elif user.strat == 2:
-        # Optimist
-        theta = theta_function(sum_media_beliefs_of_creator, threshold=1)
-    elif user.strat == 3:
-        # Pessimist
-        theta = theta_function(sum_media_beliefs_of_creator, threshold=user.tm)
-    else:
-        raise ValueError("User type error")
-
-    user_payoffs = np.array(
-        [
-            [0, -cU, theta * (-cU) - (user.tm * bM), theta * (-cU) - (user.tm * bM)],
-            [0, bU, theta * bU - user.tm * bM, theta * bU - user.tm * bM],
-        ]
+    # Plot heatmap
+    plot_heatmap(
+        results,
+        new_dir,
+        vars,
+        v1_range,
+        v1_scale,
+        v2_range,
+        v2_scale,
+        save_fig=True,
     )
-    creator_payoffs = np.array(
-        [
-            [0, bP, theta * bP, theta * bP],
-            [-cP, bP - cP, theta * bP - cP, theta * bP - cP],
-        ]
-    )
-    return user_payoffs, creator_payoffs
 
+    # Clean up files
+    path = f"{path}{new_dir}/"
+    if clear_data:
+        for file in os.listdir(path):
+            os.remove(os.path.join(path, file))
+        os.rmdir(path)
 
-def calculate_payoff_users(u: User, c: Creator):
-    # Create a list of opinions of only trusted sources
-   
-    # media_beliefs_of_creators
-    media_beliefs_of_creator = generate_media_beliefs(u, c)
-
-    # compare media beliefs with creators strategies
-    up_or_down = np.ones(len(media_beliefs_of_creator))
-    for i in range(len(up_or_down)):
-        if media_beliefs_of_creator[i] != c.strategy:
-            up_or_down[i] = -1
-
-    # Payoffs are (kinda) different depending on u.strat being 2 or 3 or more
-    user_payoffs, creator_payoffs = payoff_matrix(u, sum(media_beliefs_of_creator))
-    u.fitness += user_payoffs[c.strategy, u.strat]
-    c.fitness += creator_payoffs[c.strategy, u.strat]
-
-    # update reputation
-    update_reputation_discriminate(u.media_trust_vector, up_or_down)
-
-
-def calculate_payoff_creators(u: User, c: Creator):
-    # Create a list of opinions of only trusted sources
-   
-    # generate media beliefs of creators
-    media_beliefs_of_creator = generate_media_beliefs(u, c)
-
-    # Payoffs are (kinda) different depending on u.strat being 2 or 3 or more
-    user_payoffs, creator_payoffs = payoff_matrix(u, sum(media_beliefs_of_creator))
-    u.fitness += user_payoffs[c.strategy, u.strat]
-    c.fitness += creator_payoffs[c.strategy, u.strat]
-
-
-def count_user_strategies():
-    totals = {0: 0, 1: 0, 2: 0, 3: 0}
-    for u in user_population:
-        totals[u.strat] += 1
-    return totals
-
-
-def count_creator_strategies():
-    totals = {DEFECT: 0, COOPERATE: 0}
-    for c in creator_population:
-        totals[c.strategy] += 1
-    return totals
-
-
-def export_results(users_strats_counts: dict, creators_strats_counts: dict, plotting: bool = False):
-    print("USERS:", users_strats_counts)
-    print("CREATORS:", creators_strats_counts)
-
-    # Create a unique filename. Change it later to experiment name/id
-    file_name: str = "outputs/" + str(round(time.time())) + ".csv"
-    f = open(file_name, "a")
-    # Write the time series of all relevant frequencies
-
-    labels = "gen,N,A,O,P,CC,CD"
-    for media in media_reputation:
-        labels += f",M{media}"
-    labels += "\n"
-    f.write(labels)
-    for g in range(GENS):
-        output: str = (
-            str(generations[g])
-            + ","
-            + str(never_adopt[g])
-            + ","
-            + str(always_adopt[g])
-            + ","
-            + str(optimist[g])
-            + ","
-            + str(pessimist[g])
-            + ","
-            + str(creator_cooperator[g])
-            + ","
-            + str(creator_defector[g])
-        )
-        for media, value in media_reputation.items():
-            output += f",{value[g]}"
-        output += "\n"
-        f.write(output)
-    f.close()
-
-    if plotting:
-        df = pd.read_csv(file_name).drop("gen", axis=1)
-
-        fig, (ax1,ax2,ax3) = plt.subplots(3)
-
-        # color=['r','b','orange','g','purple','brown']
-        ls=['-','-','-', '-','-','-'] + ["dotted" for _ in media_reputation]
-        labels=['N','A','O','P','CC','CD'] + [f"M{i}" for i in media_reputation]
-        for i, col in enumerate(['N','A','O','P']):
-            df[col].plot(ls=ls[i], label=labels[i], ax=ax1)
-        for i, col in enumerate(['CC','CD']):
-            df[col].plot(ls=ls[i+4], label=labels[i+4], ax=ax2)
-        for i, col in enumerate([f"M{i}" for i in media_reputation]):
-            df[col].plot(ls=ls[i+6], label=labels[i+6], ax=ax3)
-
-        ax1.legend(loc='upper left')
-        ax2.legend(loc='upper left')
-        ax3.legend(loc='upper left')
-        plt.show()
-
-
-def run_one_generation(logging: bool = False):
-    initialization()
-
-    g, n, a, o, p, cc, cd = [], [], [], [], [], [], [] 
-    r = { i: [] for i in range(len(MEDIA_QUALITY_EXPECTED)) }
-
-    for generation in tqdm(range(GENS)):
-        # 1. Evolve agents
-        user_evolution_step()
-        # 2. Evolve Creators
-        creator_evolution_step()
-
-        user_strats_dict: dict = count_user_strategies()
-        creator_strats_dict: dict = count_creator_strategies()
-        # Store data for plotting
-        g.append(generation)
-        n.append(user_strats_dict[0] / NUMBER_USERS)
-        a.append(user_strats_dict[1] / NUMBER_USERS)
-        o.append(user_strats_dict[2] / NUMBER_USERS)
-        p.append(user_strats_dict[3] / NUMBER_USERS)
-        cc.append(creator_strats_dict[COOPERATE] / NUMBER_CREATORS)
-        cd.append(creator_strats_dict[DEFECT] / NUMBER_CREATORS)
-        for media in range(NUMBER_COMMENTATORS):
-            r[media].append(MEDIA_QUALITY_EXPECTED[media])
-
-    return g, n, a, o, p, cc, cd, r
-
-
-def run(logging: bool = True, plotting: bool = False, output: bool=False):
-    global REAL_CREATOR_STRATEGIES
-    global generations
-    global never_adopt 
-    global always_adopt 
-    global optimist
-    global pessimist 
-    global creator_cooperator 
-    global creator_defector
-    global media_reputation
-
-    # Have a fixed initial configuration of trustworthiness of commentators
-    read_args()
-
-    g_tmp = np.zeros(GENS)
-    n_tmp = np.zeros(GENS)
-    a_tmp = np.zeros(GENS)
-    o_tmp = np.zeros(GENS)
-    p_tmp = np.zeros(GENS)
-    cc_tmp = np.zeros(GENS)
-    cd_tmp = np.zeros(GENS)
-    r_tmp = {i: np.zeros(GENS) for i in range(NUMBER_COMMENTATORS)}
-
-    for run in range(1, RUNS+1):
-        print(
-            "Running simulation: " + "|" + run * "█" + (RUNS - run) * " " + f"|{run}/{RUNS}|"
-        )
-
-        g, n, a, o, p, cc, cd, r = run_one_generation(logging)
-
-        g_tmp = np.array(g)
-        n_tmp += np.array(n)
-        a_tmp += np.array(a)
-        o_tmp += np.array(o)
-        p_tmp += np.array(p)
-        cc_tmp += np.array(cc)
-        cd_tmp += np.array(cd)
-      
-        for i, v in r.items():
-            r_tmp[i] += v
-    
-    generations = g_tmp
-    never_adopt = n_tmp/RUNS
-    always_adopt = a_tmp/RUNS
-    optimist = o_tmp/RUNS
-    pessimist = p_tmp/RUNS
-    creator_cooperator = cc_tmp/RUNS
-    creator_defector = cd_tmp/RUNS
-
-    for i, v in r_tmp.items():
-        media_reputation[i] = v/RUNS
-    
-    if output:
-        export_results(count_user_strategies(), count_creator_strategies(), plotting)
-
-    # calculate average cooperation rate for creators
-    nc = NUMBER_CREATORS
-    count, _ = np.histogram(creator_cooperator, bins=nc+1)
-    cc_stat_dist = count/GENS
-    avg_cooperation_creator = sum([k/nc * cc_stat_dist[k] for k in range(nc+1)])
-
-    return avg_cooperation_creator
-
-
-def run_cp_bm(n_bits: int = 6, plotting: bool = False, output: bool=False):
-    global cP
-    global bM
-
-    cps = [round(i / (n_bits-1) - 0.5, 1) for i in range(n_bits)]
-    bms = [i * 0.01 for i in range(n_bits)]
-
-    # u_heatmap = np.zeros((5,5))
-    c_heatmap = np.zeros((n_bits, n_bits))
-
-    for i, cp in enumerate(reversed(cps)):
-        cP = cp
-        for j, bm in enumerate(bms):
-            bM = bm
-            c_heatmap[i, j] = run(plotting, output)
-    
-    plt.title("Average Creators' Cooperation Rate")
-    plt.imshow(c_heatmap, cmap='RdYlGn')
-    plt.xticks(ticks=[i for i in range(n_bits)], labels=bms)
-    plt.yticks(ticks=[i for i in range(n_bits)], labels=reversed(cps))
-    plt.xlabel("bM")
-    plt.ylabel("cP")
-    plt.colorbar()
-    plt.show()
-
-    return c_heatmap   
-
-
-def multiprocess():
-    manager = multiprocessing.Manager()
-    lock = manager.Lock()
+    return results, new_dir
 
 
 if __name__ == "__main__":
-    run_cp_bm(n_bits=11, plotting=False, output=False)
+    # run_args: runs + cores
+    run_args, sim_args, payoffs, heatmap_args = read_args()
+
+    if sim_args["type"] == "time_series":
+        # sim_args[0]: "simulation"
+        # sim_args[1]: "parameters"
+        result = run_simulation(run_args, (sim_args, payoffs))
+        plot_time_series(result, (sim_args, payoffs), run_args["runs"], maxg=sim_args["generations"], save_fig=True)
+    elif sim_args["type"] == "heatmap":
+        run_heatmap(
+            vars=heatmap_args["vars"],
+            v1_start=heatmap_args["v1_start"],
+            v1_end=heatmap_args["v1_end"],
+            v1_steps=heatmap_args["v1_steps"],
+            v1_scale=heatmap_args["v1_scale"],
+            v2_start=heatmap_args["v2_start"],
+            v2_end=heatmap_args["v2_end"],
+            v2_steps=heatmap_args["v2_steps"],
+            v2_scale=heatmap_args["v2_scale"],
+        )
+    else:
+        raise ValueError("__main__: Oops, that type doesn't exist yet.")
+

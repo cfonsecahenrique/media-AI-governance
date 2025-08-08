@@ -173,5 +173,7 @@ cython_debug/
 # PyPI configuration file
 .pypirc
 
-#outputs
-outputs/17*
+# outputs
+outputs/**/*.csv
+# cluster log
+*.out
