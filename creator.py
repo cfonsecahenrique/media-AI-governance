@@ -14,4 +14,6 @@ class Creator:
         self.fitness: int = 0
 
     def mutate(self):
+        """Mutates creator strategy.
+        """
         self.strategy: int = 1 - self.strategy

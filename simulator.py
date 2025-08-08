@@ -10,7 +10,7 @@ from creator import Creator
 
 
 class Simulator:
-    def __init__(self, simulation, parameters):
+    def __init__(self, simulation, parameters) -> None:
         self.sim_type: str = simulation["type"]
         self.num_users: int = simulation["user population size"]
         self.num_creators: int = simulation["creator population size"]
@@ -54,7 +54,7 @@ class Simulator:
         self.creator_cooperative_acts: int = 0
         self.total_actions: int = 0
 
-    def __str__(self):
+    def __str__(self) -> None:
         user_pm, creator_pm = self.user_payoff_matrix, self.creator_payoff_matrix
         return (
             f"\n===== Simulation Parameters =====\n"
@@ -78,7 +78,12 @@ class Simulator:
             f"Cooperate| {creator_pm[1, 0]:>7.2f}  {creator_pm[1, 1]:>7.2f}  {creator_pm[1, 2]:>7.2f}  {creator_pm[1, 3]:>7.2f}\n"
         )
 
-    def calculate_payoff_matrices(self):
+    def calculate_payoff_matrices(self) -> tuple:
+        """Provides payoff matrix.
+
+        Returns:
+            tuple: user and creator payoffs.
+        """
         # Order for strats:
         # [D][wtv]: opponent defected
         # [D][D]: AllD; [D][C]: AllC; [D][B]: Bad Media Follower; [D][G]: Good Media follower;
@@ -103,13 +108,18 @@ class Simulator:
         )
         return user_payoffs, creator_payoffs
 
-    def calculate_payoff(self, user: User, creator: Creator):
+    def calculate_payoff(self, user: User, creator: Creator) -> None:
+        """Calculate interaction payoff
+
+        Args:
+            user (User): interacting user.
+            creator (Creator): interacting creator.
+        """
         user.fitness += self.user_payoff_matrix[creator.strategy, user.strategy]
         creator.fitness += self.creator_payoff_matrix[creator.strategy, user.strategy]
 
-    def init_population(self, parameters, user_init_strat=-1, creator_init_strat=-1):
-        """
-        Initialize population of users and creators
+    def init_population(self, parameters, user_init_strat=-1, creator_init_strat=-1) -> tuple:
+        """Initialize population of users and creators
 
         Args:
             parameters: interaction parameters
@@ -133,9 +143,8 @@ class Simulator:
 
         return user_population, creator_population
 
-    def user_evolution_step(self):
-        """
-        User evolutionary step
+    def user_evolution_step(self) -> None:
+        """User evolutionary step
         """
         if random.random() < self.user_mutation_rate:
             random_user: User = random.choice(self.user_pop)
@@ -199,9 +208,8 @@ class Simulator:
             if random.random() < p_i:
                 user_a.strategy = user_b.strategy
 
-    def creator_evolution_step(self):
-        """
-        Creator evolutionary step
+    def creator_evolution_step(self) -> None:
+        """Creator evolutionary step
         """
         if random.random() < self.creator_mutation_rate:
             random_creator = random.choice(self.creator_pop)
@@ -262,10 +270,9 @@ class Simulator:
             if random.random() < p_i:
                 creator_a.strategy = creator_b.strategy
 
-    def count_user_strategies(self):
-        """
-        Count number of users for each strategy
-        (Numpy optimised)
+    def count_user_strategies(self) -> dict:
+        """Count number of users for each strategy (Numpy optimised)
+
         Returns:
             dict: count for each strategy
         """
@@ -273,12 +280,12 @@ class Simulator:
             (u.strategy for u in self.user_pop), dtype=np.int8, count=self.num_users
         )
         counts = np.bincount(strategies, minlength=4)
+
         return dict(enumerate(counts))
 
-    def count_creator_strategies(self):
-        """
-        Count number of creators for each strategy
-        (Numpy optimised)
+    def count_creator_strategies(self) -> dict:
+        """Count number of creators for each strategy (Numpy optimised)
+
         Returns:
             dict: count for each strategy
         """
@@ -288,9 +295,10 @@ class Simulator:
             count=self.num_creators,
         )
         counts = np.bincount(strategies, minlength=2)
+
         return dict(enumerate(counts))
 
-    def write_output(self, filename, acr, acr_u, acr_c, d, c, b, g, cd, cc):
+    def write_output(self, filename, acr, acr_u, acr_c, d, c, b, g, cd, cc) -> None:
         """
         Write the output of the simulation on a csv file
 
@@ -306,6 +314,7 @@ class Simulator:
             cd (list): list of defective creators over generations
             cc (list): list of cooperative creators over generations
         """
+
         path = f"{filename}.csv"
         with open(path, "a") as file:
             labels = "gen,acr,acr_u,acr_c,AllD,AllC,BMedia,GMedia,Unsafe,Safe\n"
@@ -315,12 +324,14 @@ class Simulator:
                 output = f"{i},{acr[i]},{acr_u[i]},{acr_c[i]},{d[i]},{c[i]},{b[i]},{g[i]},{cd[i]},{cc[i]}\n"
                 file.write(output)
 
-    def run(self, filename: str = ""):
+    def run(self, filename: str = "") -> None:
         """
         Run the simulation.
+        
         Args:
-            filename (str, optional): If given, writes the results of the simulation on the filename. Defaults to "".
+            filename (str, optional): if given, writes the results of the simulation on the filename. Defaults to "".
         """
+
         d, c, b, g = (
             np.zeros(self.gens),
             np.zeros(self.gens),
