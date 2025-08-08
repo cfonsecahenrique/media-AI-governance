@@ -11,25 +11,27 @@ from creator import Creator
 
 class Simulator:
     def __init__(self, simulation, parameters):
-        self.sim_type = simulation["type"]
-        self.num_users = simulation["user population size"]
-        self.num_creators = simulation["creator population size"]
-        self.user_beta = simulation["user selection strength"]
-        self.user_mutation_rate = (
+        self.sim_type: str = simulation["type"]
+        self.num_users: int = simulation["user population size"]
+        self.num_creators: int = simulation["creator population size"]
+        self.user_beta: float = simulation["user selection strength"]
+        self.user_mutation_rate: float = (
             simulation["user mutation probability"] / self.num_users
         )
-        self.creator_beta = simulation["user selection strength"]
-        self.creator_mutation_rate = (
+        self.creator_beta: float = simulation["user selection strength"]
+        self.creator_mutation_rate: float = (
             simulation["creator mutation probability"] / self.num_creators
         )
-        self.gens = simulation["generations"]
-        self.media_quality = parameters["media quality"]
+        self.gens: int = simulation["generations"]
+        self.media_quality: float = parameters["media quality"]
+        self.user_initialization: int = simulation["user initialization"]
+        self.creator_initialization: int = simulation["creator initialization"]
 
         if self.sim_type == "heat_map":
-            self.converge = simulation["convergence period"]*self.gens
+            self.converge: int = simulation["convergence period"]*self.gens
             self.past_convergence = False
         else:
-            self.converge = 0
+            self.converge: int = 0
             self.past_convergence = True
 
         self.q = parameters["media quality"]
@@ -42,7 +44,9 @@ class Simulator:
         self.user_payoff_matrix, self.creator_payoff_matrix = (
             self.calculate_payoff_matrices()
         )
-        self.user_pop, self.creator_pop = self.init_population(parameters)
+        self.user_pop: list[User]
+        self.creator_pop: list[Creator]
+        self.user_pop, self.creator_pop = self.init_population(parameters, self.user_initialization, self.creator_initialization)
 
         self.user_cooperative_acts: int = 0
         self.creator_cooperative_acts: int = 0
@@ -101,7 +105,7 @@ class Simulator:
         user.fitness += self.user_payoff_matrix[creator.strategy, user.strategy]
         creator.fitness += self.creator_payoff_matrix[creator.strategy, user.strategy]
 
-    def init_population(self, parameters):
+    def init_population(self, parameters, user_init_strat=-1, creator_init_strat=-1):
         """
         Initialize population of users and creators
 
@@ -111,17 +115,19 @@ class Simulator:
         Returns:
             list[User]: population of users
             list[Creator]: population of creators
+            :param creator_init_strat: -1 if random, else that
+            :param user_init_strat: -1 if random, else that
         """
         user_population: list[User] = []
         creator_population: list[Creator] = []
 
         # create population of users
         for i in range(0, self.num_users):
-            user_population.append(User(i, parameters))
+            user_population.append(User(i, parameters, initial_strat=user_init_strat))
 
         # Create population of Devs
         for k in range(0, self.num_creators):
-            creator_population.append(Creator(k))
+            creator_population.append(Creator(k, initial_strat=creator_init_strat))
 
         return user_population, creator_population
 
