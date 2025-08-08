@@ -28,7 +28,7 @@ class Simulator:
         self.creator_initialization: int = simulation["creator initialization"]
 
         if self.sim_type == "heat_map":
-            self.converge: int = simulation["convergence period"]*self.gens
+            self.converge: int = simulation["convergence period"] * self.gens
             self.past_convergence = False
         else:
             self.converge: int = 0
@@ -46,7 +46,9 @@ class Simulator:
         )
         self.user_pop: list[User]
         self.creator_pop: list[Creator]
-        self.user_pop, self.creator_pop = self.init_population(parameters, self.user_initialization, self.creator_initialization)
+        self.user_pop, self.creator_pop = self.init_population(
+            parameters, self.user_initialization, self.creator_initialization
+        )
 
         self.user_cooperative_acts: int = 0
         self.creator_cooperative_acts: int = 0
@@ -351,11 +353,10 @@ class Simulator:
             cc[gen] = creator_strats_dict[1] / self.num_creators
             if self.past_convergence and self.total_actions > 0:
                 acr[gen] = (
-                    (self.creator_cooperative_acts + self.user_cooperative_acts)
-                    / self.total_actions
-                )
-                acr_u[gen] = self.user_cooperative_acts / (self.total_actions/2)
-                acr_c[gen] = self.creator_cooperative_acts / (self.total_actions/2)
+                    self.creator_cooperative_acts + self.user_cooperative_acts
+                ) / self.total_actions
+                acr_u[gen] = self.user_cooperative_acts / (self.total_actions / 2)
+                acr_c[gen] = self.creator_cooperative_acts / (self.total_actions / 2)
             else:
                 acr[gen] = 0
                 acr_u[gen] = 0

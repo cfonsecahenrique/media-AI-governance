@@ -1,8 +1,8 @@
 running:
   runs: 5
-  cores: all
+  cores: 5
 simulation:
-  type: "heatmap"
+  type: "time_series"
   user population size: 100
   creator population size: 50
   user selection strength: 10
