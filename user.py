@@ -4,8 +4,6 @@ import random
 # external libraries
 import numpy as np
 
-# custom libraries
-from commentator import Commentator
 
 # USER STRATEGIES
 # never adopt systems regardless of media opinions on creators

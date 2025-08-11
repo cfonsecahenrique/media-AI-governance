@@ -1,6 +1,6 @@
 running:
-  runs: 5
-  cores: all
+  runs: 10
+  cores: 10
 simulation:
   type: "heatmap"
   user population size: 100
@@ -30,4 +30,3 @@ heatmap:
   v2_end: 1
   v2_steps: 21
   v2_scale: "log"
-

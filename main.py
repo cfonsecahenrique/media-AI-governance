@@ -178,11 +178,11 @@ def run_heatmap(
     Args:
         vars (list, optional): heatmap (x, y) variables. Defaults to ("q", "cI").
         v1_start (float, optional): start point for variable x. Defaults to 0.5.
-        v1_end (float, optional): start point for variable x. Defaults to 1.0.
+        v1_end (float, optional): final point for variable x. Defaults to 1.0.
         v1_steps (int, optional): incrementing step for variable x. Defaults to 3.
         v1_scale (str, optional): scale for variable x. Defaults to "lin".
         v2_start (float, optional): start point for variable y. Defaults to 0.0.
-        v2_end (float, optional): start point for variable y. Defaults to 0.2.
+        v2_end (float, optional): final point for variable y. Defaults to 0.2.
         v2_steps (int, optional): incrementing step for variable y. Defaults to 3.
         v2_scale (str, optional): scale for variable y. Defaults to "lin".
         clear_data (bool, optional): clear all files after concatenating. Defaults to True.
@@ -195,6 +195,7 @@ def run_heatmap(
     Returns:
         tuple: tuple of results (the results from the heatmap) and new_dir (the directory where data ios stored).
     """
+    
     translator = {
         "q": "media quality",
         "bU": "user benefit",
@@ -273,7 +274,7 @@ def run_heatmap(
 
 
 if __name__ == "__main__":
-    # run_args: runs + cores
+    # get arguments from input file
     run_args, sim_args, payoffs, heatmap_args = read_args()
 
     if sim_args["type"] == "time_series":
