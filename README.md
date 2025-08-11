@@ -1,7 +1,8 @@
 # Can Media Act as a Soft Regulator of Safe AI Development? A Game Theoretical Analysis
 
 
-Official repository for the paper:  
+Official repository for the paper: 
+
 **Can Media Act as a Soft Regulator of Safe AI Development? A Game Theoretical Analysis**  
 Henrique Correia da Fonseca<sup>1,*</sup>, António Fernandes<sup>1</sup>, Zhao Song<sup>2</sup>, *et al.*  
 Published in *[Journal / Conference]*, 2025  
@@ -62,12 +63,6 @@ Published in *[Journal / Conference]*, 2025
 ### Abstract
 When developers of artificial intelligence (AI) products need to decide between profit and safety for the users, they likely choose profit. Untrustworthy AI technology must come packaged with tangible negative consequences. Here, we envisage those consequences as the loss of reputation caused by media coverage of their misdeeds, disseminated to the public. We explore whether media coverage has the potential to push AI creators into the production of safe products, enabling widespread adoption of AI technology. We created artificial populations of self-interested creators and users and studied them through the lens of evolutionary game theory. Our results reveal that media is indeed able to foster cooperation between creators and users, but not always. Cooperation does not evolve if the quality of the information provided by the media is not reliable enough, or if the costs of either accessing media or ensuring safety are too high. By shaping public perception and holding developers accountable, media emerges as a powerful soft regulator -- guiding AI safety even in the absence of formal government oversight.
 
-
-### About
-
-This repository contains the code and data to reproduce the results from our paper.
-
-You can find the full paper [here]().
 
 # Repository Structure
 
